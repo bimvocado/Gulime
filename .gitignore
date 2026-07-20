@@ -132,3 +132,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Backups ###
+*.bak
