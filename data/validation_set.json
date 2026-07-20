@@ -1,0 +1,2662 @@
+[
+  {
+    "product_name": "매일이자Wa파킹통장",
+    "bank_name": "광주은행",
+    "base_rate": 2.5,
+    "max_rate": 5.1,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "type": "AVG_BALANCE",
+        "tiers": [
+          {
+            "threshold": 300000,
+            "rate_bonus": 2.6
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 2,
+        "required_months": 2,
+        "hard_requirement": false,
+        "payout": "PRORATED",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "type": "CHANNEL",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "e-그린세이브예금",
+    "bank_name": "SC제일은행",
+    "base_rate": 3.55,
+    "max_rate": 3.85,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "은행거래실적 우대이율",
+        "type": "PRODUCT_HOLDING",
+        "tiers": [
+          {
+            "threshold": 30000000,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 1,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "순신규 고객 우대이율",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 31,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "공동구매 추가 이율",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      },
+      {
+        "condition_name": "현대카드 M포인트 전환 서비스",
+        "type": "PRODUCT_HOLDING",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KJB주거래우대예금",
+    "bank_name": "광주은행",
+    "base_rate": 3.35,
+    "max_rate": 3.85,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "요구불계좌 평균잔액 우대금리",
+        "type": "AVG_BALANCE",
+        "tiers": [
+          {
+            "threshold": 1000000,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "교차거래 우대금리",
+        "type": "PRODUCT_HOLDING",
+        "tiers": [
+          {
+            "threshold": 1,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "결제성 계좌 입금실적 우대금리",
+        "type": "SALARY_TRANSFER",
+        "tiers": [
+          {
+            "threshold": 1,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "SALARY_TRANSFER",
+        "period_months": 11,
+        "required_months": 11,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신용(체크)카드 이용 실적 우대금리",
+        "type": "CARD_SPEND",
+        "tiers": [
+          {
+            "threshold": 3000000,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "CARD_BUDGET",
+        "period_months": 11,
+        "required_months": 11,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "출산 축하 우대금리",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "JB 1·2·3 정기예금",
+    "bank_name": "전북은행",
+    "base_rate": 3.15,
+    "max_rate": 3.75,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "정기예금 미보유 (순신규) 우대",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 6,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "마케팅 동의 우대",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "자동재예치 필수 설정",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "J 정기예금",
+    "bank_name": "제주은행",
+    "base_rate": 2.0,
+    "max_rate": 3.7,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "비대면 채널 가입 우대",
+        "type": "CHANNEL",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.3
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "jBANK 로그인 실적 우대",
+        "type": "TRANSFER_COUNT",
+        "tiers": [
+          {
+            "threshold": 6,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기간별 특판 이벤트 우대금리",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 1.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "스마트모아Dream정기예금",
+    "bank_name": "광주은행",
+    "base_rate": 3.43,
+    "max_rate": 3.63,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "1천만원 이상 온라인 가입 우대",
+        "type": "DEPOSIT_AMOUNT",
+        "tiers": [
+          {
+            "threshold": 10000000,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "추가 우대금리 이벤트",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      },
+      {
+        "condition_name": "우대금리쿠폰 적용",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "TenTen 양궁예금",
+    "bank_name": "광주은행",
+    "base_rate": 3.3,
+    "max_rate": 3.61,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "TenTen양궁단 아시안게임 성적 우대",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 3,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      },
+      {
+        "condition_name": "추가 우대금리 이벤트",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      },
+      {
+        "condition_name": "우대금리쿠폰 적용",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "코드K 정기예금",
+    "bank_name": "케이뱅크",
+    "base_rate": 3.61,
+    "max_rate": 3.61,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "이벤트 금리쿠폰 적용",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "카카오뱅크 정기예금",
+    "bank_name": "카카오뱅크",
+    "base_rate": 3.6,
+    "max_rate": 3.6,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "금리쿠폰 사용 우대",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "UNKNOWN",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "The든든예금시즌2",
+    "bank_name": "경남은행",
+    "base_rate": 2.0,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "마케팅 및 모바일메세지 수신 동의",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.05
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "정기예금 미보유 (순신규) 우대",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "12개월 만기 연동 이벤트 금리",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 1.4
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "더(The) 레벨업 정기예금",
+    "bank_name": "부산은행",
+    "base_rate": 2.65,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "금융정보 및 혜택알림(PUSH) 동의 우대",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "비대면 정기예금 재예치 우대",
+        "type": "PRODUCT_HOLDING",
+        "tiers": [
+          {
+            "threshold": 1,
+            "rate_bonus": 0.8
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "더(The) 특판 정기예금",
+    "bank_name": "부산은행",
+    "base_rate": 2.2,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "금융정보 및 혜택알림(Push) 동의 우대",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "더(The)특판 정기예금 신규고객 우대",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 0.75
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "1년제 기본 특판우대이율",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "IBK굴리기통장(단기중금채)",
+    "bank_name": "IBK기업은행",
+    "base_rate": 3.55,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": []
+  },
+  {
+    "product_name": "Sh첫만남우대예금",
+    "bank_name": "SH수협은행",
+    "base_rate": 2.5,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "수협은행 예·적금 첫거래 우대",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "상품서비스 안내 전체 동의 (마케팅 동의)",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.05
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "스마트폰 뱅킹 상품 알리기를 통한 추천",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.8
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "SC제일 친환경비움예금",
+    "bank_name": "SC제일은행",
+    "base_rate": 3.53,
+    "max_rate": 3.53,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "환경 관련 기념일 금리 이벤트",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "IBK더굴리기통장(중금채)",
+    "bank_name": "IBK기업은행",
+    "base_rate": 3.52,
+    "max_rate": 3.52,
+    "rate_by_term": null,
+    "conditions": []
+  },
+  {
+    "product_name": "KB Star 정기예금",
+    "bank_name": "KB국민은행",
+    "base_rate": 2.15,
+    "max_rate": 2.9,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "금리우대쿠폰 적용 우대",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": null
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "PARTIAL"
+      }
+    ]
+  },
+  {
+    "product_name": "JB 슈퍼씨드 적금",
+    "bank_name": "전북은행",
+    "base_rate": 3.3,
+    "max_rate": 13.3,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "My씨드 확인을 통한 슈퍼씨드 추첨 당첨",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 10.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 11,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "우리 두근두근 행운적금",
+    "bank_name": "우리은행",
+    "base_rate": 3.0,
+    "max_rate": 13.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "매월 행운카드 추첨 당첨 횟수 누적",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 10.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": 5,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "우리은행 상품·서비스 마케팅 동의 (전화 또는 SMS 중 1개 이상)",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "도전 루틴 적금",
+    "bank_name": "전북은행",
+    "base_rate": 1.0,
+    "max_rate": 11.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "전북은행 적금 첫거래 고객",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "연결계좌를 통한 일일 납입 성공 횟수 누적",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": 10000,
+            "rate_bonus": 10.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "하나 장병내일준비적금",
+    "bank_name": "하나은행",
+    "base_rate": 5.0,
+    "max_rate": 10.1,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "장병내일준비적금 가입자격확인서 제출 및 의무복무기간 1개월 이상",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "국군재정관리단을 통한 군급여이체 12회 이상",
+        "type": "SALARY",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.6
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "하나은행 주택청약종합저축 보유",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기초생활수급자 증빙서류 제출",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 3.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "군인공제회 병(兵) 회원 저축 상품 가입 및 회원자격 취득",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "하나카드 체크/신용카드 결제실적 3회 이상",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": 3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "삼성카드 우리 적금",
+    "bank_name": "우리은행",
+    "base_rate": 2.5,
+    "max_rate": 10.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "우리은행 상품·서비스 마케팅 동의 (전화 또는 SMS 중 1개 이상)",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "제휴 삼성카드 발급/보유 및 결제대금 자동이체 6회 이상",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "직전 6개월 동안 우리은행 예·적금 상품 미보유",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": 6,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "삼성카드 누적 이용금액 기준 충족 (신규/기존 차등)",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": 6000000,
+            "rate_bonus": 4.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "우리 빙고 적금",
+    "bank_name": "우리은행",
+    "base_rate": 2.5,
+    "max_rate": 10.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "우리은행 상품·서비스 마케팅 동의 (전화 또는 SMS 중 1개 이상)",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "3X3 빙고판 미션 달성을 통한 빙고 줄 완성",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 7.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KB아이사랑적금",
+    "bank_name": "KB국민은행",
+    "base_rate": 2.0,
+    "max_rate": 10.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "아이사랑 우대이율 (미성년 자녀 수 및 임신확인서 제출)",
+        "type": "FAMILY_MEMBER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 4.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "희망가득 우대이율 (기초생활수급자, 등록장애인, 한부모가족 증빙)",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "본인 입출금 계좌로 아동수당 6회 이상 수령",
+        "type": "GOVERNMENT_BENEFIT",
+        "tiers": [
+          {
+            "threshold": 100000,
+            "rate_bonus": 3.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KB장병내일준비적금",
+    "bank_name": "KB국민은행",
+    "base_rate": 5.0,
+    "max_rate": 10.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "장병내일준비적금 가입자격 확인서 제출 및 남은 의무복무기간 1개월 이상",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "국민은행 주택청약종합저축(청년 주택드림 청약 포함) 계좌 보유",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "국민카드 결제대금 출금 발생 월 6개월 이상",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 24,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기초생활수급자 증빙(수급자증명서 또는 사회보장급여 중지통지서 제출)",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 3.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "2026 특판 가입 기간 내 KB Youth Club(밀리터리클럽) 가입 유지",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "신한 장병내일준비 적금",
+    "bank_name": "신한은행",
+    "base_rate": 5.0,
+    "max_rate": 10.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "장병내일준비적금 가입자격 확인서 제출 및 남은 의무복무기간 1개월 이상",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신한은행 주택청약종합저축(청년우대형 포함) 만기전일까지 유지",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "입출금통장에 건별 50만원 이상 입금된 월에 적금 납입",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": 500000,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기초생활수급자 증빙(수급자증명서 또는 사회보장급여중지통지서 제출)",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 3.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신한은행 증권계좌에서 증권거래 발생",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "IBK장병내일준비적금",
+    "bank_name": "IBK기업은행",
+    "base_rate": 5.0,
+    "max_rate": 9.7,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "장병내일준비적금 가입자격확인서 제출 및 남은 의무복무기간 1개월 이상",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 입출금식 계좌로 건당 10만원 이상 급여이체 12회 이상",
+        "type": "SALARY",
+        "tiers": [
+          {
+            "threshold": 100000,
+            "rate_bonus": 1.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 24,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만기 시점에 당행 주택청약종합저축(청년주택드림 포함) 보유",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.4
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 나라사랑카드를 결제(매출표 접수) 1회 이상 사용",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.3
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 24,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 본인 명의 적립식 상품(적금, 펀드, 중금채) 신규 가입",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.3
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 24,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기초생활수급자 증빙 서류 영업점 제출",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 3.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "챌린지적금 with 현대자동차",
+    "bank_name": "부산은행",
+    "base_rate": 2.0,
+    "max_rate": 9.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "가입기간 중 급여입금 실적 3개월 이상 (만기월 제외)",
+        "type": "SALARY",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": 3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "적금 전체 불입 회차 중 2/3 이상 부산은행 간 자동이체 불입",
+        "type": "AUTOMATIC_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "가입기간 중 부산은행 신용/체크카드 누적 이용금액 50만원 이상",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": 500000,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "포용금융 우대 - 청년층(가입 시점 만 19세 ~ 만 39세)",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "포용금융 우대 - 기초생활수급자 또는 차상위 계층 증빙서류 제출",
+        "type": "SOCIALLY_VULNERABLE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "현대자동차 차량 계약사실확인서 모바일뱅킹 제출 (2026.04.01 이후 계약건)",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "현대자동차 전기차(전기·수소전기차) 계약사실확인서 제출",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "우리WON모바일 적금",
+    "bank_name": "우리은행",
+    "base_rate": 2.5,
+    "max_rate": 8.5,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "우리WON모바일(알뜰폰) 신규 개통 및 적금 만기일까지 유지",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 4.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "우리은행 통장에서 우리WON모바일 통신비 자동이체 6회 이상",
+        "type": "AUTOMATIC_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "마이키즈 적금",
+    "bank_name": "케이뱅크",
+    "base_rate": 3.0,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "만 17세 미만 실명 개인 자녀 및 마이키즈 서비스 법정대리인 연결",
+        "type": "FAMILY_MEMBER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "전체 계약 월 수의 2/3 이상 개월 수 동안 적금 납입",
+        "type": "AUTOMATIC_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 4.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "마이키즈 출시 기념 이벤트 금리우대쿠폰 적용",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "신한 다둥이 상생 적금",
+    "bank_name": "신한은행",
+    "base_rate": 2.5,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "저출생상생 우대 (결혼, 임신, 난임, 출산 증빙서류 제출)",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "다둥이 상생 우대 (2007년 이후 출생 미성년 자녀 기준)",
+        "type": "FAMILY_MEMBER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신한 통장을 통한 서울시다둥이 행복카드(신용/체크) 결제 실적 보유",
+        "type": "CARD_USAGE",
+        "tiers": [
+          {
+            "threshold": 1,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "부모급여, 영아, 양육, 아동수당 중 1가지를 신한 계좌로 6개월 이상 수령",
+        "type": "GOVERNMENT_BENEFIT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신한은행 첫 거래 우대 (입출금 통장 첫 신규 또는 거래중지 계좌만 보유)",
+        "type": "WELCOME_BONUS",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "하나더소호 가맹점 적금",
+    "bank_name": "하나은행",
+    "base_rate": 2.0,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "만 14세 이상 실명의 개인사업자 자격 보유 및 증징",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "하나은행 입출금통장으로 가맹점 매출대금(카드사) 입금 실적 6개월 이상 보유",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "하나은행 입출금통장으로 입금된 가맹점 매출대금의 카드사 개수 충족",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 4.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "Hi baby 적금",
+    "bank_name": "경남은행",
+    "base_rate": 1.45,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "마케팅동의 및 모바일메세지 수신동의 유지",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.55
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "상품 가입기간(신규일 ~ 만기일 전일) 내 자녀 출산 및 증빙서류 제출",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "다자녀 우대 (2026년 이후 가입: 2007년 이후 출생자녀 수 기준)",
+        "type": "FAMILY_MEMBER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "경남은행 입출금통장으로 출산지원금(부모급여 등) 건당 10만원 이상 6개월 이상 입금",
+        "type": "GOVERNMENT_BENEFIT",
+        "tiers": [
+          {
+            "threshold": 100000,
+            "rate_bonus": 2.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "하나 아이키움 적금",
+    "bank_name": "하나은행",
+    "base_rate": 2.0,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "본인 계좌로 양육 수당 6회 이상 수령 또는 임신사실확인서 제출",
+        "type": "GOVERNMENT_BENEFIT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": 6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "가입월 말일까지 하나원큐 앱에서 '아이 미래 지킴' 서약 완료",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 1,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 주택청약종합저축 보유(유지) 및 하나원큐 오픈뱅킹에 청약 계좌 등록·조회",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.6
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 3,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "가입일 기준 익월말까지 『하나 합 서비스』 가입 및 타행 기관 1개 이상 연결 후 만기 전전월말 유지",
+        "type": "MYDATA",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.3
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 10,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "가입 전 하나은행 상품·서비스 마케팅 동의 항목 전제 동의",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만기 전영업일까지 다자녀(만 19세 미만 미성년 자녀) 가구 증빙 서류 제출",
+        "type": "FAMILY_MEMBER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 3.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "IBK청년미래적금",
+    "bank_name": "IBK기업은행",
+    "base_rate": 5.0,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "가입 연령, 개인소득, 가구소득 및 금융소득종합과세 미해당 자격 검증 승인",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "소득 우대: 가입 신청 시점 총급여 3,600만원 또는 종합소득 2,600만원 이하",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만기일 속하는 월의 3개월 전 말일까지 서민금융진흥원 청년재무상담 이수",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 33,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 입출식 계좌로 월 50만원 이상 급여이체 실적 24개월 이상 보유",
+        "type": "SALARY",
+        "tiers": [
+          {
+            "threshold": 500000,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 36,
+        "required_months": 24,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 신용/체크카드 36개월간 월평균 이용실적 30만원 이상 및 만기시점 카드 보유",
+        "type": "CARD_SPENDING",
+        "tiers": [
+          {
+            "threshold": 300000,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 36,
+        "required_months": 36,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 주택청약종합저축 또는 청년 주택드림 청약통장을 만기시점에 보유",
+        "type": "CROSS_PRODUCT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "중소기업 재직자 우대 또는 청년도약계좌 연계가입/최초고객 우대 항목 충족",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KB청년미래적금",
+    "bank_name": "KB국민은행",
+    "base_rate": 5.0,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "정부 정책 자격 검증 (나이, 개인소득, 가구소득, 금융소득종합과세 미해당)",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 계좌로 급여 입금 실적 월수 12회 이상 보유",
+        "type": "SALARY",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 34,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 계좌 출금실적 충족 (공과금 자동이체 2건 이상 / KB리브모바일 청년도약 요금제 / KB국민카드 대금 출금 중 하나를 12회 이상)",
+        "type": "AUTOMATIC_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.8
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 34,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "거래감사 우대 (KB청년도약계좌 가입이력 / 6개월 내 무실적 신규 / 만기전전월 기준 KB모임통장 총무 및 모임원 2인 이상 유지 중 하나 충족)",
+        "type": "WELCOME_BONUS",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "소득플러스: 신청 시점 총급여 3,600만원 또는 종합소득 2,600만원 이하",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만기일 속하는 월의 3개월 전 말일까지 서민금융진흥원 청년재무상담 이수",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 33,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": null,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  }
+]
