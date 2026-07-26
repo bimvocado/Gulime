@@ -2658,5 +2658,587 @@
         "parse_status": "COMPLETE"
       }
     ]
+  },
+  {
+    "product_name": "KB 특★한 적금",
+    "conditions": [
+      {
+        "condition_name": "목표달성 축하 우대이율 (50만원 이하 0.5%p, 50만원 초과 1.0%p)",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "별 모으기 우대이율 (10개 0.5%p, 20개 1.0%p)",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "함께해요 우대이율",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 2.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KB국민프리미엄적금(정액)",
+    "conditions": [
+      {
+        "condition_name": "단체가입/나라사랑/쿠폰 우대이율 (1년 0.6%p, 2년 0.7%p, 3년 0.9%p, 5년 1.0%p)",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "교차거래 우대이율",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KB내맘대로적금",
+    "conditions": [
+      {
+        "condition_name": "9가지 선택 항목 중 우대이율 적용조건 충족 (항목당 0.1%p, 최대 6개)",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "KB맑은하늘적금",
+    "conditions": [
+      {
+        "condition_name": "종이통장 줄이기 미션",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "종이서식 줄이기 미션",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "대중교통 미션 (1년제 0.4%p, 2년제 0.5%p, 3년제 0.6%p)",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.6,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "퀴즈미션",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "The파트너예금",
+    "conditions": [
+      {
+        "condition_name": "경남은행 거래기간 5년이상 + 마케팅동의 고객",
+        "type": "CUSTOMER_TENURE",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": 60,
+        "required_months": 60,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "급여, 연금, 가맹점대금 입금 시",
+        "type": "SALARY",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "당행 카드 결제실적 보유 시",
+        "type": "CARD_SPENDING",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "오면우대! 하면우대! 정기적금",
+    "conditions": [
+      {
+        "condition_name": "신규고객 적금 가입 시",
+        "type": "WELCOME_BONUS",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 3.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "상품 가입 전 마케팅동의 시",
+        "type": "MARKETING_AGREEMENT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "이 적금 신규월 포함 3개월 동안 10만원 이상 경남은행 카드 대금결제 시",
+        "type": "CARD_SPENDING",
+        "threshold": 100000,
+        "resource": "NONE",
+        "period_months": 3,
+        "required_months": 3,
+        "rate_bonus": 2.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기존고객 급여 또는 연금입금 시",
+        "type": "SALARY",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.5,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기존고객 공과금 자동이체 시",
+        "type": "AUTOMATIC_TRANSFER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 2.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기존고객 경남은행 카드이용 시 (8회이상&10만원이상 카드대금 결제보유)",
+        "type": "CARD_SPENDING",
+        "threshold": 100000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.5,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "행복 DREAM 적금",
+    "conditions": [
+      {
+        "condition_name": "신규일로부터 6개월전까지 당행 적금 미보유",
+        "type": "WELCOME_BONUS",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": 6,
+        "required_months": 6,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "월부금이 50만원 이상인 경우",
+        "type": "DEPOSIT_AMOUNT",
+        "threshold": 500000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "이 예금을 자동이체로 납입하는 경우",
+        "type": "AUTOMATIC_TRANSFER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신규일로부터 익월 말일까지 신용(체크)카드를 최초로 발급하고 동 기간내에 10만원이상 이용실적이 있는경우",
+        "type": "CARD_SPENDING",
+        "threshold": 100000,
+        "resource": "NONE",
+        "period_months": 2,
+        "required_months": 2,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "이 예금 가입전 경남은행 마케팅동의가 되어있는경우",
+        "type": "MARKETING_AGREEMENT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "미즈월복리정기예금",
+    "conditions": [
+      {
+        "condition_name": "요구불평잔 (300만원이상 0.1%, 500만원이상 0.2%)",
+        "type": "AVERAGE_BALANCE",
+        "threshold": 5000000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신용(체크)카드결제실적 (전월결제금 300만원이상 0.05%, 500만원이상 0.1%)",
+        "type": "CARD_SPENDING",
+        "threshold": 5000000,
+        "resource": "NONE",
+        "period_months": 1,
+        "required_months": 1,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "여행스케치_남도투어적금",
+    "conditions": [
+      {
+        "condition_name": "예금가입일~만기일전일까지 당행이선정한 전라남도 관광지 방문 인증시",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.5,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신용(체크)카드사용실적 300만원이상",
+        "type": "CARD_SPENDING",
+        "threshold": 3000000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "개인(신용)정보 동의",
+        "type": "MARKETING_AGREEMENT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "해피라이프_여행스케치적금V",
+    "conditions": [
+      {
+        "condition_name": "해피라이프_여행스케치외화적금V 동일자가입",
+        "type": "CROSS_PRODUCT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.5,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "해지원금 기준 500만원이상",
+        "type": "DEPOSIT_AMOUNT",
+        "threshold": 5000000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신용(체크)카드사용실적 300만원이상",
+        "type": "CARD_SPENDING",
+        "threshold": 3000000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "개인(신용)정보 동의",
+        "type": "MARKETING_AGREEMENT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "NH1934월복리적금",
+    "conditions": [
+      {
+        "condition_name": "급여이체 실적 또는 개인사업자 계좌 실적",
+        "type": "SALARY",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 1.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "비대면 채널 이체 실적",
+        "type": "ELECTRONIC_BANKING",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "마케팅 동의",
+        "type": "MARKETING_AGREEMENT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "농업계고 및 청년농부사관학교 졸업자",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 2.0,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "NH왈츠회전예금 II",
+    "conditions": [
+      {
+        "condition_name": "급여이체실적(50만원 이상)이 있는 경우",
+        "type": "SALARY",
+        "threshold": 500000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "트리플 회전 우대이율 : 4회전기간부터",
+        "type": "OTHER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
+  },
+  {
+    "product_name": "NH직장인월복리적금",
+    "conditions": [
+      {
+        "condition_name": "가입기간 중 3개월 이상 급여이체시",
+        "type": "SALARY",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": 3,
+        "rate_bonus": 0.3,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "주택청약종합저축 또는 펀드가입",
+        "type": "CROSS_PRODUCT",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "NH채움카드 결제실적 1백만원 이상",
+        "type": "CARD_SPENDING",
+        "threshold": 1000000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.2,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "인터넷(스마트)뱅킹 또는 올원뱅크로 가입",
+        "type": "ELECTRONIC_BANKING",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "parse_status": "COMPLETE"
+      }
+    ]
   }
+
 ]
