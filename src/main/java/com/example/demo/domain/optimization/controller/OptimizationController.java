@@ -16,7 +16,6 @@ public class OptimizationController {
 
     @PostMapping
     public ResponseEntity<OptimizationResponseDto> getOptimalOptions(@RequestBody OptimizationRequestDto request) {
-        OptimizationResponseDto response = optimizationService.getOptimalOptions(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(optimizationService.getOptimalOptions(request));
     }
 }

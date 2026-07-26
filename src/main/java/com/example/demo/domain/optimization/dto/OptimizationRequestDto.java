@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OptimizationRequestDto {
     private Long lumpSum;                  // 보유 목돈
-    private Long emergencyFund;            // 비상금 (파킹통장 고정)
+    private Long emergencyFund;            // 비상금 (파킹통장에 고정 배분)
     private Long monthlySavingsCapacity;   // 월 저축 여력
-    private Long cardBudget;               // 사용자 지정 카드 예산 상한
+    private Long cardBudget;               // 사용자 카드 예산 상한
 }

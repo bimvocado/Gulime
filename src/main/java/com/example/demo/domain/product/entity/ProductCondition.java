@@ -22,6 +22,15 @@ public class ProductCondition {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(name = "period_months")
+    private Integer periodMonths;
+
+    @Column(name = "required_months")
+    private Integer requiredMonths;
+
+    @Column(name = "selection_type")
+    private String selectionType; // "TIERED"(단계형), "CHOICE"(선택형), "SINGLE"(단일) 등
+
     @Column(name = "type", nullable = false, length = 30)
     private String type;
 

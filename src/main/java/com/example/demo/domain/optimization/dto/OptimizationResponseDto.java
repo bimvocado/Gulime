@@ -2,6 +2,7 @@ package com.example.demo.domain.optimization.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+
 import java.util.List;
 
 @Getter
@@ -13,9 +14,9 @@ public class OptimizationResponseDto {
     @Builder
     public static class OptionDto {
         private String style;               // "STABLE", "BALANCED", "AGGRESSIVE"
-        private Long expectedFinalAmount;    // 12개월 뒤 예상 총액
+        private Long expectedFinalAmount;    // 12개월 뒤 예상 총액 (원리금 + 재투입)
         private Double risk;                 // 실현금리 표준편차 σ[r]
-        private Long cardBudgetUsed;         // 카드 요구액 합계
-        private List<String> products;      // 선택된 상품 ID 리스트
+        private Long cardBudgetUsed;         // 조합에 필요한 카드 사용 요구액 합계
+        private List<String> products;      // 추천 상품 ID 목록
     }
 }
