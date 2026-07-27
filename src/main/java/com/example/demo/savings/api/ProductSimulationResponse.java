@@ -6,6 +6,7 @@ public record ProductSimulationResponse(
         String productId,
         String productName,
         String bankName,
+        int termMonths,
         double baseRate,
         double advertisedMaxRate,
         double expectedRate,

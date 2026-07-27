@@ -18,6 +18,12 @@ ProductCatalog
 `ProductCatalog`는 저장소 경계입니다. 현재 구현은 JSON 파일을 읽지만,
 추후 JPA 구현으로 교체해도 계산 엔진과 API 코드는 변경하지 않아도 됩니다.
 
+JSON의 `rate_by_term`에 만기별 금리가 있으면 하나의 원본 상품을
+`PRODUCT_..._1M`, `PRODUCT_..._3M`, `PRODUCT_..._12M`과 같은 만기별
+상품 variant로 변환합니다. 다중 `tiers`는 같은 tier 그룹에서 하나만,
+상품 레벨 `selection_rule.max_select`가 있는 조건은 선택 그룹에서 지정된
+개수만 적용합니다. `branch`와 `exclusive_group`도 중복 적용하지 않습니다.
+
 ## API
 
 - `POST /api/v1/simulate`: 조건별 확률·신뢰구간·민감도와 예상금리 계산

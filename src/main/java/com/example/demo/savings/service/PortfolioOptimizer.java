@@ -100,6 +100,7 @@ public final class PortfolioOptimizer {
                     return new AvailableProductResponse(
                             evaluation.product().productId(),
                             evaluation.product().productName(),
+                            evaluation.product().termMonths(),
                             toPercent(evaluation.expectedRate()),
                             evaluation.resourceDemand().cardBudget(),
                             result.status(),

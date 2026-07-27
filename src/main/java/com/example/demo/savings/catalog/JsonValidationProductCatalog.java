@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 
 /**
  * data/validation_set.json을 엔진의 도메인 모델로 변환합니다.
@@ -82,11 +83,13 @@ public class JsonValidationProductCatalog implements ProductCatalog {
 
             Map<String, SavingsProduct> loaded = new LinkedHashMap<>();
             for (JsonNode productNode : root) {
-                SavingsProduct product = toProduct(productNode);
-                if (loaded.putIfAbsent(product.productId(), product) != null) {
-                    throw new IllegalStateException(
-                            "중복 상품 ID가 생성되었습니다: " + product.productId()
-                    );
+                for (SavingsProduct product : toProducts(productNode)) {
+                    if (loaded.putIfAbsent(product.productId(), product) != null) {
+                        throw new IllegalStateException(
+                                "중복 상품 ID가 생성되었습니다: "
+                                        + product.productId()
+                        );
+                    }
                 }
             }
             if (loaded.isEmpty()) {
@@ -101,7 +104,7 @@ public class JsonValidationProductCatalog implements ProductCatalog {
         }
     }
 
-    private SavingsProduct toProduct(JsonNode node) {
+    private List<SavingsProduct> toProducts(JsonNode node) {
         String productName = requiredText(node, "product_name");
         String bankName = text(node, "bank_name");
         if (bankName == null || bankName.isBlank()) {
@@ -109,39 +112,53 @@ public class JsonValidationProductCatalog implements ProductCatalog {
             // 데이터 자체는 계산에서 제외하지 않고, DB 적재 단계에서 보강할 수 있게 둡니다.
             bankName = "은행 미상";
         }
-        String productId = stableId(bankName, productName);
+        String baseProductId = stableId(bankName, productName);
+        List<TermRate> termRates = termRates(node);
+        boolean usesTermVariants = hasTermRateDefinition(node);
+        SelectionConfig selection = selectionConfig(node, baseProductId);
 
-        List<ProductCondition> conditions = new ArrayList<>();
-        JsonNode conditionNodes = node.path("conditions");
-        if (conditionNodes.isArray()) {
-            int conditionIndex = 0;
-            for (JsonNode conditionNode : conditionNodes) {
-                conditions.addAll(toConditions(
-                        productId,
-                        conditionIndex++,
-                        conditionNode
-                ));
+        List<SavingsProduct> products = new ArrayList<>();
+        for (TermRate termRate : termRates) {
+            String productId = usesTermVariants
+                    ? baseProductId + "_" + termRate.termMonths() + "M"
+                    : baseProductId;
+            List<ProductCondition> conditions = new ArrayList<>();
+            JsonNode conditionNodes = node.path("conditions");
+            if (conditionNodes.isArray()) {
+                int conditionIndex = 0;
+                for (JsonNode conditionNode : conditionNodes) {
+                    conditions.addAll(toConditions(
+                            productId,
+                            conditionIndex++,
+                            conditionNode,
+                            termRate.termMonths(),
+                            selection
+                    ));
+                }
             }
-        }
 
-        return new SavingsProduct(
-                productId,
-                productName,
-                bankName,
-                inferProductType(productName),
-                DEFAULT_TERM_MONTHS,
-                0L,
-                Long.MAX_VALUE,
-                percentToRatio(nullableDouble(node.get("base_rate"), 0.0)),
-                percentToRatio(nullableDouble(node.get("max_rate"), 0.0)),
-                conditions
-        );
+            products.add(new SavingsProduct(
+                    productId,
+                    productName,
+                    bankName,
+                    productType(node, productName),
+                    termRate.termMonths(),
+                    nullableLong(node.get("minimum_amount"), 0L),
+                    nullableLong(node.get("maximum_amount"), Long.MAX_VALUE),
+                    percentToRatio(termRate.baseRate()),
+                    percentToRatio(termRate.maxRate()),
+                    conditions
+            ));
+        }
+        return products;
     }
 
     private List<ProductCondition> toConditions(
             String productId,
             int conditionIndex,
-            JsonNode node
+            JsonNode node,
+            int termMonths,
+            SelectionConfig selection
     ) {
         JsonNode tiers = node.path("tiers");
         if (tiers.isArray() && !tiers.isEmpty()) {
@@ -153,14 +170,26 @@ public class JsonValidationProductCatalog implements ProductCatalog {
                         conditionIndex,
                         tierIndex++,
                         node,
-                        tier
+                        tier,
+                        termMonths,
+                        tiers.size() > 1,
+                        selection
                 ));
             }
             return result;
         }
 
         // 마이그레이션 이전 형식(threshold/rate_bonus가 조건에 직접 존재)도 지원합니다.
-        return List.of(toCondition(productId, conditionIndex, 0, node, node));
+        return List.of(toCondition(
+                productId,
+                conditionIndex,
+                0,
+                node,
+                node,
+                termMonths,
+                false,
+                selection
+        ));
     }
 
     private ProductCondition toCondition(
@@ -168,7 +197,10 @@ public class JsonValidationProductCatalog implements ProductCatalog {
             int conditionIndex,
             int tierIndex,
             JsonNode conditionNode,
-            JsonNode valueNode
+            JsonNode valueNode,
+            int termMonths,
+            boolean tiered,
+            SelectionConfig selection
     ) {
         ConditionType type = normalizeConditionType(text(conditionNode, "type"));
         ResourceType resource = normalizeResource(
@@ -187,8 +219,21 @@ public class JsonValidationProductCatalog implements ProductCatalog {
             sourceText = conditionName;
         }
 
-        String selectionGroup = text(conditionNode, "exclusive_group");
-        Integer maxSelect = selectableLimit(conditionNode.get("selectable"));
+        Integer conditionSelectLimit = selectableLimit(
+                conditionNode.get("selectable")
+        );
+        boolean selectable = conditionSelectLimit != null;
+        Integer maxSelect = selectable
+                ? conditionSelectLimit > 1
+                        ? conditionSelectLimit
+                        : selection.maxSelect()
+                : null;
+        String selectionGroup = selectable
+                ? selection.group()
+                : null;
+        String tierGroup = tiered
+                ? productId + "_C" + conditionIndex + "_TIER"
+                : null;
 
         return new ProductCondition(
                 productId + "_C" + conditionIndex + "_T" + tierIndex,
@@ -199,7 +244,12 @@ public class JsonValidationProductCatalog implements ProductCatalog {
                 resource,
                 nullableInteger(conditionNode.get("period_months")),
                 nullableInteger(conditionNode.get("required_months")),
-                percentToRatio(nullableDouble(valueNode.get("rate_bonus"), null)),
+                percentToRatio(conditionRate(
+                        conditionNode,
+                        valueNode,
+                        termMonths,
+                        tiered
+                )),
                 conditionNode.path("hard_requirement").asBoolean(false),
                 enumValue(
                         Payout.class,
@@ -211,11 +261,209 @@ public class JsonValidationProductCatalog implements ProductCatalog {
                         text(conditionNode, "parse_status"),
                         ParseStatus.PARTIAL
                 ),
+                tierGroup,
                 selectionGroup,
-                maxSelect == null ? SelectionRule.ALL : SelectionRule.MAX_SELECT,
+                selectable ? SelectionRule.MAX_SELECT : SelectionRule.ALL,
                 maxSelect,
+                text(conditionNode, "exclusive_group"),
                 text(conditionNode, "branch")
         );
+    }
+
+    private List<TermRate> termRates(JsonNode productNode) {
+        double baseRate = nullableDouble(productNode.get("base_rate"), 0.0);
+        double maxRate = nullableDouble(
+                productNode.get("max_rate"),
+                baseRate
+        );
+        double advertisedSpread = Math.max(0.0, maxRate - baseRate);
+        Map<Integer, TermRate> rates = new TreeMap<>();
+
+        JsonNode productRates = productNode.get("rate_by_term");
+        if (isNonEmptyObject(productRates)) {
+            for (Map.Entry<String, JsonNode> entry : productRates.properties()) {
+                int term = termMonths(entry.getKey());
+                JsonNode value = entry.getValue();
+                double termBaseRate;
+                double termMaxRate;
+                if (value.isNumber()) {
+                    termBaseRate = value.asDouble();
+                    termMaxRate = termBaseRate + advertisedSpread;
+                } else if (value.isObject()) {
+                    termBaseRate = nullableDouble(
+                            firstPresent(value, "base_rate", "rate"),
+                            baseRate
+                    );
+                    termMaxRate = nullableDouble(
+                            value.get("max_rate"),
+                            termBaseRate + advertisedSpread
+                    );
+                } else {
+                    throw new IllegalStateException(
+                            "rate_by_term[" + entry.getKey()
+                                    + "]은 숫자 또는 객체여야 합니다."
+                    );
+                }
+                rates.put(term, new TermRate(term, termBaseRate, termMaxRate));
+            }
+        }
+
+        JsonNode conditions = productNode.path("conditions");
+        if (conditions.isArray()) {
+            for (JsonNode condition : conditions) {
+                JsonNode conditionRates = condition.get("rate_by_term");
+                if (!isNonEmptyObject(conditionRates)) {
+                    continue;
+                }
+                for (Map.Entry<String, JsonNode> entry
+                        : conditionRates.properties()) {
+                    int term = termMonths(entry.getKey());
+                    rates.putIfAbsent(
+                            term,
+                            new TermRate(term, baseRate, maxRate)
+                    );
+                }
+            }
+        }
+
+        Integer explicitTerm = nullableInteger(productNode.get("period_months"));
+        if (explicitTerm != null) {
+            if (explicitTerm <= 0) {
+                throw new IllegalStateException(
+                        "period_months는 1 이상이어야 합니다."
+                );
+            }
+            rates.putIfAbsent(
+                    explicitTerm,
+                    new TermRate(explicitTerm, baseRate, maxRate)
+            );
+        }
+        if (rates.isEmpty()) {
+            rates.put(
+                    DEFAULT_TERM_MONTHS,
+                    new TermRate(DEFAULT_TERM_MONTHS, baseRate, maxRate)
+            );
+        }
+        return List.copyOf(rates.values());
+    }
+
+    private boolean hasTermRateDefinition(JsonNode productNode) {
+        if (isNonEmptyObject(productNode.get("rate_by_term"))) {
+            return true;
+        }
+        JsonNode conditions = productNode.path("conditions");
+        if (conditions.isArray()) {
+            for (JsonNode condition : conditions) {
+                if (isNonEmptyObject(condition.get("rate_by_term"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Double conditionRate(
+            JsonNode conditionNode,
+            JsonNode tierNode,
+            int termMonths,
+            boolean tiered
+    ) {
+        JsonNode rates = conditionNode.get("rate_by_term");
+        if (isNonEmptyObject(rates)) {
+            JsonNode termRate = rates.get(Integer.toString(termMonths));
+            if (termRate != null && !termRate.isNull()) {
+                if (tiered) {
+                    throw new IllegalStateException(
+                            "다중 tiers와 rate_by_term을 한 조건에 동시에 "
+                                    + "사용할 수 없습니다: "
+                                    + text(conditionNode, "condition_name")
+                    );
+                }
+                if (termRate.isNumber()) {
+                    return termRate.asDouble();
+                }
+                if (termRate.isObject()) {
+                    return nullableDouble(termRate.get("rate_bonus"), null);
+                }
+                throw new IllegalStateException(
+                        "조건 rate_by_term[" + termMonths
+                                + "]은 숫자 또는 객체여야 합니다."
+                );
+            }
+        }
+        return nullableDouble(tierNode.get("rate_bonus"), null);
+    }
+
+    private SelectionConfig selectionConfig(
+            JsonNode productNode,
+            String productId
+    ) {
+        JsonNode rule = productNode.get("selection_rule");
+        int maxSelect = 1;
+        if (rule != null && !rule.isNull()) {
+            if (!rule.isObject()) {
+                throw new IllegalStateException(
+                        "selection_rule은 객체여야 합니다: " + productId
+                );
+            }
+            Integer configured = nullableInteger(rule.get("max_select"));
+            if (configured == null || configured <= 0) {
+                throw new IllegalStateException(
+                        "selection_rule.max_select는 1 이상이어야 합니다: "
+                                + productId
+                );
+            }
+            maxSelect = configured;
+        }
+        return new SelectionConfig(
+                productId + "_CHOICE",
+                maxSelect
+        );
+    }
+
+    private ProductType productType(JsonNode node, String productName) {
+        String explicit = text(node, "product_type");
+        if (explicit == null || explicit.isBlank()) {
+            return inferProductType(productName);
+        }
+        return switch (explicit.toUpperCase(Locale.ROOT)) {
+            case "SAVING", "SAVINGS" -> ProductType.SAVING;
+            case "PARKING" -> ProductType.PARKING;
+            case "DEPOSIT" -> ProductType.DEPOSIT;
+            default -> throw new IllegalStateException(
+                    "지원하지 않는 product_type입니다: " + explicit
+            );
+        };
+    }
+
+    private int termMonths(String rawTerm) {
+        try {
+            int value = Integer.parseInt(rawTerm);
+            if (value <= 0) {
+                throw new NumberFormatException();
+            }
+            return value;
+        } catch (NumberFormatException exception) {
+            throw new IllegalStateException(
+                    "rate_by_term의 키는 1 이상의 개월 수여야 합니다: "
+                            + rawTerm,
+                    exception
+            );
+        }
+    }
+
+    private boolean isNonEmptyObject(JsonNode node) {
+        return node != null && node.isObject() && !node.isEmpty();
+    }
+
+    private JsonNode firstPresent(JsonNode node, String... fields) {
+        for (String field : fields) {
+            JsonNode value = node.get(field);
+            if (value != null && !value.isNull()) {
+                return value;
+            }
+        }
+        return null;
     }
 
     private ConditionType normalizeConditionType(String rawType) {
@@ -225,22 +473,26 @@ public class JsonValidationProductCatalog implements ProductCatalog {
         return switch (rawType.toUpperCase(Locale.ROOT)) {
             case "CARD_SPEND", "CARD_SPENDING", "CARD_USAGE" ->
                     ConditionType.CARD_SPEND;
-            case "CARD_OWNERSHIP" -> ConditionType.CARD_OWNERSHIP;
-            case "CARD_PAYMENT_ACCOUNT" -> ConditionType.CARD_PAYMENT_ACCOUNT;
+            case "CARD_ISSUE", "CARD_OWNERSHIP" ->
+                    ConditionType.CARD_OWNERSHIP;
+            case "CARD_ACCOUNT", "CARD_PAYMENT_ACCOUNT" ->
+                    ConditionType.CARD_PAYMENT_ACCOUNT;
             case "SALARY", "SALARY_TRANSFER" -> ConditionType.SALARY_TRANSFER;
             case "FIRST_TRADE", "WELCOME_BONUS" -> ConditionType.FIRST_TRADE;
             case "AVG_BALANCE", "AVERAGE_BALANCE", "BALANCE_MAINTENANCE" ->
                     ConditionType.BALANCE_MAINTENANCE;
-            case "DEPOSIT_AMOUNT" -> ConditionType.DEPOSIT_AMOUNT;
-            case "TRANSFER_COUNT", "AUTOMATIC_TRANSFER" ->
+            case "MIN_DEPOSIT", "DEPOSIT_AMOUNT" ->
+                    ConditionType.DEPOSIT_AMOUNT;
+            case "AUTO_TRANSFER", "TRANSFER_COUNT", "AUTOMATIC_TRANSFER" ->
                     ConditionType.TRANSFER_COUNT;
             case "PRODUCT_HOLDING", "CROSS_PRODUCT" ->
                     ConditionType.PRODUCT_HOLDING;
             case "CHANNEL", "CHANNEL_USE", "ELECTRONIC_BANKING" ->
                     ConditionType.CHANNEL_USE;
-            case "MARKETING_AGREEMENT", "MARKETING_CONSENT",
+            case "MARKETING_AGREE", "MARKETING_AGREEMENT", "MARKETING_CONSENT",
                     "MARKETING_EVENT", "MYDATA" ->
                     ConditionType.MARKETING_CONSENT;
+            case "UNCONDITIONAL" -> ConditionType.OTHER;
             default -> ConditionType.OTHER;
         };
     }
@@ -314,6 +566,11 @@ public class JsonValidationProductCatalog implements ProductCatalog {
         return node.asLong();
     }
 
+    private long nullableLong(JsonNode node, long defaultValue) {
+        Long value = nullableLong(node);
+        return value == null ? defaultValue : value;
+    }
+
     private Integer nullableInteger(JsonNode node) {
         if (node == null || node.isNull()) {
             return null;
@@ -340,6 +597,19 @@ public class JsonValidationProductCatalog implements ProductCatalog {
             return node.asInt();
         }
         return node.asBoolean(false) ? 1 : null;
+    }
+
+    private record TermRate(
+            int termMonths,
+            double baseRate,
+            double maxRate
+    ) {
+    }
+
+    private record SelectionConfig(
+            String group,
+            int maxSelect
+    ) {
     }
 
     private <E extends Enum<E>> E enumValue(

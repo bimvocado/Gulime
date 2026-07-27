@@ -1,0 +1,156 @@
+[
+  {
+    "product_name": "다중만기 테스트예금",
+    "bank_name": "테스트은행",
+    "product_type": "DEPOSIT",
+    "base_rate": 2.0,
+    "max_rate": 3.0,
+    "rate_by_term": {
+      "1": 1.1,
+      "3": 1.3,
+      "6": 1.6,
+      "12": 2.0,
+      "24": {
+        "base_rate": 2.4,
+        "max_rate": 3.6
+      },
+      "36": 2.6
+    },
+    "selection_rule": {
+      "max_select": 2,
+      "total_options": 3
+    },
+    "conditions": [
+      {
+        "condition_name": "요구불평잔",
+        "type": "AVG_BALANCE",
+        "resource": "CASH_BALANCE",
+        "tiers": [
+          {
+            "threshold": 3000000,
+            "rate_bonus": 0.1
+          },
+          {
+            "threshold": 5000000,
+            "rate_bonus": 0.2
+          }
+        ],
+        "hard_requirement": false,
+        "payout": "PRORATED",
+        "selectable": false,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "급여이체 선택",
+        "type": "SALARY_TRANSFER",
+        "resource": "SALARY_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "selectable": true,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "마케팅동의 선택",
+        "type": "MARKETING_AGREE",
+        "resource": "NONE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "selectable": true,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "첫거래 선택",
+        "type": "FIRST_TRADE",
+        "resource": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.3
+          }
+        ],
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "selectable": true,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "신규고객 분기",
+        "type": "MARKETING_AGREE",
+        "resource": "NONE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.4
+          }
+        ],
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": "NEW_CUSTOMER",
+        "selectable": false,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "기존고객 분기",
+        "type": "MARKETING_AGREE",
+        "resource": "NONE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.05
+          }
+        ],
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": "EXISTING_CUSTOMER",
+        "selectable": false,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만기별 우대",
+        "type": "UNCONDITIONAL",
+        "resource": "NONE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "rate_by_term": {
+          "1": 0.01,
+          "12": 0.12
+        },
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "selectable": false,
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "모바일 가입 필수",
+        "type": "CHANNEL",
+        "resource": "NONE",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "selectable": false,
+        "parse_status": "COMPLETE"
+      }
+    ]
+  }
+]

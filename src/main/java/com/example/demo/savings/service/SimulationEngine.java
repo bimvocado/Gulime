@@ -108,6 +108,7 @@ public final class SimulationEngine {
                 evaluation.product().productId(),
                 evaluation.product().productName(),
                 evaluation.product().bankName(),
+                evaluation.product().termMonths(),
                 toPercent(evaluation.product().baseRate()),
                 toPercent(evaluation.product().maxRate()),
                 toPercent(evaluation.expectedRate()),

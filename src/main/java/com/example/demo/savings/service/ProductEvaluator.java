@@ -10,10 +10,12 @@ import com.example.demo.savings.domain.UserProfile;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.function.Function;
 
 public final class ProductEvaluator {
 
@@ -192,59 +194,100 @@ public final class ProductEvaluator {
     private List<ConditionEvaluation> selectConditions(
             List<ConditionEvaluation> candidates
     ) {
-        List<ConditionEvaluation> result = new ArrayList<>();
-        Map<String, List<ConditionEvaluation>> grouped = new LinkedHashMap<>();
+        Set<ConditionEvaluation> active = new LinkedHashSet<>(candidates);
 
-        for (ConditionEvaluation candidate : candidates) {
-            String group = candidate.condition().selectionGroup();
-            if (group == null || group.isBlank()) {
-                result.add(candidate.withSelected(true));
-            } else {
-                grouped.computeIfAbsent(group, ignored -> new ArrayList<>())
+        // 한 논리 조건의 계단식 구간은 누적하지 않고 가장 유리한 한 구간만 적용합니다.
+        retainBestPerGroup(
+                active,
+                item -> item.condition().tierGroup(),
+                ignored -> 1
+        );
+        retainBestBranch(active);
+
+        // 동일 exclusive_group은 중복 적용할 수 없습니다.
+        retainBestPerGroup(
+                active,
+                item -> item.condition().exclusiveGroup(),
+                ignored -> 1
+        );
+
+        // 선택형 상품은 상품 레벨 max_select만큼 자동으로 최선의 조건을 고릅니다.
+        retainBestPerGroup(
+                active,
+                item -> item.condition().selectionGroup(),
+                group -> group.stream()
+                        .map(ConditionEvaluation::condition)
+                        .map(ProductCondition::maxSelect)
+                        .filter(value -> value != null && value > 0)
+                        .findFirst()
+                        .orElse(group.size())
+        );
+
+        return candidates.stream()
+                .map(candidate -> candidate.withSelected(active.contains(candidate)))
+                .toList();
+    }
+
+    private void retainBestPerGroup(
+            Set<ConditionEvaluation> active,
+            Function<ConditionEvaluation, String> groupKey,
+            Function<List<ConditionEvaluation>, Integer> limitProvider
+    ) {
+        Map<String, List<ConditionEvaluation>> groups = new LinkedHashMap<>();
+        for (ConditionEvaluation candidate : active) {
+            String key = groupKey.apply(candidate);
+            if (key != null && !key.isBlank()) {
+                groups.computeIfAbsent(key, ignored -> new ArrayList<>())
                         .add(candidate);
             }
         }
 
-        for (List<ConditionEvaluation> group : grouped.values()) {
-            List<ConditionEvaluation> branchSelected = chooseBestBranch(group);
-            int maxSelect = branchSelected.stream()
-                    .map(ConditionEvaluation::condition)
-                    .map(ProductCondition::maxSelect)
-                    .filter(value -> value != null && value > 0)
-                    .findFirst()
-                    .orElse(branchSelected.size());
-
-            List<ConditionEvaluation> chosen = branchSelected.stream()
-                    .sorted(Comparator.comparingDouble(this::expectedContribution)
-                            .reversed())
-                    .limit(maxSelect)
-                    .toList();
-
-            for (ConditionEvaluation candidate : group) {
-                result.add(candidate.withSelected(chosen.contains(candidate)));
-            }
+        for (List<ConditionEvaluation> group : groups.values()) {
+            int limit = Math.max(0, limitProvider.apply(group));
+            Set<ConditionEvaluation> retained = group.stream()
+                    .sorted(Comparator
+                            .comparingDouble(this::expectedContribution)
+                            .reversed()
+                            .thenComparing(item ->
+                                    item.condition().conditionId()))
+                    .limit(limit)
+                    .collect(java.util.stream.Collectors.toCollection(
+                            LinkedHashSet::new
+                    ));
+            active.removeIf(candidate ->
+                    group.contains(candidate) && !retained.contains(candidate));
         }
-
-        return result;
     }
 
-    private List<ConditionEvaluation> chooseBestBranch(
-            List<ConditionEvaluation> group
-    ) {
-        Map<String, List<ConditionEvaluation>> branches = group.stream()
-                .collect(Collectors.groupingBy(
-                        item -> item.condition().branch() == null
-                                ? "__DEFAULT__"
-                                : item.condition().branch()
-                ));
-        if (branches.size() <= 1) {
-            return group;
+    private void retainBestBranch(Set<ConditionEvaluation> active) {
+        Map<String, List<ConditionEvaluation>> branches = new LinkedHashMap<>();
+        for (ConditionEvaluation candidate : active) {
+            String branch = candidate.condition().branch();
+            if (branch != null && !branch.isBlank()) {
+                branches.computeIfAbsent(branch, ignored -> new ArrayList<>())
+                        .add(candidate);
+            }
         }
-        return branches.values().stream()
-                .max(Comparator.comparingDouble(branch -> branch.stream()
-                        .mapToDouble(this::expectedContribution)
-                        .sum()))
-                .orElse(List.of());
+        if (branches.size() <= 1) {
+            return;
+        }
+
+        String selectedBranch = branches.entrySet().stream()
+                .max(Comparator
+                        .<Map.Entry<String, List<ConditionEvaluation>>>
+                                comparingDouble(entry -> entry.getValue().stream()
+                                        .mapToDouble(this::expectedContribution)
+                                        .sum())
+                        .thenComparing(Map.Entry::getKey))
+                .map(Map.Entry::getKey)
+                .orElseThrow();
+
+        active.removeIf(candidate -> {
+            String branch = candidate.condition().branch();
+            return branch != null
+                    && !branch.isBlank()
+                    && !branch.equals(selectedBranch);
+        });
     }
 
     private double expectedContribution(ConditionEvaluation evaluation) {

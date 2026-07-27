@@ -13,9 +13,11 @@ public record ProductCondition(
         boolean hardRequirement,
         Payout payout,
         ParseStatus parseStatus,
+        String tierGroup,
         String selectionGroup,
         SelectionRule selectionRule,
         Integer maxSelect,
+        String exclusiveGroup,
         String branch
 ) {
     public ProductCondition(
@@ -46,7 +48,9 @@ public record ProductCondition(
                 payout,
                 parseStatus,
                 null,
+                null,
                 SelectionRule.ALL,
+                null,
                 null,
                 null
         );
