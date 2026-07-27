@@ -20,9 +20,12 @@ ProductCatalog
 
 ## API
 
-- `POST /simulate`: 조건별 확률·신뢰구간·민감도와 예상금리 계산
-- `POST /options`: 목돈과 월 저축 여력을 자동 슬롯으로 만들고 Greedy 배분
-- `POST /roadmap`: 파킹·예금·적금 초기배분과 만기 재투입 로드맵 계산
+- `POST /api/v1/simulate`: 조건별 확률·신뢰구간·민감도와 예상금리 계산
+- `POST /api/v1/options`: 목돈과 월 저축 여력을 자동 슬롯으로 만들고 Greedy 배분
+- `POST /api/v1/roadmap`: 파킹·예금·적금 초기배분과 만기 재투입 로드맵 계산
+
+기존 클라이언트 호환을 위해 `/simulate`, `/options`, `/roadmap` 경로도
+동일한 계산 엔진으로 제공합니다.
 
 `/options` 요청은 사용자가 상품 슬롯을 지정하지 않습니다. 온보딩의
 `lumpSum`, `emergencyFund`, `monthlySaving`으로 엔진이 목돈 및 적금 슬롯을

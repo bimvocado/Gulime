@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/simulate")
+@RequestMapping({"/simulate", "/api/v1/simulate"})
 public class SimulationController {
 
     private final SimulationService simulationService;

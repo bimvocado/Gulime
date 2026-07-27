@@ -16,14 +16,14 @@ public class PlanningController {
         this.planningService = planningService;
     }
 
-    @PostMapping("/options")
+    @PostMapping({"/options", "/api/v1/options"})
     public ResponseEntity<OptionsResponse> options(
             @Valid @RequestBody OptionsRequest request
     ) {
         return ResponseEntity.ok(planningService.options(request));
     }
 
-    @PostMapping("/roadmap")
+    @PostMapping({"/roadmap", "/api/v1/roadmap"})
     public ResponseEntity<RoadmapResponse> roadmap(
             @Valid @RequestBody RoadmapRequest request
     ) {

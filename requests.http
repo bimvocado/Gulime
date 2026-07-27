@@ -1,5 +1,5 @@
 ### 전체 상품 시뮬레이션
-POST http://localhost:8080/simulate
+POST http://localhost:8080/api/v1/simulate
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### 포트폴리오 선택지
-POST http://localhost:8080/options
+POST http://localhost:8080/api/v1/options
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ### 선택 결과의 12개월 로드맵
-POST http://localhost:8080/roadmap
+POST http://localhost:8080/api/v1/roadmap
 Content-Type: application/json
 
 {
