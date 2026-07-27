@@ -135,3 +135,7 @@ out/
 
 ### Backups ###
 *.bak
+
+node_modules/
+data/parsed_conditions.json
+data/raw_products.json
