@@ -1,0 +1,452 @@
+package com.example.demo.savings.service;
+
+import com.example.demo.savings.api.FinalConfirmationRiskResponse;
+import com.example.demo.savings.api.InitialAllocationResponse;
+import com.example.demo.savings.api.InitialDepositResponse;
+import com.example.demo.savings.api.InitialSavingResponse;
+import com.example.demo.savings.api.RoadmapMilestoneResponse;
+import com.example.demo.savings.api.RoadmapResponse;
+import com.example.demo.savings.api.RoadmapSummaryResponse;
+import com.example.demo.savings.domain.ProductType;
+import com.example.demo.savings.domain.SelectedAllocation;
+import com.example.demo.savings.domain.SavingsProduct;
+import com.example.demo.savings.domain.UserProfile;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public final class RoadmapEngine {
+
+    private static final int HORIZON_MONTHS = 12;
+    private final ProductEvaluator evaluator = new ProductEvaluator();
+
+    public RoadmapResponse create(
+            List<SavingsProduct> catalog,
+            UserProfile profile,
+            List<SelectedAllocation> selections
+    ) {
+        Map<String, ProductEvaluation> evaluations = new LinkedHashMap<>();
+        for (SavingsProduct product : catalog) {
+            evaluations.put(
+                    product.productId(),
+                    evaluator.evaluate(product, profile)
+            );
+        }
+
+        long allocatable = Math.max(
+                0L,
+                profile.lumpSum() - profile.emergencyFund()
+        );
+        long lumpSumPrincipal = selections.stream()
+                .filter(selection -> requiredEvaluation(
+                        evaluations,
+                        selection.productId()
+                ).product().productType() != ProductType.SAVING)
+                .mapToLong(SelectedAllocation::amount)
+                .sum();
+        if (lumpSumPrincipal > allocatable) {
+            throw new IllegalArgumentException(
+                    "선택 원금이 비상금을 제외한 배분 가능 금액을 초과합니다."
+            );
+        }
+
+        validateMonthlySaving(selections, evaluations, profile);
+        validateResources(
+                selections,
+                evaluations,
+                profile,
+                allocatable
+        );
+
+        List<InitialDepositResponse> deposits = new ArrayList<>();
+        List<InitialSavingResponse> savings = new ArrayList<>();
+        List<RoadmapMilestoneResponse> milestones = new ArrayList<>();
+        List<FinalConfirmationRiskResponse> risks = new ArrayList<>();
+
+        milestones.add(new RoadmapMilestoneResponse(
+                0,
+                "START",
+                null,
+                null,
+                lumpSumPrincipal,
+                "비상금을 파킹 자금으로 남기고 선택한 상품 운용을 시작합니다.",
+                false
+        ));
+
+        long expectedTotalReturn = 0L;
+        long totalPrincipal = 0L;
+
+        for (SelectedAllocation selection : selections) {
+            ProductEvaluation evaluation = requiredEvaluation(
+                    evaluations,
+                    selection.productId()
+            );
+            SavingsProduct product = evaluation.product();
+            validateTerm(product);
+
+            if (product.productType() == ProductType.SAVING) {
+                long monthlyAmount = monthlyAmount(
+                        selection.amount(),
+                        product.termMonths()
+                );
+                validateAmount(product, monthlyAmount);
+                savings.add(new InitialSavingResponse(
+                        0,
+                        product.productId(),
+                        product.productName(),
+                        monthlyAmount,
+                        product.termMonths()
+                ));
+                long savingReturn = projectedSavingReturn(
+                        selection.amount(),
+                        product.termMonths(),
+                        evaluation.expectedRate()
+                );
+                expectedTotalReturn += savingReturn;
+                totalPrincipal += selection.amount();
+                milestones.add(new RoadmapMilestoneResponse(
+                        product.termMonths(),
+                        "SAVING_MATURITY",
+                        product.productId(),
+                        product.productName(),
+                        selection.amount() + savingReturn,
+                        "월 적금 납입이 종료되고 예상 원금과 이자를 수령합니다.",
+                        product.termMonths() < HORIZON_MONTHS
+                ));
+            } else {
+                validateAmount(product, selection.amount());
+                deposits.add(new InitialDepositResponse(
+                        0,
+                        product.productId(),
+                        product.productName(),
+                        selection.amount(),
+                        product.termMonths()
+                ));
+                totalPrincipal += selection.amount();
+                expectedTotalReturn += projectDeposit(
+                        milestones,
+                        catalog,
+                        evaluations,
+                        evaluation,
+                        selection.amount()
+                );
+            }
+
+            addFinalRisks(risks, evaluation);
+        }
+
+        milestones.sort(Comparator
+                .comparingInt(RoadmapMilestoneResponse::month)
+                .thenComparing(RoadmapMilestoneResponse::eventType));
+
+        double effectiveRate = totalPrincipal == 0L
+                ? 0.0
+                : expectedTotalReturn / (double) totalPrincipal * 100.0;
+
+        return new RoadmapResponse(
+                new InitialAllocationResponse(
+                        profile.emergencyFund(),
+                        deposits,
+                        savings
+                ),
+                new RoadmapSummaryResponse(
+                        totalPrincipal,
+                        profile.emergencyFund(),
+                        profile.monthlySaving(),
+                        expectedTotalReturn,
+                        round(effectiveRate, 6)
+                ),
+                milestones,
+                risks,
+                "만기 시점에는 현재 상품과 금리를 다시 조회합니다. "
+                        + "미래 금리는 예측하지 않고 현재 기대금리 기준으로 "
+                        + "Greedy 재투입합니다."
+        );
+    }
+
+    private long projectDeposit(
+            List<RoadmapMilestoneResponse> milestones,
+            List<SavingsProduct> catalog,
+            Map<String, ProductEvaluation> evaluations,
+            ProductEvaluation initial,
+            long initialAmount
+    ) {
+        int month = 0;
+        long amount = initialAmount;
+        long totalReturn = 0L;
+        ProductEvaluation current = initial;
+
+        while (month < HORIZON_MONTHS
+                && month + current.product().termMonths()
+                <= HORIZON_MONTHS) {
+            int term = current.product().termMonths();
+            long interest = Math.round(
+                    amount * current.expectedRate() * term / 12.0
+            );
+            amount += interest;
+            totalReturn += interest;
+            month += term;
+
+            milestones.add(new RoadmapMilestoneResponse(
+                    month,
+                    "MATURITY",
+                    current.product().productId(),
+                    current.product().productName(),
+                    amount,
+                    "예상 원금과 이자를 수령합니다.",
+                    month < HORIZON_MONTHS
+            ));
+
+            int remaining = HORIZON_MONTHS - month;
+            if (remaining == 0) {
+                break;
+            }
+
+            ProductEvaluation next = chooseGreedyReinvestment(
+                    catalog,
+                    evaluations,
+                    amount,
+                    remaining
+            );
+            if (next == null) {
+                milestones.add(new RoadmapMilestoneResponse(
+                        month,
+                        "HOLD_IN_PARKING",
+                        null,
+                        "파킹통장",
+                        amount,
+                        "남은 기간에 맞는 상품이 없어 파킹통장에 보관합니다.",
+                        true
+                ));
+                break;
+            }
+
+            current = next;
+            milestones.add(new RoadmapMilestoneResponse(
+                    month,
+                    "REINVESTMENT",
+                    current.product().productId(),
+                    current.product().productName(),
+                    amount,
+                    "현재 시점 상품을 다시 평가해 최고 기대금리 상품으로 재투입합니다.",
+                    true
+            ));
+        }
+
+        return totalReturn;
+    }
+
+    private ProductEvaluation chooseGreedyReinvestment(
+            List<SavingsProduct> catalog,
+            Map<String, ProductEvaluation> evaluations,
+            long amount,
+            int remainingMonths
+    ) {
+        return catalog.stream()
+                .filter(product -> product.productType() != ProductType.SAVING)
+                .map(product -> evaluations.get(product.productId()))
+                .filter(evaluation ->
+                        evaluation.product().termMonths() <= remainingMonths)
+                .filter(evaluation ->
+                        amount >= evaluation.product().minimumAmount()
+                                && amount
+                                <= evaluation.product().maximumAmount())
+                .filter(ProductEvaluation::hardRequirementsSatisfied)
+                .filter(evaluation ->
+                        evaluation.resourceDemand().cardBudget() == 0L
+                                && evaluation.resourceDemand().salaryTransfer()
+                                == 0
+                                && evaluation.resourceDemand().cashBalance()
+                                == 0L
+                                && evaluation.resourceDemand()
+                                .firstTradeByBank().isEmpty())
+                .max(Comparator
+                        .comparingDouble(ProductEvaluation::expectedRate)
+                        .thenComparingInt(evaluation ->
+                                evaluation.product().termMonths()))
+                .orElse(null);
+    }
+
+    private void addFinalRisks(
+            List<FinalConfirmationRiskResponse> risks,
+            ProductEvaluation evaluation
+    ) {
+        evaluation.conditions().stream()
+                .filter(ConditionEvaluation::selected)
+                .filter(condition -> condition.probability() < 0.999)
+                .forEach(condition -> risks.add(
+                        new FinalConfirmationRiskResponse(
+                                condition.probability() == 0.0
+                                        ? "CRITICAL"
+                                        : "WARNING",
+                                evaluation.product().productId(),
+                                condition.condition().conditionId(),
+                                evaluation.product().productName()
+                                        + "의 '"
+                                        + condition.condition().conditionName()
+                                        + "' 조건 달성확률은 "
+                                        + round(
+                                        condition.probability() * 100.0,
+                                        2
+                                )
+                                        + "%입니다."
+                        )
+                ));
+    }
+
+    private void validateMonthlySaving(
+            List<SelectedAllocation> selections,
+            Map<String, ProductEvaluation> evaluations,
+            UserProfile profile
+    ) {
+        long totalMonthly = selections.stream()
+                .filter(selection -> requiredEvaluation(
+                        evaluations,
+                        selection.productId()
+                ).product().productType() == ProductType.SAVING)
+                .mapToLong(selection -> {
+                    SavingsProduct product = requiredEvaluation(
+                            evaluations,
+                            selection.productId()
+                    ).product();
+                    return monthlyAmount(
+                            selection.amount(),
+                            product.termMonths()
+                    );
+                })
+                .sum();
+        if (totalMonthly > profile.monthlySaving()) {
+            throw new IllegalArgumentException(
+                    "선택한 적금의 월 납입액이 월 저축 여력을 초과합니다."
+            );
+        }
+    }
+
+    private void validateResources(
+            List<SelectedAllocation> selections,
+            Map<String, ProductEvaluation> evaluations,
+            UserProfile profile,
+            long allocatable
+    ) {
+        long card = 0L;
+        int salary = 0;
+        long cash = 0L;
+        Map<String, Integer> firstTrade = new LinkedHashMap<>();
+
+        for (SelectedAllocation selection : selections) {
+            ProductEvaluation evaluation = requiredEvaluation(
+                    evaluations,
+                    selection.productId()
+            );
+            if (!evaluation.hardRequirementsSatisfied()) {
+                throw new IllegalArgumentException(
+                        evaluation.product().productName()
+                                + "의 필수조건을 만족하지 못합니다."
+                );
+            }
+            card += evaluation.resourceDemand().cardBudget();
+            salary += evaluation.resourceDemand().salaryTransfer();
+            cash += evaluation.resourceDemand().cashBalance();
+            evaluation.resourceDemand().firstTradeByBank()
+                    .forEach((bank, count) -> firstTrade.merge(
+                            bank,
+                            count,
+                            Integer::sum
+                    ));
+        }
+
+        if (card > profile.cardBudgetCap()) {
+            throw new IllegalArgumentException(
+                    "CARD_BUDGET 제약을 위반합니다."
+            );
+        }
+        if (salary > (profile.salaryTransferable() ? 1 : 0)) {
+            throw new IllegalArgumentException(
+                    "SALARY_TRANSFER 제약을 위반합니다."
+            );
+        }
+        if (cash > allocatable) {
+            throw new IllegalArgumentException(
+                    "CASH_BALANCE 제약을 위반합니다."
+            );
+        }
+        boolean firstTradeViolation = firstTrade.entrySet().stream()
+                .anyMatch(entry ->
+                        profile.existingBanks().contains(entry.getKey())
+                                || entry.getValue() > 1);
+        if (firstTradeViolation) {
+            throw new IllegalArgumentException(
+                    "FIRST_TRADE 제약을 위반합니다."
+            );
+        }
+    }
+
+    private ProductEvaluation requiredEvaluation(
+            Map<String, ProductEvaluation> evaluations,
+            String productId
+    ) {
+        ProductEvaluation evaluation = evaluations.get(productId);
+        if (evaluation == null) {
+            throw new ProductNotFoundException(productId);
+        }
+        return evaluation;
+    }
+
+    private void validateTerm(SavingsProduct product) {
+        if (product.termMonths() <= 0
+                || product.termMonths() > HORIZON_MONTHS) {
+            throw new IllegalArgumentException(
+                    "1~12개월 상품만 현재 로드맵에서 지원합니다."
+            );
+        }
+    }
+
+    private void validateAmount(
+            SavingsProduct product,
+            long amount
+    ) {
+        if (amount < product.minimumAmount()
+                || amount > product.maximumAmount()) {
+            throw new IllegalArgumentException(
+                    product.productName()
+                            + "의 가입금액 범위를 벗어났습니다."
+            );
+        }
+    }
+
+    private long projectedSavingReturn(
+            long totalContribution,
+            int termMonths,
+            double expectedRate
+    ) {
+        double averageDurationYears = (termMonths + 1.0) / 24.0;
+        return Math.round(
+                totalContribution
+                        * expectedRate
+                        * averageDurationYears
+        );
+    }
+
+    private long monthlyAmount(
+            long totalContribution,
+            int termMonths
+    ) {
+        if (termMonths <= 0) {
+            throw new IllegalArgumentException(
+                    "적금 기간은 1개월 이상이어야 합니다."
+            );
+        }
+        return totalContribution / termMonths;
+    }
+
+    private static double round(double value, int scale) {
+        return BigDecimal.valueOf(value)
+                .setScale(scale, RoundingMode.HALF_UP)
+                .doubleValue();
+    }
+}
