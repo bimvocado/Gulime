@@ -1,0 +1,147 @@
+[
+  {
+    "product_name": "토스통장",
+    "bank_name": "토스뱅크",
+    "base_rate": 1.8,
+    "max_rate": 1.8,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "조건 없는 기본금리",
+        "type": "UNCONDITIONAL",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.0,
+        "hard_requirement": false,
+        "payout": "MONTHLY",
+        "parse_status": "COMPLETE",
+        "source_text": "조건 없이 금액 구간별 기본금리 제공"
+      }
+    ],
+    "spcl_cnd": "조건 없이 조건 없는 기본금리 제공 (매월 이자 지급)"
+  },
+  {
+    "product_name": "OK짠테크통장",
+    "bank_name": "OK저축은행",
+    "base_rate": 3.3,
+    "max_rate": 7.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "50만원 이하 구간 우대",
+        "type": "OTHER",
+        "threshold": 500000,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 3.7,
+        "hard_requirement": false,
+        "payout": "MONTHLY",
+        "parse_status": "COMPLETE",
+        "source_text": "50만원 이하분에 대해 연 7.0% 적용(기본 3.3% + 우대 3.7%)"
+      },
+      {
+        "condition_name": "시중은행/증권사 오픈뱅킹 등록",
+        "type": "PRODUCT_HOLDING",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.5,
+        "hard_requirement": false,
+        "payout": "MONTHLY",
+        "parse_status": "COMPLETE",
+        "source_text": "타행 오픈뱅킹에 OK짠테크통장 등록 시 연 0.5%p 우대"
+      }
+    ],
+    "spcl_cnd": "1. 50만원 이하 금액에 대해 우대금리 제공\n2. 타행 오픈뱅킹에 계좌 등록 시 연 0.5%p 우대금리 제공"
+  },
+  {
+    "product_name": "사이다입출금통장",
+    "bank_name": "SBI저축은행",
+    "base_rate": 2.9,
+    "max_rate": 3.2,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "마케팅 정보 수신 동의",
+        "type": "MARKETING_AGREE",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.3,
+        "hard_requirement": false,
+        "payout": "MONTHLY",
+        "parse_status": "COMPLETE",
+        "source_text": "사이다뱅크 앱 내 마케팅 정보 수신 동의 시 연 0.3%p 우대"
+      }
+    ],
+    "spcl_cnd": "사이다뱅크 앱 내 마케팅 정보 수신 동의 시 연 0.3%p 우대이율 적용"
+  },
+  {
+    "product_name": "플러스입출금통장",
+    "bank_name": "애큐온저축은행",
+    "base_rate": 3.1,
+    "max_rate": 3.3,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "개인정보 수집 이용동의 및 마케팅 동의",
+        "type": "MARKETING_AGREE",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "MONTHLY",
+        "parse_status": "COMPLETE",
+        "source_text": "개인정보 수집 이용동의(마케팅 목적) 및 애큐온멤버십 회원 가입 시 0.1%p"
+      },
+      {
+        "condition_name": "자동이체 등록",
+        "type": "AUTO_TRANSFER",
+        "threshold": null,
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "rate_bonus": 0.1,
+        "hard_requirement": false,
+        "payout": "MONTHLY",
+        "parse_status": "COMPLETE",
+        "source_text": "애큐온저축은행 입출금계좌에서 자동이체 1건 이상 등록 시 0.1%p"
+      }
+    ],
+    "spcl_cnd": "1. 개인정보 수집 이용동의(마케팅 목적) 및 멤버십 가입 시 0.1%p\n2. 자동이체 1건 이상 등록 시 0.1%p"
+  },
+  {
+    "product_name": "KB 마이핏 통장",
+    "bank_name": "KB국민은행",
+    "category": "PARKING",
+    "base_rate": 0.1,
+    "max_rate": 1.5,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "비상금 파킹 이머니 우대금리",
+        "type": "OTHER",
+        "threshold": 2000000,
+        "resource": "NONE",
+        "rate_bonus": 1.4,
+        "source_text": "통장 내 '비상금'으로 설정한 금액(최대 200만원)에 대해 연 1.5% 적용(기본 0.1% + 우대 1.4%)"
+      },
+      {
+        "condition_name": "KB국민카드 결제 또는 급여이체",
+        "type": "CARD_SPEND",
+        "threshold": null,
+        "resource": "CARD_BUDGET",
+        "rate_bonus": 0.0,
+        "source_text": "KB국민카드 결제실적 또는 급여이체 실적 충족 시 비상금 우대금리 적용 자격 부여"
+      }
+    ],
+    "spcl_cnd": "1. 통장 내 '비상금' 분리 설정 시 최대 200만원까지 연 1.5% 금리 제공\n2. KB국민카드 결제 계좌 지정 또는 KB국민은행으로 급여이체 실적 보유 시 우대금리 적용"
+  }
+]
