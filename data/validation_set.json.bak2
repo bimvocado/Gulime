@@ -198,7 +198,7 @@
       },
       {
         "condition_name": "1년제 기본 특판우대이율",
-        "type": "UNCONDITIONAL",
+        "type": "OTHER",
         "tiers": [
           {
             "threshold": 12,
@@ -252,7 +252,7 @@
         "tiers": [
           {
             "threshold": null,
-            "rate_bonus": 0.05
+            "rate_bonus": 5.0
           }
         ],
         "resource": "NONE",
@@ -428,7 +428,7 @@
     "conditions": [
       {
         "condition_name": "부산은행 우대금리 조건",
-        "type": "UNCONDITIONAL",
+        "type": "OTHER",
         "tiers": [
           {
             "threshold": null,
@@ -578,7 +578,7 @@
     "conditions": [
       {
         "condition_name": "제주은행 우대금리 조건",
-        "type": "PRODUCT_HOLDING",
+        "type": "OTHER",
         "tiers": [
           {
             "threshold": null,
@@ -638,7 +638,7 @@
     "conditions": [
       {
         "condition_name": "전북은행 우대금리 조건",
-        "type": "MARKETING_AGREE",
+        "type": "OTHER",
         "tiers": [
           {
             "threshold": null,
@@ -1388,7 +1388,7 @@
     "conditions": [
       {
         "condition_name": "전북은행 우대금리 조건",
-        "type": "AUTO_TRANSFER",
+        "type": "OTHER",
         "tiers": [
           {
             "threshold": null,
@@ -1418,7 +1418,7 @@
     "conditions": [
       {
         "condition_name": "전북은행 우대금리 조건",
-        "type": "AUTO_TRANSFER",
+        "type": "OTHER",
         "tiers": [
           {
             "threshold": null,
