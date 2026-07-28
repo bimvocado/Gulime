@@ -1,0 +1,59 @@
+### 전체 상품 시뮬레이션
+POST http://localhost:8080/api/v1/simulate
+Content-Type: application/json
+
+{
+  "profile": {
+    "employment": "FREELANCER",
+    "salaryTransferable": false,
+    "lumpSum": 5000000,
+    "emergencyFund": 1000000,
+    "monthlySaving": 500000,
+    "cardSpend6m": [220000, 310000, 180000, 270000, 350000, 170000],
+    "cardBudgetCap": 300000,
+    "existingBanks": ["국민은행"]
+  },
+  "productIds": []
+}
+
+### 포트폴리오 선택지
+POST http://localhost:8080/api/v1/options
+Content-Type: application/json
+
+{
+  "profile": {
+    "employment": "FREELANCER",
+    "salaryTransferable": false,
+    "lumpSum": 5000000,
+    "emergencyFund": 1000000,
+    "monthlySaving": 500000,
+    "cardSpend6m": [220000, 310000, 180000, 270000, 350000, 170000],
+    "cardBudgetCap": 300000,
+    "existingBanks": ["국민은행"]
+  },
+  "riskTolerance": 0.5
+}
+
+### 선택 결과의 12개월 로드맵
+POST http://localhost:8080/api/v1/roadmap
+Content-Type: application/json
+
+{
+  "profile": {
+    "employment": "FREELANCER",
+    "salaryTransferable": false,
+    "lumpSum": 5000000,
+    "emergencyFund": 1000000,
+    "monthlySaving": 500000,
+    "cardSpend6m": [220000, 310000, 180000, 270000, 350000, 170000],
+    "cardBudgetCap": 300000,
+    "existingBanks": ["국민은행"]
+  },
+  "selectedAllocations": [
+    {
+      "slotIndex": 0,
+      "productId": "PRODUCT_2CF3D12665D74BCA",
+      "amount": 3000000
+    }
+  ]
+}
