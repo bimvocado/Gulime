@@ -31,6 +31,9 @@ public class ProductCondition {
     @Column(name = "selection_type")
     private String selectionType; // "TIERED"(단계형), "CHOICE"(선택형), "SINGLE"(단일) 등
 
+    @Column(name = "condition_name")
+    private String conditionName;
+
     @Column(name = "type", nullable = false, length = 30)
     private String type;
 
@@ -45,6 +48,29 @@ public class ProductCondition {
 
     @Column(name = "payout_type", nullable = false, length = 30)
     private String payoutType;
+
+    @Column(name = "hard_requirement")
+    @Builder.Default
+    private Boolean hardRequirement = false;
+
+    @Column(name = "selectable")
+    @Builder.Default
+    private Boolean selectable = false;
+
+    @Column(name = "selection_group")
+    private String selectionGroup;
+
+    @Column(name = "tier_group")
+    private String tierGroup;
+
+    @Column(name = "exclusive_group")
+    private String exclusiveGroup;
+
+    @Column(name = "branch")
+    private String branch;
+
+    @Column(name = "parse_status", length = 30)
+    private String parseStatus;
 
     @Column(name = "source_text", nullable = false, columnDefinition = "TEXT")
     private String sourceText;

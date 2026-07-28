@@ -43,6 +43,12 @@ public class Product {
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified;
 
+    @Column(name = "selection_rule", length = 30)
+    private String selectionRule;
+
+    @Column(name = "max_select")
+    private Integer maxSelect;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ProductCondition> conditions = new ArrayList<>();
