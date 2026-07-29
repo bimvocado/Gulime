@@ -209,6 +209,8 @@ def build_product_row(matched: MatchedProduct) -> dict | None:
     if term_fields is None:
         return None
 
+    parsed = matched.parsed_entry.get("parsed") or {}
+    selection_rule = parsed.get("selection_rule") or {}
     return {
         "product_id": matched.product_id,
         "bank_name": matched.bank_name,
@@ -219,6 +221,8 @@ def build_product_row(matched: MatchedProduct) -> dict | None:
         "max_limit": term_fields.get("max_limit"),
         "period_months": term_fields["period_months"],
         "is_verified": False,
+        "selection_rule": "MAX_SELECT" if selection_rule.get("max_select") else None,
+        "max_select": selection_rule.get("max_select"),
     }
 
 
@@ -230,17 +234,28 @@ def build_condition_rows(product_id: str, condition: dict, selection_rule: dict 
         return None
 
     rows = []
-    for tier in tiers:
+    for tier_index, tier in enumerate(tiers):
+        selectable_value = condition.get("selectable")
+        selectable = bool(selectable_value)
         rows.append({
             "product_id": product_id,
             "period_months": condition.get("period_months"),
             "required_months": condition.get("required_months"),
             "selection_type": selection_type,
+            "condition_name": condition.get("condition_name"),
             "type": condition["type"],
             "resource": normalize_resource(condition.get("resource")),
             "threshold": tier.get("threshold"),
             "rate_bonus": normalize_rate_bonus(tier.get("rate_bonus")),
             "payout_type": condition.get("payout"),
+            "hard_requirement": bool(condition.get("hard_requirement", False)),
+            "selectable": selectable,
+            "selection_group": f"{product_id}_SELECTION" if selectable else None,
+            "tier_group": f"{product_id}_{condition.get('condition_name', 'CONDITION')}_TIER"
+                          if len(tiers) > 1 else None,
+            "exclusive_group": condition.get("exclusive_group"),
+            "branch": condition.get("branch"),
+            "parse_status": condition.get("parse_status"),
             "source_text": condition.get("source_text"),
         })
     return rows
@@ -285,10 +300,11 @@ def insert_product(cursor, product_row: dict) -> None:
         """
         INSERT INTO products
             (product_id, bank_name, product_name, product_type, base_rate, max_rate,
-             max_limit, period_months, is_verified)
+             max_limit, period_months, is_verified, selection_rule, max_select)
         VALUES
             (%(product_id)s, %(bank_name)s, %(product_name)s, %(product_type)s, %(base_rate)s,
-             %(max_rate)s, %(max_limit)s, %(period_months)s, %(is_verified)s)
+             %(max_rate)s, %(max_limit)s, %(period_months)s, %(is_verified)s,
+             %(selection_rule)s, %(max_select)s)
         """,
         product_row,
     )
@@ -298,11 +314,15 @@ def insert_condition(cursor, condition_row: dict) -> None:
     cursor.execute(
         """
         INSERT INTO product_conditions
-            (product_id, period_months, required_months, selection_type, type, resource,
-             threshold, rate_bonus, payout_type, source_text)
+            (product_id, period_months, required_months, selection_type, condition_name,
+             type, resource, threshold, rate_bonus, payout_type, hard_requirement,
+             selectable, selection_group, tier_group, exclusive_group, branch,
+             parse_status, source_text)
         VALUES
-            (%(product_id)s, %(period_months)s, %(required_months)s, %(selection_type)s, %(type)s,
-             %(resource)s, %(threshold)s, %(rate_bonus)s, %(payout_type)s, %(source_text)s)
+            (%(product_id)s, %(period_months)s, %(required_months)s, %(selection_type)s,
+             %(condition_name)s, %(type)s, %(resource)s, %(threshold)s, %(rate_bonus)s,
+             %(payout_type)s, %(hard_requirement)s, %(selectable)s, %(selection_group)s,
+             %(tier_group)s, %(exclusive_group)s, %(branch)s, %(parse_status)s, %(source_text)s)
         """,
         condition_row,
     )
