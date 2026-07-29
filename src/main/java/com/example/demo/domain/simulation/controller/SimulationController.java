@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+// 임시 비활성화 - 예린 확인 필요 (savings.api.SimulationController와 빈 충돌)
+// @RestController
 @RequestMapping("/api/v1/simulate")
 @RequiredArgsConstructor
 public class SimulationController {
