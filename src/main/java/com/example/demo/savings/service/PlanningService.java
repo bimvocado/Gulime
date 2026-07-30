@@ -21,32 +21,44 @@ public class PlanningService {
     }
 
     public OptionsResponse options(OptionsRequest request) {
+        // ProfileMapper를 통해 DTO -> 도메인 변환
+        var domainProfile = ProfileMapper.toDomain(request.profile());
+
+        // 🎯 유저가 선택한 목표 기간 (6, 12, 24, 36 등)
+        int targetMonths = domainProfile.targetMonths();
+
         long allocatable = Math.max(
                 0L,
-                request.profile().lumpSum() - request.profile().emergencyFund()
+                domainProfile.lumpSum() - domainProfile.emergencyFund()
         );
+
         java.util.List<AllocationSlot> slots = new java.util.ArrayList<>();
+
+        // 1. 목돈/예금 슬롯 (12개월 고정 -> targetMonths 반영)
         if (allocatable > 0L) {
             slots.add(new AllocationSlot(
                     AllocationType.LUMP_SUM,
                     allocatable,
-                    12
+                    targetMonths
             ));
         }
-        if (request.profile().monthlySaving() > 0L) {
+
+        // 2. 월 적금 슬롯 (12개월 고정 -> targetMonths 반영 및 총액 재계산)
+        if (domainProfile.monthlySaving() > 0L) {
             slots.add(new AllocationSlot(
                     AllocationType.MONTHLY_SAVING,
-                    request.profile().monthlySaving() * 12L,
-                    12
+                    domainProfile.monthlySaving() * (long) targetMonths,
+                    targetMonths
             ));
         }
+
         if (slots.isEmpty()) {
             throw new IllegalArgumentException("배분할 목돈 또는 월 저축 여력이 없습니다.");
         }
 
         return optimizer.optimize(
                 productCatalog.findAll(),
-                ProfileMapper.toDomain(request.profile()),
+                domainProfile,
                 request.riskTolerance(),
                 slots
         );

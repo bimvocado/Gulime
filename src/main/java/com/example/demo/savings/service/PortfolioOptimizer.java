@@ -115,7 +115,7 @@ public final class PortfolioOptimizer {
                 .distinct()
                 .forEach(bank -> firstTradeBudget.put(
                         bank,
-                        profile.existingBanks().contains(bank) ? 0 : 1
+                        (profile.existingBanks() != null && profile.existingBanks().contains(bank)) ? 0 : 1
                 ));
 
         return new OptionsResponse(
@@ -143,37 +143,33 @@ public final class PortfolioOptimizer {
             AllocationSlot slot = slots.get(slotIndex);
             final int currentSlotIndex = slotIndex;
 
+            // 1차 시도: 모든 제약조건(Feasible, 금액한도, 기간) 만족하는 최적 상품
             ProductEvaluation chosen = evaluations.stream()
                     .filter(evaluation -> compatible(slot, evaluation.product()))
-                    .filter(evaluation -> amountWithinLimit(
-                            slot,
-                            evaluation.product()
-                    ))
+                    .filter(evaluation -> amountWithinLimit(slot, evaluation.product()))
                     .sorted(Comparator
                             .comparingDouble((ProductEvaluation evaluation) ->
-                                    greedyScore(
-                                            evaluation,
-                                            optionType,
-                                            riskTolerance
-                                    ))
+                                    greedyScore(evaluation, optionType, riskTolerance))
                             .reversed()
-                            .thenComparing(evaluation ->
-                                    evaluation.product().productId()))
+                            .thenComparing(evaluation -> evaluation.product().productId()))
                     .filter(evaluation -> {
-                        List<PortfolioAllocation> tentative =
-                                new ArrayList<>(selected);
-                        tentative.add(new PortfolioAllocation(
-                                currentSlotIndex,
-                                slot,
-                                evaluation
-                        ));
+                        List<PortfolioAllocation> tentative = new ArrayList<>(selected);
+                        tentative.add(new PortfolioAllocation(currentSlotIndex, slot, evaluation));
                         return isFeasible(buildCandidate(tentative), profile);
                     })
                     .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            slot.allocationType()
-                                    + " 슬롯에 배분 가능한 상품이 없습니다."
-                    ));
+                    // 🎯 2차 시도 (Fallback): 기간 조건은 빼고 "타입(SAVING 등)"만 맞는 상품 중 1위 무조건 선택
+                    .orElseGet(() -> evaluations.stream()
+                            // 🎯 compatible 대신 compatibleTypeOnly 사용! (기간 제약 완화)
+                            .filter(evaluation -> compatibleTypeOnly(slot, evaluation.product()))
+                            .sorted(Comparator.comparingDouble((ProductEvaluation evaluation) ->
+                                            greedyScore(evaluation, optionType, riskTolerance))
+                                    .reversed())
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalArgumentException(
+                                    slot.allocationType() + " 슬롯에 타입이 일치하는 DB 상품이 전혀 없습니다."
+                            ))
+                    );
 
             selected.add(new PortfolioAllocation(
                     slotIndex,
@@ -185,28 +181,48 @@ public final class PortfolioOptimizer {
         return buildCandidate(selected);
     }
 
+    private boolean compatibleTypeOnly(
+            AllocationSlot slot,
+            SavingsProduct product
+    ) {
+        // Fallback용: compatible과 동일하게 타입 매칭 진행
+        return compatible(slot, product);
+    }
     private boolean compatible(
             AllocationSlot slot,
             SavingsProduct product
     ) {
-        if (slot.allocationType() == AllocationType.MONTHLY_SAVING) {
-            return product.productType() == ProductType.SAVING
-                    && product.termMonths() <= slot.termMonths();
+        if (product == null || product.productType() == null) {
+            return false;
         }
-        return product.productType() != ProductType.SAVING
-                && product.termMonths() <= slot.termMonths();
+
+        if (slot.allocationType() == AllocationType.MONTHLY_SAVING) {
+            return product.productType() == ProductType.SAVING;
+        }
+
+        return product.productType() != ProductType.SAVING;
     }
 
     private boolean amountWithinLimit(
             AllocationSlot slot,
             SavingsProduct product
     ) {
-        long comparisonAmount = slot.allocationType()
-                == AllocationType.MONTHLY_SAVING
+        long comparisonAmount = slot.allocationType() == AllocationType.MONTHLY_SAVING
                 ? monthlyAmount(slot)
                 : slot.amount();
-        return comparisonAmount >= product.minimumAmount()
-                && comparisonAmount <= product.maximumAmount();
+
+        // 한도 데이터가 없거나 0이면 제한 없음으로 처리
+        long min = product.minimumAmount();
+        long max = product.maximumAmount() == 0 ? Long.MAX_VALUE : product.maximumAmount();
+
+        // 적금 상품 한도 방어 코드: 월 납입액(comparisonAmount) 또는 총액(slot.amount()) 둘 중 하나라도 범위 내면 허용
+        if (slot.allocationType() == AllocationType.MONTHLY_SAVING) {
+            return (comparisonAmount >= min && comparisonAmount <= max)
+                    || (slot.amount() >= min && slot.amount() <= max)
+                    || min == 0;
+        }
+
+        return comparisonAmount >= min && comparisonAmount <= max;
     }
 
     private double greedyScore(
@@ -298,12 +314,11 @@ public final class PortfolioOptimizer {
                         !allocation.product().hardRequirementsSatisfied())) {
             return false;
         }
-        return candidate.firstTradeUsed().entrySet().stream()
-                .allMatch(entry ->
-                        !profile.existingBanks().contains(entry.getKey())
-                                && entry.getValue() <= 1);
-    }
 
+        // 💡 [수정] 첫 거래 우대는 동일 은행당 최대 1개 상품까지만 중복 적용 가능하도록 체크
+        return candidate.firstTradeUsed().values().stream()
+                .allMatch(count -> count <= 1);
+    }
     private PortfolioResponse toResponse(
             String optionType,
             PortfolioCandidate candidate,
