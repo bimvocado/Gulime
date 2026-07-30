@@ -13,9 +13,14 @@ canonical_bank_name()(별칭 매핑 + 법인격 표기 제거)으로 정규화�
 conditions 비교 방식:
 - 두 파일 모두 조건의 tiers 배열은 항상 원소 1개([{"threshold": ..., "rate_bonus": ...}])이므로
   tiers[0]만 비교한다.
-- 조건 개수가 다르면 그 자체를 별도로 기록하고, 필드 정확도는 두 리스트를 인덱스(등장 순서)로
-  맞춰 min(len(parsed), len(validation))개만 짝지어 비교한다. 정답지에는 있지만 파싱 결과에
-  짝이 없는 조건(누락)은 "조건 누락" 케이스로 별도 기록하며 필드 정확도 분모에는 넣지 않는다.
+- 정답지 조건 중 parse_status != COMPLETE(예: FAILED)인 것은 채점 대상에서 아예 제외한다
+  (excluded_conditions로 별도 집계). 원문에 개별 행동 근거가 없는 포괄 placeholder 조건이
+  여기 해당한다.
+- 조건 개수가 다르면 그 자체를 별도로 기록한다. 필드 정확도는 인덱스 순서가 아니라 내용 기반으로
+  짝을 지어 비교한다: 정답지 조건마다 (resource, type)이 같은 미사용 파싱 조건 중 threshold가
+  가장 가까운 것을(동률이면 condition_name 유사도가 높은 것을) 짝짓는다. 짝을 찾지 못한 정답지
+  조건은 "조건 누락"(missing_conditions)으로 기록하며 필드 정확도 분모에는 넣지 않는다. 반대로
+  끝까지 짝지어지지 않은 파싱 조건은 "조건 초과"(extra_conditions)로 별도 기록한다.
 
 측정 필드: type, threshold, resource, rate_bonus (오차 0.01 이내면 정답)
 
@@ -26,6 +31,7 @@ from __future__ import annotations
 
 import json
 import sys
+from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
@@ -50,8 +56,12 @@ def load_json(path: Path) -> Any:
         return json.load(f)
 
 
+def normalize_product_name(product_name: str | None) -> str:
+    return " ".join((product_name or "").split())
+
+
 def match_key(product_name: str | None, bank_name: str | None) -> tuple[str, str]:
-    return (product_name or "", canonical_bank_name(bank_name))
+    return (normalize_product_name(product_name), canonical_bank_name(bank_name))
 
 
 def index_parsed(entries: list[dict]) -> dict[tuple[str, str], dict]:
@@ -101,6 +111,45 @@ def compare_condition(parsed_cond: dict, val_cond: dict) -> dict[str, bool]:
     }
 
 
+def name_similarity(a: str | None, b: str | None) -> float:
+    return SequenceMatcher(None, a or "", b or "").ratio()
+
+
+def find_best_condition_match(
+    val_cond: dict, parsed_conditions: list[dict], used: set[int]
+) -> int | None:
+    """val_cond와 (resource, type)이 같은 미사용 parsed_conditions 중 최적 후보의 index를 찾는다.
+    후보가 여럿이면 threshold 차이가 작은 쪽, 동률이면 condition_name 유사도가 높은 쪽을 고른다."""
+    v_resource = val_cond.get("resource")
+    v_type = val_cond.get("type")
+    candidates = [
+        idx
+        for idx, pc in enumerate(parsed_conditions)
+        if idx not in used and pc.get("resource") == v_resource and pc.get("type") == v_type
+    ]
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0]
+
+    v_threshold = first_tier(val_cond).get("threshold")
+    v_name = val_cond.get("condition_name")
+
+    def threshold_diff(idx: int) -> float:
+        p_threshold = first_tier(parsed_conditions[idx]).get("threshold")
+        if v_threshold is None and p_threshold is None:
+            return 0.0
+        if v_threshold is None or p_threshold is None:
+            return float("inf")
+        return abs(v_threshold - p_threshold)
+
+    def name_score(idx: int) -> float:
+        return name_similarity(v_name, parsed_conditions[idx].get("condition_name"))
+
+    candidates.sort(key=lambda idx: (threshold_diff(idx), -name_score(idx)))
+    return candidates[0]
+
+
 def main() -> None:
     parsed_entries = load_json(PARSED_PATH)
     validation_entries = load_json(VALIDATION_PATH)
@@ -113,6 +162,8 @@ def main() -> None:
     condition_count_mismatches: list[dict] = []
     wrong_cases: list[dict] = []
     missing_conditions: list[dict] = []
+    extra_conditions: list[dict] = []
+    excluded_conditions: list[dict] = []
 
     for val_product in validation_entries:
         product_name = val_product.get("product_name")
@@ -124,8 +175,20 @@ def main() -> None:
             unmatched_products.append({"product_name": product_name, "bank_name": bank_name})
             continue
 
-        val_conditions = get_conditions(val_product)
+        val_conditions_all = get_conditions(val_product)
         parsed_conditions = get_conditions(parsed_product)
+
+        val_conditions = [c for c in val_conditions_all if c.get("parse_status") == "COMPLETE"]
+        for c in val_conditions_all:
+            if c.get("parse_status") != "COMPLETE":
+                excluded_conditions.append(
+                    {
+                        "product_name": product_name,
+                        "bank_name": bank_name,
+                        "condition_name": c.get("condition_name"),
+                        "parse_status": c.get("parse_status"),
+                    }
+                )
 
         if len(val_conditions) != len(parsed_conditions):
             condition_count_mismatches.append(
@@ -137,10 +200,21 @@ def main() -> None:
                 }
             )
 
-        paired = min(len(val_conditions), len(parsed_conditions))
-        for i in range(paired):
-            val_cond = val_conditions[i]
-            parsed_cond = parsed_conditions[i]
+        used_parsed_indices: set[int] = set()
+        for i, val_cond in enumerate(val_conditions):
+            match_idx = find_best_condition_match(val_cond, parsed_conditions, used_parsed_indices)
+            if match_idx is None:
+                missing_conditions.append(
+                    {
+                        "product_name": product_name,
+                        "bank_name": bank_name,
+                        "condition_index": i,
+                        "condition_name": val_cond.get("condition_name"),
+                    }
+                )
+                continue
+            used_parsed_indices.add(match_idx)
+            parsed_cond = parsed_conditions[match_idx]
             result = compare_condition(parsed_cond, val_cond)
             v_tier = first_tier(val_cond)
             p_tier = first_tier(parsed_cond)
@@ -162,6 +236,7 @@ def main() -> None:
                             "product_name": product_name,
                             "bank_name": bank_name,
                             "condition_index": i,
+                            "matched_parsed_index": match_idx,
                             "condition_name": val_cond.get("condition_name"),
                             "field": field,
                             "expected": expected,
@@ -169,13 +244,14 @@ def main() -> None:
                         }
                     )
 
-        for i in range(paired, len(val_conditions)):
-            missing_conditions.append(
+        extra_indices = [idx for idx in range(len(parsed_conditions)) if idx not in used_parsed_indices]
+        for idx in extra_indices:
+            extra_conditions.append(
                 {
                     "product_name": product_name,
                     "bank_name": bank_name,
-                    "condition_index": i,
-                    "condition_name": val_conditions[i].get("condition_name"),
+                    "parsed_index": idx,
+                    "condition_name": parsed_conditions[idx].get("condition_name"),
                 }
             )
 
@@ -193,6 +269,8 @@ def main() -> None:
             "unmatched_products_count": len(unmatched_products),
             "condition_count_mismatches_count": len(condition_count_mismatches),
             "missing_conditions_count": len(missing_conditions),
+            "extra_conditions_count": len(extra_conditions),
+            "excluded_conditions_count": len(excluded_conditions),
             "overall_accuracy": overall_accuracy,
             "field_accuracy": field_accuracy,
             "field_totals": field_total,
@@ -200,6 +278,8 @@ def main() -> None:
         "unmatched_products": unmatched_products,
         "condition_count_mismatches": condition_count_mismatches,
         "missing_conditions": missing_conditions,
+        "extra_conditions": extra_conditions,
+        "excluded_conditions": excluded_conditions,
         "wrong_cases": wrong_cases,
     }
 
@@ -217,6 +297,8 @@ def main() -> None:
             print(f"  - {u['product_name']} ({u['bank_name']})")
     print(f"조건 개수 불일치: {len(condition_count_mismatches)}개 상품")
     print(f"누락된 조건(정답지엔 있으나 파싱 결과에 짝이 없음): {len(missing_conditions)}개")
+    print(f"초과된 조건(파싱엔 있으나 정답지엔 짝이 없음): {len(extra_conditions)}개")
+    print(f"채점 제외 조건(parse_status != COMPLETE): {len(excluded_conditions)}개")
     print()
     print(f"전체 정확도: {overall_accuracy:.4f} ({total_correct}/{total_count})" if total_count else "전체 정확도: N/A")
     print("항목별 정확도:")
@@ -232,6 +314,7 @@ def main() -> None:
         print(
             f"  - [{w['product_name']} / {w['bank_name']}] "
             f"condition[{w['condition_index']}]({w['condition_name']}) "
+            f"<-> parsed[{w['matched_parsed_index']}] "
             f"{w['field']}: 정답={w['expected']!r} vs 파싱={w['actual']!r}"
         )
 

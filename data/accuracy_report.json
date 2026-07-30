@@ -3,20 +3,22 @@
     "validation_products": 42,
     "matched_products": 41,
     "unmatched_products_count": 1,
-    "condition_count_mismatches_count": 30,
-    "missing_conditions_count": 1,
-    "overall_accuracy": 0.42857142857142855,
+    "condition_count_mismatches_count": 13,
+    "missing_conditions_count": 62,
+    "extra_conditions_count": 82,
+    "excluded_conditions_count": 2,
+    "overall_accuracy": 0.9207317073170732,
     "field_accuracy": {
-      "type": 0.04081632653061224,
-      "threshold": 0.7142857142857143,
-      "resource": 0.6530612244897959,
-      "rate_bonus": 0.30612244897959184
+      "type": 1.0,
+      "threshold": 0.7804878048780488,
+      "resource": 1.0,
+      "rate_bonus": 0.9024390243902439
     },
     "field_totals": {
-      "type": 49,
-      "threshold": 49,
-      "resource": 49,
-      "rate_bonus": 49
+      "type": 41,
+      "threshold": 41,
+      "resource": 41,
+      "rate_bonus": 41
     }
   },
   "unmatched_products": [
@@ -26,6 +28,12 @@
     }
   ],
   "condition_count_mismatches": [
+    {
+      "product_name": "e-그린세이브예금",
+      "bank_name": "SC제일은행",
+      "validation_count": 4,
+      "parsed_count": 3
+    },
     {
       "product_name": "스마트모아Dream정기예금",
       "bank_name": "광주은행",
@@ -39,358 +47,964 @@
       "parsed_count": 2
     },
     {
-      "product_name": "iM함께예금",
-      "bank_name": "아이엠뱅크",
-      "validation_count": 1,
-      "parsed_count": 5
-    },
-    {
       "product_name": "LIVE정기예금",
       "bank_name": "부산은행",
       "validation_count": 1,
       "parsed_count": 3
     },
     {
-      "product_name": "미즈월복리정기예금",
-      "bank_name": "광주은행",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "굿스타트예금",
-      "bank_name": "광주은행",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "제주Dream\n정기예금\n(개인/만기\n지급식)",
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
       "bank_name": "제주은행",
       "validation_count": 1,
       "parsed_count": 9
     },
     {
-      "product_name": "J정기예금\n(만기지급식)",
+      "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
       "bank_name": "제주은행",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "스마일드림 \n정기예금\n(개인/선이자\n지급식)",
-      "bank_name": "제주은행",
-      "validation_count": 1,
+      "validation_count": 2,
       "parsed_count": 3
     },
     {
-      "product_name": "JB 123 정기예금\n (만기일시지급식)",
+      "product_name": "JB 123 정기예금 (만기일시지급식)",
       "bank_name": "전북은행",
-      "validation_count": 1,
+      "validation_count": 3,
       "parsed_count": 2
-    },
-    {
-      "product_name": "BNK더조은정기예금",
-      "bank_name": "경남은행",
-      "validation_count": 1,
-      "parsed_count": 5
-    },
-    {
-      "product_name": "The든든예금(시즌2)",
-      "bank_name": "경남은행",
-      "validation_count": 1,
-      "parsed_count": 3
-    },
-    {
-      "product_name": "The파트너예금",
-      "bank_name": "경남은행",
-      "validation_count": 1,
-      "parsed_count": 3
     },
     {
       "product_name": "IBK평생한가족통장(실세금리정기예금)",
       "bank_name": "중소기업은행",
-      "validation_count": 1,
+      "validation_count": 4,
       "parsed_count": 6
     },
     {
-      "product_name": "신한My플러스 정기예금",
-      "bank_name": "신한은행",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "NH왈츠회전예금 II",
-      "bank_name": "농협은행주식회사",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "NH내가Green초록세상예금",
-      "bank_name": "농협은행주식회사",
-      "validation_count": 1,
-      "parsed_count": 4
-    },
-    {
-      "product_name": "NH고향사랑기부예금",
-      "bank_name": "농협은행주식회사",
-      "validation_count": 1,
-      "parsed_count": 4
-    },
-    {
-      "product_name": "Sh해양플라스틱Zero!예금\n(만기일시지급식)",
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
       "bank_name": "수협은행",
-      "validation_count": 1,
+      "validation_count": 4,
       "parsed_count": 5
     },
     {
       "product_name": "우리SUPER주거래적금",
       "bank_name": "우리은행",
-      "validation_count": 1,
-      "parsed_count": 5
-    },
-    {
-      "product_name": "WON적금",
-      "bank_name": "우리은행",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "iM함께적금",
-      "bank_name": "아이엠뱅크",
-      "validation_count": 1,
+      "validation_count": 4,
       "parsed_count": 5
     },
     {
       "product_name": "저탄소 실천 적금",
       "bank_name": "부산은행",
-      "validation_count": 1,
+      "validation_count": 0,
       "parsed_count": 2
     },
     {
       "product_name": "Only One 주거래 우대적금",
       "bank_name": "부산은행",
-      "validation_count": 1,
+      "validation_count": 0,
       "parsed_count": 2
-    },
-    {
-      "product_name": "해피라이프_여행스케치적금V",
-      "bank_name": "광주은행",
-      "validation_count": 1,
-      "parsed_count": 4
-    },
-    {
-      "product_name": "여행스케치_남도투어적금",
-      "bank_name": "광주은행",
-      "validation_count": 1,
-      "parsed_count": 3
-    },
-    {
-      "product_name": "VIP플러스적금",
-      "bank_name": "광주은행",
-      "validation_count": 1,
-      "parsed_count": 2
-    },
-    {
-      "product_name": "jbank 저금통적금",
-      "bank_name": "제주은행",
-      "validation_count": 1,
-      "parsed_count": 4
-    },
-    {
-      "product_name": "MZ 플랜적금",
-      "bank_name": "제주은행",
-      "validation_count": 1,
-      "parsed_count": 4
     },
     {
       "product_name": "사이버우대매일부금",
       "bank_name": "제주은행",
-      "validation_count": 1,
+      "validation_count": 3,
       "parsed_count": 6
     }
   ],
   "missing_conditions": [
     {
+      "product_name": "e-그린세이브예금",
+      "bank_name": "SC제일은행",
+      "condition_index": 3,
+      "condition_name": "현대카드 M포인트 전환 서비스"
+    },
+    {
+      "product_name": "스마트모아Dream정기예금",
+      "bank_name": "광주은행",
+      "condition_index": 0,
+      "condition_name": "1천만원 이상 온라인 가입 우대"
+    },
+    {
+      "product_name": "더(The) 레벨업 정기예금",
+      "bank_name": "부산은행",
+      "condition_index": 0,
+      "condition_name": "금융정보 및 혜택알림(PUSH) 동의 우대"
+    },
+    {
+      "product_name": "더(The) 레벨업 정기예금",
+      "bank_name": "부산은행",
+      "condition_index": 1,
+      "condition_name": "비대면 정기예금 재예치 우대"
+    },
+    {
+      "product_name": "더(The) 특판 정기예금",
+      "bank_name": "부산은행",
+      "condition_index": 0,
+      "condition_name": "금융정보 및 혜택알림(Push) 동의 우대"
+    },
+    {
+      "product_name": "Sh첫만남우대예금",
+      "bank_name": "SH수협은행",
+      "condition_index": 1,
+      "condition_name": "상품서비스 안내 전체 동의 (마케팅 동의)"
+    },
+    {
+      "product_name": "Sh첫만남우대예금",
+      "bank_name": "SH수협은행",
+      "condition_index": 2,
+      "condition_name": "스마트폰 뱅킹 상품 알리기를 통한 추천"
+    },
+    {
+      "product_name": "마이키즈 적금",
+      "bank_name": "케이뱅크",
+      "condition_index": 0,
+      "condition_name": "만 17세 미만 실명 개인 자녀 및 마이키즈 서비스 법정대리인 연결"
+    },
+    {
+      "product_name": "마이키즈 적금",
+      "bank_name": "케이뱅크",
+      "condition_index": 1,
+      "condition_name": "전체 계약 월 수의 2/3 이상 개월 수 동안 적금 납입"
+    },
+    {
       "product_name": "마이키즈 적금",
       "bank_name": "케이뱅크",
       "condition_index": 2,
       "condition_name": "마이키즈 출시 기념 이벤트 금리우대쿠폰 적용"
+    },
+    {
+      "product_name": "iM함께예금",
+      "bank_name": "아이엠뱅크",
+      "condition_index": 0,
+      "condition_name": "전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유"
+    },
+    {
+      "product_name": "iM함께예금",
+      "bank_name": "아이엠뱅크",
+      "condition_index": 4,
+      "condition_name": "인터넷·모바일뱅킹 가입"
+    },
+    {
+      "product_name": "굿스타트예금",
+      "bank_name": "광주은행",
+      "condition_index": 0,
+      "condition_name": "최근 1년 정기예금 첫거래"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "condition_index": 0,
+      "condition_name": "제주은행 우대금리 조건"
+    },
+    {
+      "product_name": "J정기예금 (만기지급식)",
+      "bank_name": "제주은행",
+      "condition_index": 1,
+      "condition_name": "계약기간 절반 이상 매월 Jbank 로그인"
+    },
+    {
+      "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
+      "bank_name": "제주은행",
+      "condition_index": 0,
+      "condition_name": "김만덕나눔적금 보유 또는 만기 해지"
+    },
+    {
+      "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
+      "bank_name": "제주은행",
+      "condition_index": 1,
+      "condition_name": "탐나는전 체크카드 보유"
+    },
+    {
+      "product_name": "JB 123 정기예금 (만기일시지급식)",
+      "bank_name": "전북은행",
+      "condition_index": 0,
+      "condition_name": "자동재예치 회차 우대"
+    },
+    {
+      "product_name": "JB 123 정기예금 (만기일시지급식)",
+      "bank_name": "전북은행",
+      "condition_index": 1,
+      "condition_name": "최근 6개월 정기예금 미보유"
+    },
+    {
+      "product_name": "JB 123 정기예금 (만기일시지급식)",
+      "bank_name": "전북은행",
+      "condition_index": 2,
+      "condition_name": "개인신용정보 수집·이용 및 상품서비스 안내수단 전체 동의"
+    },
+    {
+      "product_name": "BNK더조은정기예금",
+      "bank_name": "경남은행",
+      "condition_index": 1,
+      "condition_name": "금리우대쿠폰 등록"
+    },
+    {
+      "product_name": "BNK더조은정기예금",
+      "bank_name": "경남은행",
+      "condition_index": 2,
+      "condition_name": "경남은행 오픈뱅킹 가입 및 유지"
+    },
+    {
+      "product_name": "BNK더조은정기예금",
+      "bank_name": "경남은행",
+      "condition_index": 3,
+      "condition_name": "자동재예치 가입"
+    },
+    {
+      "product_name": "The든든예금(시즌2)",
+      "bank_name": "경남은행",
+      "condition_index": 1,
+      "condition_name": "최근 12개월 신규·해지 이력 없는 신규고객"
+    },
+    {
+      "product_name": "The파트너예금",
+      "bank_name": "경남은행",
+      "condition_index": 0,
+      "condition_name": "거래기간 5년 이상 및 마케팅 동의"
+    },
+    {
+      "product_name": "The파트너예금",
+      "bank_name": "경남은행",
+      "condition_index": 1,
+      "condition_name": "급여·연금·가맹점대금 입금"
+    },
+    {
+      "product_name": "IBK평생한가족통장(실세금리정기예금)",
+      "bank_name": "중소기업은행",
+      "condition_index": 0,
+      "condition_name": "최초 신규 고객"
+    },
+    {
+      "product_name": "IBK평생한가족통장(실세금리정기예금)",
+      "bank_name": "중소기업은행",
+      "condition_index": 2,
+      "condition_name": "장기거래 고객"
+    },
+    {
+      "product_name": "신한My플러스 정기예금",
+      "bank_name": "신한은행",
+      "condition_index": 0,
+      "condition_name": "정기예금 미보유"
+    },
+    {
+      "product_name": "신한My플러스 정기예금",
+      "bank_name": "신한은행",
+      "condition_index": 1,
+      "condition_name": "소득 이체"
+    },
+    {
+      "product_name": "NH왈츠회전예금 II",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 1,
+      "condition_name": "4회전부터 트리플 회전 우대"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 0,
+      "condition_name": "온실가스 줄이기 실천서약 동의"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 1,
+      "condition_name": "통장 미발급"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 2,
+      "condition_name": "손하나로인증 서비스 등록"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 3,
+      "condition_name": "NH내가Green초록세상적금 동시 보유"
+    },
+    {
+      "product_name": "NH고향사랑기부예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 0,
+      "condition_name": "고향사랑기부금 납부"
+    },
+    {
+      "product_name": "NH고향사랑기부예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 1,
+      "condition_name": "만 65세 이상 고령자 우대"
+    },
+    {
+      "product_name": "NH고향사랑기부예금",
+      "bank_name": "농협은행주식회사",
+      "condition_index": 2,
+      "condition_name": "만 19~34세 MZ고객 우대"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "condition_index": 0,
+      "condition_name": "해양플라스틱 감축 서약"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "condition_index": 1,
+      "condition_name": "봉사활동 또는 상품 홍보"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "condition_index": 2,
+      "condition_name": "입출금통장 최초 신규"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "condition_index": 3,
+      "condition_name": "자동이체 출금실적"
+    },
+    {
+      "product_name": "카카오뱅크 정기예금",
+      "bank_name": "주식회사 카카오뱅크",
+      "condition_index": 0,
+      "condition_name": "주식회사 카카오뱅크 우대금리 조건"
+    },
+    {
+      "product_name": "우리SUPER주거래적금",
+      "bank_name": "우리은행",
+      "condition_index": 1,
+      "condition_name": "공과금 자동이체 출금"
+    },
+    {
+      "product_name": "WON적금",
+      "bank_name": "우리은행",
+      "condition_index": 0,
+      "condition_name": "우리꿈통장·WON통장에 연결 가입"
+    },
+    {
+      "product_name": "WON적금",
+      "bank_name": "우리은행",
+      "condition_index": 1,
+      "condition_name": "오픈뱅킹에 타행계좌 등록"
+    },
+    {
+      "product_name": "iM함께적금",
+      "bank_name": "아이엠뱅크",
+      "condition_index": 0,
+      "condition_name": "전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유"
+    },
+    {
+      "product_name": "iM함께적금",
+      "bank_name": "아이엠뱅크",
+      "condition_index": 4,
+      "condition_name": "인터넷·모바일뱅킹 가입"
+    },
+    {
+      "product_name": "펫 적금",
+      "bank_name": "부산은행",
+      "condition_index": 0,
+      "condition_name": "부산은행 우대금리 조건"
+    },
+    {
+      "product_name": "BNK내맘대로 적금",
+      "bank_name": "부산은행",
+      "condition_index": 0,
+      "condition_name": "부산은행 우대금리 조건"
+    },
+    {
+      "product_name": "부산이라 좋다 Big적금",
+      "bank_name": "부산은행",
+      "condition_index": 0,
+      "condition_name": "부산은행 우대금리 조건"
+    },
+    {
+      "product_name": "해피라이프_여행스케치적금V",
+      "bank_name": "광주은행",
+      "condition_index": 0,
+      "condition_name": "여행스케치외화적금V 동일자 가입"
+    },
+    {
+      "product_name": "여행스케치_남도투어적금",
+      "bank_name": "광주은행",
+      "condition_index": 0,
+      "condition_name": "전라남도 관광지 방문 인증"
+    },
+    {
+      "product_name": "VIP플러스적금",
+      "bank_name": "광주은행",
+      "condition_index": 0,
+      "condition_name": "VIP 고객 선정"
+    },
+    {
+      "product_name": "VIP플러스적금",
+      "bank_name": "광주은행",
+      "condition_index": 1,
+      "condition_name": "정기예금 500만원 이상 가입 및 유지"
+    },
+    {
+      "product_name": "jbank 저금통적금",
+      "bank_name": "제주은행",
+      "condition_index": 1,
+      "condition_name": "첫거래 또는 상품 1개월 내 재가입"
+    },
+    {
+      "product_name": "jbank 저금통적금",
+      "bank_name": "제주은행",
+      "condition_index": 3,
+      "condition_name": "추천인 우대"
+    },
+    {
+      "product_name": "MZ 플랜적금",
+      "bank_name": "제주은행",
+      "condition_index": 0,
+      "condition_name": "매월 1회 이상 지속 납입"
+    },
+    {
+      "product_name": "MZ 플랜적금",
+      "bank_name": "제주은행",
+      "condition_index": 1,
+      "condition_name": "목표금액 달성"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "condition_index": 0,
+      "condition_name": "비대면 채널 신규"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "condition_index": 1,
+      "condition_name": "탐나는 J 직장인·주거래통장 가입 및 기본요건 충족"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "condition_index": 2,
+      "condition_name": "달리자 파킹통장 가입"
+    }
+  ],
+  "extra_conditions": [
+    {
+      "product_name": "스마트모아Dream정기예금",
+      "bank_name": "광주은행",
+      "parsed_index": 0,
+      "condition_name": "1년미만, 1천만원이상"
+    },
+    {
+      "product_name": "스마트모아Dream정기예금",
+      "bank_name": "광주은행",
+      "parsed_index": 1,
+      "condition_name": "1년이상, 1천만원이상"
+    },
+    {
+      "product_name": "더(The) 레벨업 정기예금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "모바일뱅킹 금융정보 및 혜택알림 동의 우대이율"
+    },
+    {
+      "product_name": "더(The) 레벨업 정기예금",
+      "bank_name": "부산은행",
+      "parsed_index": 1,
+      "condition_name": null
+    },
+    {
+      "product_name": "더(The) 특판 정기예금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "모바일뱅킹 금융정보 및 혜택알림 동의 우대이율"
+    },
+    {
+      "product_name": "Sh첫만남우대예금",
+      "bank_name": "SH수협은행",
+      "parsed_index": 1,
+      "condition_name": "마케팅전체동의"
+    },
+    {
+      "product_name": "Sh첫만남우대예금",
+      "bank_name": "SH수협은행",
+      "parsed_index": 2,
+      "condition_name": "스마트폰뱅킹의 상품알리기"
+    },
+    {
+      "product_name": "마이키즈 적금",
+      "bank_name": "케이뱅크",
+      "parsed_index": 0,
+      "condition_name": "입금실적에 따라 우대금리 적용"
+    },
+    {
+      "product_name": "마이키즈 적금",
+      "bank_name": "케이뱅크",
+      "parsed_index": 1,
+      "condition_name": "금리쿠폰을 입력시 우대금리 적용"
+    },
+    {
+      "product_name": "iM함께예금",
+      "bank_name": "아이엠뱅크",
+      "parsed_index": 0,
+      "condition_name": "전월 총수신 평잔 30만원 이상 또는 상품 가입 전 첫만남플러스통장 보유"
+    },
+    {
+      "product_name": "iM함께예금",
+      "bank_name": "아이엠뱅크",
+      "parsed_index": 3,
+      "condition_name": "당행 오픈뱅킹서비스에 다른 은행 계좌 등록"
+    },
+    {
+      "product_name": "LIVE정기예금",
+      "bank_name": "부산은행",
+      "parsed_index": 1,
+      "condition_name": "6~11개월 특판 우대이율"
+    },
+    {
+      "product_name": "LIVE정기예금",
+      "bank_name": "부산은행",
+      "parsed_index": 2,
+      "condition_name": "12개월 특판 우대이율"
+    },
+    {
+      "product_name": "굿스타트예금",
+      "bank_name": "광주은행",
+      "parsed_index": 0,
+      "condition_name": "첫예금거래"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 0,
+      "condition_name": "급여이체"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 1,
+      "condition_name": "적립식예금 잔액 10만원 이상 보유"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 2,
+      "condition_name": "탑스, 주거래 고객"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 3,
+      "condition_name": "결제계좌(가맹점) 전월 입금액 10만원 이상"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 4,
+      "condition_name": "비과세종합저축 대상 고객"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 5,
+      "condition_name": "다자녀(3인이상 자녀)가정"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 6,
+      "condition_name": "탐나는 J연금통장 가입고객"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 7,
+      "condition_name": "국민연금안심통장 가입고객"
+    },
+    {
+      "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 8,
+      "condition_name": "공무원연금안심통장 가입고객"
+    },
+    {
+      "product_name": "J정기예금 (만기지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 1,
+      "condition_name": "신규일로부터 만기달 제외한 계약기간의 1/2이상 매월 Jbank로그인 시 0.2%제공(만기시제공)"
+    },
+    {
+      "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 0,
+      "condition_name": "김만덕나눔적금 보유 또는 김만적 나눔적금 만기 해지고객"
+    },
+    {
+      "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 1,
+      "condition_name": "탐나는전 체크카드 보유고객"
+    },
+    {
+      "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
+      "bank_name": "제주은행",
+      "parsed_index": 2,
+      "condition_name": "최고0.3% 추가우대"
+    },
+    {
+      "product_name": "JB 123 정기예금 (만기일시지급식)",
+      "bank_name": "전북은행",
+      "parsed_index": 0,
+      "condition_name": "자동재예치 우대이율"
+    },
+    {
+      "product_name": "JB 123 정기예금 (만기일시지급식)",
+      "bank_name": "전북은행",
+      "parsed_index": 1,
+      "condition_name": "이벤트우대이율"
+    },
+    {
+      "product_name": "BNK더조은정기예금",
+      "bank_name": "경남은행",
+      "parsed_index": 1,
+      "condition_name": "신규시 금리우대쿠폰을 등록한 경우"
+    },
+    {
+      "product_name": "BNK더조은정기예금",
+      "bank_name": "경남은행",
+      "parsed_index": 2,
+      "condition_name": "경남은행 오픈뱅킹 서비스를 가입한 경우"
+    },
+    {
+      "product_name": "BNK더조은정기예금",
+      "bank_name": "경남은행",
+      "parsed_index": 3,
+      "condition_name": "자동재예치를 통해 가입한 경우"
+    },
+    {
+      "product_name": "The든든예금(시즌2)",
+      "bank_name": "경남은행",
+      "parsed_index": 1,
+      "condition_name": "신규고객 우대(최근 12개월 신규이력·해지이력 미보유)"
+    },
+    {
+      "product_name": "The파트너예금",
+      "bank_name": "경남은행",
+      "parsed_index": 0,
+      "condition_name": "경남은행 거래기간 5년이상 + 마케팅동의 고객"
+    },
+    {
+      "product_name": "The파트너예금",
+      "bank_name": "경남은행",
+      "parsed_index": 1,
+      "condition_name": "급여, 연금, 가맹점대금 입금 시"
+    },
+    {
+      "product_name": "IBK평생한가족통장(실세금리정기예금)",
+      "bank_name": "중소기업은행",
+      "parsed_index": 0,
+      "condition_name": "최고 연 0.20%p"
+    },
+    {
+      "product_name": "IBK평생한가족통장(실세금리정기예금)",
+      "bank_name": "중소기업은행",
+      "parsed_index": 1,
+      "condition_name": "고객별 우대 : 최고 연 0.05%p"
+    },
+    {
+      "product_name": "IBK평생한가족통장(실세금리정기예금)",
+      "bank_name": "중소기업은행",
+      "parsed_index": 2,
+      "condition_name": "1. 최초신규고객 : 연 0.05%p"
+    },
+    {
+      "product_name": "IBK평생한가족통장(실세금리정기예금)",
+      "bank_name": "중소기업은행",
+      "parsed_index": 5,
+      "condition_name": "주거래우대 : 연 0.15%p"
+    },
+    {
+      "product_name": "신한My플러스 정기예금",
+      "bank_name": "신한은행",
+      "parsed_index": 0,
+      "condition_name": "정기예금 미보유"
+    },
+    {
+      "product_name": "신한My플러스 정기예금",
+      "bank_name": "신한은행",
+      "parsed_index": 1,
+      "condition_name": "소득이체"
+    },
+    {
+      "product_name": "NH왈츠회전예금 II",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 1,
+      "condition_name": "트리플 회전 우대이율"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 0,
+      "condition_name": "온실가스 줄이기 실천서약서 동의"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 1,
+      "condition_name": "통장미발급"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 2,
+      "condition_name": "손하나로인증 서비스 등록"
+    },
+    {
+      "product_name": "NH내가Green초록세상예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 3,
+      "condition_name": "NH내가Green초록세상적금 동시 보유"
+    },
+    {
+      "product_name": "NH고향사랑기부예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 0,
+      "condition_name": "고향사랑기부금 납부고객 우대"
+    },
+    {
+      "product_name": "NH고향사랑기부예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 1,
+      "condition_name": "만65세 이상 고령자 우대"
+    },
+    {
+      "product_name": "NH고향사랑기부예금",
+      "bank_name": "농협은행주식회사",
+      "parsed_index": 2,
+      "condition_name": "만 19~34세 MZ고객 우대"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "parsed_index": 0,
+      "condition_name": "해양플라스틱감축서약"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "parsed_index": 1,
+      "condition_name": "봉사활동 또는 상품홍보"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "parsed_index": 2,
+      "condition_name": "입출금통장 최초신규"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "parsed_index": 3,
+      "condition_name": "자동이체 출금실적"
+    },
+    {
+      "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
+      "bank_name": "수협은행",
+      "parsed_index": 4,
+      "condition_name": "수협신용카드 / 당행 펀드 또는 적금 / 수협체크카드"
+    },
+    {
+      "product_name": "카카오뱅크 정기예금",
+      "bank_name": "주식회사 카카오뱅크",
+      "parsed_index": 0,
+      "condition_name": "복잡한 우대조건 없이 가입가능한 정기예금"
+    },
+    {
+      "product_name": "우리SUPER주거래적금",
+      "bank_name": "우리은행",
+      "parsed_index": 1,
+      "condition_name": "공과금 이체"
+    },
+    {
+      "product_name": "우리SUPER주거래적금",
+      "bank_name": "우리은행",
+      "parsed_index": 4,
+      "condition_name": "금리우대쿠폰"
+    },
+    {
+      "product_name": "WON적금",
+      "bank_name": "우리은행",
+      "parsed_index": 0,
+      "condition_name": "가. 이 적금을 우리꿈통장, WON통장에 연결하여 가입하는 경우"
+    },
+    {
+      "product_name": "WON적금",
+      "bank_name": "우리은행",
+      "parsed_index": 1,
+      "condition_name": "나. 우리 오픈뱅킹 서비스에 타행계좌가 등록되어 있는 경우"
+    },
+    {
+      "product_name": "iM함께적금",
+      "bank_name": "아이엠뱅크",
+      "parsed_index": 0,
+      "condition_name": "전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유"
+    },
+    {
+      "product_name": "iM함께적금",
+      "bank_name": "아이엠뱅크",
+      "parsed_index": 3,
+      "condition_name": "당행 오픈뱅킹서비스에 다른 은행 계좌 등록"
+    },
+    {
+      "product_name": "펫 적금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "우대이율"
+    },
+    {
+      "product_name": "저탄소 실천 적금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "개인형 우대이율"
+    },
+    {
+      "product_name": "저탄소 실천 적금",
+      "bank_name": "부산은행",
+      "parsed_index": 1,
+      "condition_name": "기업형(개인사업자 및 법인)우대이율"
+    },
+    {
+      "product_name": "BNK내맘대로 적금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "신규시 우대이율 0.05% 및 해지시 우대이율 최대 0.15%"
+    },
+    {
+      "product_name": "부산이라 좋다 Big적금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "우대이율"
+    },
+    {
+      "product_name": "Only One 주거래 우대적금",
+      "bank_name": "부산은행",
+      "parsed_index": 0,
+      "condition_name": "공통 우대이율 최대 2%"
+    },
+    {
+      "product_name": "Only One 주거래 우대적금",
+      "bank_name": "부산은행",
+      "parsed_index": 1,
+      "condition_name": "가입자격별 우대이율 최대 0.5%"
+    },
+    {
+      "product_name": "해피라이프_여행스케치적금V",
+      "bank_name": "광주은행",
+      "parsed_index": 0,
+      "condition_name": "해피라이프_여행스케치외화적금V 동일자가입"
+    },
+    {
+      "product_name": "여행스케치_남도투어적금",
+      "bank_name": "광주은행",
+      "parsed_index": 0,
+      "condition_name": "예금가입일~만기일전일까지 당행이선정한 전라남도 관광지 방문 인증시"
+    },
+    {
+      "product_name": "VIP플러스적금",
+      "bank_name": "광주은행",
+      "parsed_index": 0,
+      "condition_name": "VIP고객이거나 가입일 이후부터 만기일전일까지 VIP고객에 선정된 경험이 있는 경우"
+    },
+    {
+      "product_name": "VIP플러스적금",
+      "bank_name": "광주은행",
+      "parsed_index": 1,
+      "condition_name": "정기예금 500만원이상(만기 1년이상) 가입하고 만기일 전일까지 유지한 경우"
+    },
+    {
+      "product_name": "jbank 저금통적금",
+      "bank_name": "제주은행",
+      "parsed_index": 1,
+      "condition_name": "첫거래고객 or JBANK저금통적금 1개월 내 재신규"
+    },
+    {
+      "product_name": "jbank 저금통적금",
+      "bank_name": "제주은행",
+      "parsed_index": 3,
+      "condition_name": "추천인 우대금리"
+    },
+    {
+      "product_name": "MZ 플랜적금",
+      "bank_name": "제주은행",
+      "parsed_index": 0,
+      "condition_name": "매월 1회이상 지속적 납입시"
+    },
+    {
+      "product_name": "MZ 플랜적금",
+      "bank_name": "제주은행",
+      "parsed_index": 1,
+      "condition_name": "목표 금액 달성"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "parsed_index": 0,
+      "condition_name": "최고 0.4%p 추가 우대금리 제공"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "parsed_index": 1,
+      "condition_name": "비대면채널 신규시 0.1%p"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "parsed_index": 2,
+      "condition_name": "탐나는 J 직장인통장"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "parsed_index": 3,
+      "condition_name": "탐나는 J 주거래통장"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "parsed_index": 4,
+      "condition_name": "달리자 파킹통장 가입 고객이 이 상품 가입시 0.3%p"
+    },
+    {
+      "product_name": "사이버우대매일부금",
+      "bank_name": "제주은행",
+      "parsed_index": 5,
+      "condition_name": "가입고객이 기본우대 요건 충족 후 이 상품 가입시 0.1%p"
+    }
+  ],
+  "excluded_conditions": [
+    {
+      "product_name": "저탄소 실천 적금",
+      "bank_name": "부산은행",
+      "condition_name": "부산은행 우대금리 조건",
+      "parse_status": "FAILED"
+    },
+    {
+      "product_name": "Only One 주거래 우대적금",
+      "bank_name": "부산은행",
+      "condition_name": "부산은행 우대금리 조건",
+      "parse_status": "FAILED"
     }
   ],
   "wrong_cases": [
     {
       "product_name": "e-그린세이브예금",
       "bank_name": "SC제일은행",
-      "condition_index": 0,
-      "condition_name": "은행거래실적 우대이율",
-      "field": "type",
-      "expected": "PRODUCT_HOLDING",
-      "actual": "FIRST_TRADE"
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 0,
-      "condition_name": "은행거래실적 우대이율",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "FIRST_TRADE"
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 0,
-      "condition_name": "은행거래실적 우대이율",
-      "field": "threshold",
-      "expected": 30000000,
-      "actual": null
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 0,
-      "condition_name": "은행거래실적 우대이율",
-      "field": "rate_bonus",
-      "expected": 0.1,
-      "actual": 0.2
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 1,
-      "condition_name": "순신규 고객 우대이율",
-      "field": "type",
-      "expected": "FIRST_TRADE",
-      "actual": "MIN_DEPOSIT"
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 1,
-      "condition_name": "순신규 고객 우대이율",
-      "field": "resource",
-      "expected": "FIRST_TRADE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 1,
+      "condition_index": 2,
+      "matched_parsed_index": 0,
       "condition_name": "순신규 고객 우대이율",
       "field": "threshold",
       "expected": 31,
-      "actual": 50000000
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 1,
-      "condition_name": "순신규 고객 우대이율",
-      "field": "rate_bonus",
-      "expected": 0.2,
-      "actual": 0.1
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 2,
-      "condition_name": "현대카드 M포인트 전환 서비스",
-      "field": "type",
-      "expected": "PRODUCT_HOLDING",
-      "actual": "AVG_BALANCE"
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 2,
-      "condition_name": "현대카드 M포인트 전환 서비스",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 2,
-      "condition_name": "현대카드 M포인트 전환 서비스",
-      "field": "threshold",
-      "expected": null,
-      "actual": 30000000
-    },
-    {
-      "product_name": "e-그린세이브예금",
-      "bank_name": "SC제일은행",
-      "condition_index": 2,
-      "condition_name": "현대카드 M포인트 전환 서비스",
-      "field": "rate_bonus",
-      "expected": 0.0,
-      "actual": 0.1
-    },
-    {
-      "product_name": "스마트모아Dream정기예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "1천만원 이상 온라인 가입 우대",
-      "field": "type",
-      "expected": "DEPOSIT_AMOUNT",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "스마트모아Dream정기예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "1천만원 이상 온라인 가입 우대",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "스마트모아Dream정기예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "1천만원 이상 온라인 가입 우대",
-      "field": "rate_bonus",
-      "expected": 0.2,
-      "actual": 0.1
-    },
-    {
-      "product_name": "더(The) 레벨업 정기예금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "금융정보 및 혜택알림(PUSH) 동의 우대",
-      "field": "type",
-      "expected": "MARKETING_CONSENT",
-      "actual": "MARKETING_AGREE"
-    },
-    {
-      "product_name": "더(The) 레벨업 정기예금",
-      "bank_name": "부산은행",
-      "condition_index": 1,
-      "condition_name": "비대면 정기예금 재예치 우대",
-      "field": "type",
-      "expected": "PRODUCT_HOLDING",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "더(The) 레벨업 정기예금",
-      "bank_name": "부산은행",
-      "condition_index": 1,
-      "condition_name": "비대면 정기예금 재예치 우대",
-      "field": "threshold",
-      "expected": 1,
       "actual": null
     },
     {
       "product_name": "더(The) 특판 정기예금",
       "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "금융정보 및 혜택알림(Push) 동의 우대",
-      "field": "type",
-      "expected": "MARKETING_CONSENT",
-      "actual": "MARKETING_AGREE"
-    },
-    {
-      "product_name": "더(The) 특판 정기예금",
-      "bank_name": "부산은행",
       "condition_index": 1,
+      "matched_parsed_index": 1,
       "condition_name": "더(The)특판 정기예금 신규고객 우대",
       "field": "threshold",
       "expected": 12,
@@ -400,15 +1014,7 @@
       "product_name": "더(The) 특판 정기예금",
       "bank_name": "부산은행",
       "condition_index": 2,
-      "condition_name": "1년제 기본 특판우대이율",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "더(The) 특판 정기예금",
-      "bank_name": "부산은행",
-      "condition_index": 2,
+      "matched_parsed_index": 2,
       "condition_name": "1년제 기본 특판우대이율",
       "field": "threshold",
       "expected": 12,
@@ -418,132 +1024,27 @@
       "product_name": "Sh첫만남우대예금",
       "bank_name": "SH수협은행",
       "condition_index": 0,
+      "matched_parsed_index": 0,
       "condition_name": "수협은행 예·적금 첫거래 우대",
       "field": "threshold",
       "expected": 12,
       "actual": null
     },
     {
-      "product_name": "Sh첫만남우대예금",
-      "bank_name": "SH수협은행",
-      "condition_index": 1,
-      "condition_name": "상품서비스 안내 전체 동의 (마케팅 동의)",
-      "field": "type",
-      "expected": "MARKETING_CONSENT",
-      "actual": "MARKETING_AGREE"
-    },
-    {
-      "product_name": "Sh첫만남우대예금",
-      "bank_name": "SH수협은행",
-      "condition_index": 1,
-      "condition_name": "상품서비스 안내 전체 동의 (마케팅 동의)",
+      "product_name": "iM함께예금",
+      "bank_name": "아이엠뱅크",
+      "condition_index": 3,
+      "matched_parsed_index": 4,
+      "condition_name": "오픈뱅킹에 다른 은행 계좌 등록",
       "field": "rate_bonus",
-      "expected": 5.0,
+      "expected": 0.1,
       "actual": 0.05
     },
     {
-      "product_name": "Sh첫만남우대예금",
-      "bank_name": "SH수협은행",
-      "condition_index": 2,
-      "condition_name": "스마트폰 뱅킹 상품 알리기를 통한 추천",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "CHANNEL"
-    },
-    {
-      "product_name": "마이키즈 적금",
-      "bank_name": "케이뱅크",
-      "condition_index": 0,
-      "condition_name": "만 17세 미만 실명 개인 자녀 및 마이키즈 서비스 법정대리인 연결",
-      "field": "type",
-      "expected": "FAMILY_MEMBER",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "마이키즈 적금",
-      "bank_name": "케이뱅크",
-      "condition_index": 0,
-      "condition_name": "만 17세 미만 실명 개인 자녀 및 마이키즈 서비스 법정대리인 연결",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "마이키즈 적금",
-      "bank_name": "케이뱅크",
-      "condition_index": 0,
-      "condition_name": "만 17세 미만 실명 개인 자녀 및 마이키즈 서비스 법정대리인 연결",
-      "field": "rate_bonus",
-      "expected": 0.0,
-      "actual": 0.5
-    },
-    {
-      "product_name": "마이키즈 적금",
-      "bank_name": "케이뱅크",
-      "condition_index": 1,
-      "condition_name": "전체 계약 월 수의 2/3 이상 개월 수 동안 적금 납입",
-      "field": "type",
-      "expected": "AUTOMATIC_TRANSFER",
-      "actual": "OTHER"
-    },
-    {
-      "product_name": "마이키즈 적금",
-      "bank_name": "케이뱅크",
-      "condition_index": 1,
-      "condition_name": "전체 계약 월 수의 2/3 이상 개월 수 동안 적금 납입",
-      "field": "rate_bonus",
-      "expected": 4.0,
-      "actual": 0.3
-    },
-    {
-      "product_name": "iM함께예금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AVG_BALANCE"
-    },
-    {
-      "product_name": "iM함께예금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "iM함께예금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "threshold",
-      "expected": null,
-      "actual": 300000
-    },
-    {
-      "product_name": "iM함께예금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.45,
-      "actual": 0.1
-    },
-    {
       "product_name": "LIVE정기예금",
       "bank_name": "부산은행",
       "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "LIVE정기예금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
+      "matched_parsed_index": 0,
       "condition_name": "부산은행 우대금리 조건",
       "field": "rate_bonus",
       "expected": 0.85,
@@ -553,672 +1054,67 @@
       "product_name": "미즈월복리정기예금",
       "bank_name": "광주은행",
       "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AVG_BALANCE"
-    },
-    {
-      "product_name": "미즈월복리정기예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "미즈월복리정기예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
+      "matched_parsed_index": 0,
+      "condition_name": "요구불예금 평잔",
       "field": "threshold",
-      "expected": null,
+      "expected": 3000000,
       "actual": 300000
     },
     {
       "product_name": "미즈월복리정기예금",
       "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.2,
-      "actual": 0.1
-    },
-    {
-      "product_name": "굿스타트예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "FIRST_TRADE"
-    },
-    {
-      "product_name": "굿스타트예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "FIRST_TRADE"
-    },
-    {
-      "product_name": "굿스타트예금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.5,
-      "actual": 0.4
-    },
-    {
-      "product_name": "제주Dream\n정기예금\n(개인/만기\n지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "제주Dream\n정기예금\n(개인/만기\n지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "J정기예금\n(만기지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "CHANNEL"
-    },
-    {
-      "product_name": "J정기예금\n(만기지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 1.7,
-      "actual": 0.3
-    },
-    {
-      "product_name": "스마일드림 \n정기예금\n(개인/선이자\n지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "PRODUCT_HOLDING"
-    },
-    {
-      "product_name": "스마일드림 \n정기예금\n(개인/선이자\n지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CARD_BUDGET"
-    },
-    {
-      "product_name": "스마일드림 \n정기예금\n(개인/선이자\n지급식)",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.95,
-      "actual": 0.2
-    },
-    {
-      "product_name": "JB 123 정기예금\n (만기일시지급식)",
-      "bank_name": "전북은행",
-      "condition_index": 0,
-      "condition_name": "전북은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "JB 123 정기예금\n (만기일시지급식)",
-      "bank_name": "전북은행",
-      "condition_index": 0,
-      "condition_name": "전북은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.6,
-      "actual": 0.1
-    },
-    {
-      "product_name": "내맘 쏙 정기예금",
-      "bank_name": "전북은행",
-      "condition_index": 0,
-      "condition_name": "전북은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "MARKETING_AGREE"
-    },
-    {
-      "product_name": "BNK더조은정기예금",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "MIN_DEPOSIT"
-    },
-    {
-      "product_name": "BNK더조은정기예금",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "BNK더조은정기예금",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
+      "condition_index": 1,
+      "matched_parsed_index": 1,
+      "condition_name": "신용·체크카드 결제실적",
       "field": "threshold",
-      "expected": null,
-      "actual": 20000000
-    },
-    {
-      "product_name": "BNK더조은정기예금",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.5,
-      "actual": 0.1
-    },
-    {
-      "product_name": "The든든예금(시즌2)",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "MARKETING_AGREE"
-    },
-    {
-      "product_name": "The든든예금(시즌2)",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 1.55,
-      "actual": 0.05
-    },
-    {
-      "product_name": "The파트너예금",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "LOYALTY"
-    },
-    {
-      "product_name": "The파트너예금",
-      "bank_name": "경남은행",
-      "condition_index": 0,
-      "condition_name": "경남은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.4,
-      "actual": 0.2
+      "expected": 3000000,
+      "actual": 300000
     },
     {
       "product_name": "IBK평생한가족통장(실세금리정기예금)",
       "bank_name": "중소기업은행",
-      "condition_index": 0,
-      "condition_name": "중소기업은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "신한My플러스 정기예금",
-      "bank_name": "신한은행",
-      "condition_index": 0,
-      "condition_name": "신한은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "신한My플러스 정기예금",
-      "bank_name": "신한은행",
-      "condition_index": 0,
-      "condition_name": "신한은행 우대금리 조건",
+      "condition_index": 3,
+      "matched_parsed_index": 3,
+      "condition_name": "주거래 우대",
       "field": "rate_bonus",
-      "expected": 1.0,
-      "actual": 0.1
-    },
-    {
-      "product_name": "NH왈츠회전예금 II",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "NH왈츠회전예금 II",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "NH왈츠회전예금 II",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "threshold",
-      "expected": null,
-      "actual": 500000
-    },
-    {
-      "product_name": "NH내가Green초록세상예금",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "NH내가Green초록세상예금",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.4,
-      "actual": 0.1
-    },
-    {
-      "product_name": "NH고향사랑기부예금",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "NH고향사랑기부예금",
-      "bank_name": "농협은행주식회사",
-      "condition_index": 0,
-      "condition_name": "농협은행주식회사 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.45,
-      "actual": 0.3
-    },
-    {
-      "product_name": "Sh해양플라스틱Zero!예금\n(만기일시지급식)",
-      "bank_name": "수협은행",
-      "condition_index": 0,
-      "condition_name": "수협은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "Sh해양플라스틱Zero!예금\n(만기일시지급식)",
-      "bank_name": "수협은행",
-      "condition_index": 0,
-      "condition_name": "수협은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.35,
-      "actual": 0.1
-    },
-    {
-      "product_name": "카카오뱅크 정기예금",
-      "bank_name": "주식회사 카카오뱅크",
-      "condition_index": 0,
-      "condition_name": "주식회사 카카오뱅크 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "카카오뱅크 정기예금",
-      "bank_name": "주식회사 카카오뱅크",
-      "condition_index": 0,
-      "condition_name": "주식회사 카카오뱅크 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.2,
-      "actual": 0.0
-    },
-    {
-      "product_name": "우리SUPER주거래적금",
-      "bank_name": "우리은행",
-      "condition_index": 0,
-      "condition_name": "우리은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "우리SUPER주거래적금",
-      "bank_name": "우리은행",
-      "condition_index": 0,
-      "condition_name": "우리은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "우리SUPER주거래적금",
-      "bank_name": "우리은행",
-      "condition_index": 0,
-      "condition_name": "우리은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 1.4,
-      "actual": 0.7
-    },
-    {
-      "product_name": "WON적금",
-      "bank_name": "우리은행",
-      "condition_index": 0,
-      "condition_name": "우리은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "CARD_ACCOUNT"
-    },
-    {
-      "product_name": "WON적금",
-      "bank_name": "우리은행",
-      "condition_index": 0,
-      "condition_name": "우리은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "WON적금",
-      "bank_name": "우리은행",
-      "condition_index": 0,
-      "condition_name": "우리은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.2,
-      "actual": 0.1
-    },
-    {
-      "product_name": "iM함께적금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AVG_BALANCE"
-    },
-    {
-      "product_name": "iM함께적금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "iM함께적금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "threshold",
-      "expected": null,
-      "actual": 300000
-    },
-    {
-      "product_name": "iM함께적금",
-      "bank_name": "아이엠뱅크",
-      "condition_index": 0,
-      "condition_name": "아이엠뱅크 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.85,
-      "actual": 0.1
-    },
-    {
-      "product_name": "펫 적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "펫 적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.9,
-      "actual": 0.55
-    },
-    {
-      "product_name": "저탄소 실천 적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "BNK내맘대로 \n적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "BNK내맘대로 \n적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.2,
+      "expected": 0.15,
       "actual": 0.05
     },
     {
-      "product_name": "부산이라 좋다\nBig적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "부산이라 좋다\nBig적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
+      "product_name": "iM함께적금",
+      "bank_name": "아이엠뱅크",
+      "condition_index": 3,
+      "matched_parsed_index": 4,
+      "condition_name": "오픈뱅킹에 다른 은행 계좌 등록",
       "field": "rate_bonus",
-      "expected": 2.2,
-      "actual": 2.0
-    },
-    {
-      "product_name": "Only One 주거래 우대적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "Only One 주거래 우대적금",
-      "bank_name": "부산은행",
-      "condition_index": 0,
-      "condition_name": "부산은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 2.5,
-      "actual": 2
-    },
-    {
-      "product_name": "해피라이프_여행스케치적금V",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "PRODUCT_HOLDING"
-    },
-    {
-      "product_name": "해피라이프_여행스케치적금V",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "SALARY_TRANSFER"
-    },
-    {
-      "product_name": "해피라이프_여행스케치적금V",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 1.2,
-      "actual": 0.5
+      "expected": 0.3,
+      "actual": 0.05
     },
     {
       "product_name": "여행스케치_남도투어적금",
       "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "여행스케치_남도투어적금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 1.9,
-      "actual": 1.5
-    },
-    {
-      "product_name": "VIP플러스적금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "VIP플러스적금",
-      "bank_name": "광주은행",
-      "condition_index": 0,
-      "condition_name": "광주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 0.5,
-      "actual": 0.3
-    },
-    {
-      "product_name": "jbank 저금통적금",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AVG_BALANCE"
-    },
-    {
-      "product_name": "jbank 저금통적금",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "resource",
-      "expected": "NONE",
-      "actual": "CASH_BALANCE"
-    },
-    {
-      "product_name": "jbank 저금통적금",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
+      "condition_index": 1,
+      "matched_parsed_index": 1,
+      "condition_name": "신용·체크카드 사용실적 300만원 이상",
       "field": "threshold",
-      "expected": null,
-      "actual": 500000
+      "expected": 3000000,
+      "actual": 300000
     },
     {
       "product_name": "jbank 저금통적금",
       "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 2.1,
-      "actual": 0.8
-    },
-    {
-      "product_name": "MZ 플랜적금",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AUTO_TRANSFER"
-    },
-    {
-      "product_name": "MZ 플랜적금",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "rate_bonus",
-      "expected": 2.0,
-      "actual": 0.5
-    },
-    {
-      "product_name": "사이버우대매일부금",
-      "bank_name": "제주은행",
-      "condition_index": 0,
-      "condition_name": "제주은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "UNCONDITIONAL"
-    },
-    {
-      "product_name": "JB 다이렉트적금(자유적립식)",
-      "bank_name": "전북은행",
-      "condition_index": 0,
-      "condition_name": "전북은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AUTO_TRANSFER"
+      "condition_index": 2,
+      "matched_parsed_index": 2,
+      "condition_name": "목표금액 30만원 이상 설정 및 달성",
+      "field": "threshold",
+      "expected": 300000,
+      "actual": null
     },
     {
       "product_name": "JB 다이렉트적금(정액적립식)",
       "bank_name": "전북은행",
       "condition_index": 0,
-      "condition_name": "전북은행 우대금리 조건",
-      "field": "type",
-      "expected": "OTHER",
-      "actual": "AUTO_TRANSFER"
-    },
-    {
-      "product_name": "JB 다이렉트적금(정액적립식)",
-      "bank_name": "전북은행",
-      "condition_index": 0,
+      "matched_parsed_index": 0,
       "condition_name": "전북은행 우대금리 조건",
       "field": "threshold",
       "expected": null,

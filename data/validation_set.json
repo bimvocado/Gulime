@@ -1,78 +1,383 @@
 [
   {
     "product_name": "e-그린세이브예금",
-    "bank_name": "한국스탠다드차타드은행",
-    "base_rate": 3.65,
-    "max_rate": 3.95,
+    "bank_name": "SC제일은행",
+    "base_rate": 3.55,
+    "max_rate": 3.85,
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "첫거래/신규고객",
+        "condition_name": "6~12개월제(만기일시지급식) 5천만원 이상 가입",
+        "type": "MIN_DEPOSIT",
+        "tiers": [
+          {
+            "threshold": 50000000,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "CASH_BALANCE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1.SC제일은행 최초 거래 신규고객 우대이율 제공(보너스이율0.2%)                     \n2.만기일에 아래의 조건을 모두 충족하는 경우보너스이율 제공\n-6~12개월제(만기일시지급식) 5천만원 이상 가입\n-만기일 기준 전전월 마지막 영업일에 수익증권(펀드)*을 3천만원 이상 보유 \n(가입기간: 6개월~1년제/ 보너스이율:0.1% / 만기해약하는 경우에 한해 보너스이율을 적용함)",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만기일 기준 전전월 마지막 영업일에 수익증권(펀드) 3천만원 이상 보유",
+        "type": "AVG_BALANCE",
+        "tiers": [
+          {
+            "threshold": 30000000,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "CASH_BALANCE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1.SC제일은행 최초 거래 신규고객 우대이율 제공(보너스이율0.2%)                     \n2.만기일에 아래의 조건을 모두 충족하는 경우보너스이율 제공\n-6~12개월제(만기일시지급식) 5천만원 이상 가입\n-만기일 기준 전전월 마지막 영업일에 수익증권(펀드)*을 3천만원 이상 보유 \n(가입기간: 6개월~1년제/ 보너스이율:0.1% / 만기해약하는 경우에 한해 보너스이율을 적용함)",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "순신규 고객 우대이율",
         "type": "FIRST_TRADE",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": 31,
+            "rate_bonus": 0.2
+          }
+        ],
         "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
+        "period_months": null,
+        "required_months": null,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1.SC제일은행 최초 거래 신규고객 우대이율 제공(보너스이율0.2%)"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1.SC제일은행 최초 거래 신규고객 우대이율 제공(보너스이율0.2%)                     \n2.만기일에 아래의 조건을 모두 충족하는 경우보너스이율 제공\n-6~12개월제(만기일시지급식) 5천만원 이상 가입\n-만기일 기준 전전월 마지막 영업일에 수익증권(펀드)*을 3천만원 이상 보유 \n(가입기간: 6개월~1년제/ 보너스이율:0.1% / 만기해약하는 경우에 한해 보너스이율을 적용함)",
+        "parse_status": "COMPLETE"
       },
       {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2.만기일에 아래의 조건을 모두 충족하는 경우보너스이율 제공"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": 50000000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-6~12개월제(만기일시지급식) 5천만원 이상 가입"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
+        "condition_name": "현대카드 M포인트 전환 서비스",
         "type": "PRODUCT_HOLDING",
-        "threshold": 30000000,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
         "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-만기일 기준 전전월 마지막 영업일에 수익증권(펀드)*을 3천만원 이상 보유"
-      },
-      {
-        "condition_name": "(가입기간",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "(가입기간: 6개월~1년제/ 보너스이율:0.1% / 만기해약하는 경우에 한해 보너스이율을 적용함)"
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1.SC제일은행 최초 거래 신규고객 우대이율 제공(보너스이율0.2%)                     \n2.만기일에 아래의 조건을 모두 충족하는 경우보너스이율 제공\n-6~12개월제(만기일시지급식) 5천만원 이상 가입\n-만기일 기준 전전월 마지막 영업일에 수익증권(펀드)*을 3천만원 이상 보유 \n(가입기간: 6개월~1년제/ 보너스이율:0.1% / 만기해약하는 경우에 한해 보너스이율을 적용함)",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "1.SC제일은행 최초 거래 신규고객 우대이율 제공(보너스이율0.2%)                     \n2.만기일에 아래의 조건을 모두 충족하는 경우보너스이율 제공\n-6~12개월제(만기일시지급식) 5천만원 이상 가입\n-만기일 기준 전전월 마지막 영업일에 수익증권(펀드)*을 3천만원 이상 보유 \n(가입기간: 6개월~1년제/ 보너스이율:0.1% / 만기해약하는 경우에 한해 보너스이율을 적용함)"
+  },
+  {
+    "product_name": "스마트모아Dream정기예금",
+    "bank_name": "광주은행",
+    "base_rate": 3.43,
+    "max_rate": 3.63,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "1천만원 이상 온라인 가입 우대",
+        "type": "DEPOSIT_AMOUNT",
+        "tiers": [
+          {
+            "threshold": 10000000,
+            "rate_bonus": 0.2
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "▶ 1년미만, 1천만원이상 0.10%p\n▶ 1년이상, 1천만원이상 0.20%p",
+        "parse_status": "COMPLETE"
+      }
+    ],
+    "spcl_cnd": "▶ 1년미만, 1천만원이상 0.10%p\n▶ 1년이상, 1천만원이상 0.20%p"
+  },
+  {
+    "product_name": "더(The) 레벨업 정기예금",
+    "bank_name": "부산은행",
+    "base_rate": 2.65,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "금융정보 및 혜택알림(PUSH) 동의 우대",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*우대이율(최대 0.90%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 비대면 정기예금 재예치 우대이율  : 0.80%",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "비대면 정기예금 재예치 우대",
+        "type": "PRODUCT_HOLDING",
+        "tiers": [
+          {
+            "threshold": 1,
+            "rate_bonus": 0.8
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*우대이율(최대 0.90%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 비대면 정기예금 재예치 우대이율  : 0.80%",
+        "parse_status": "COMPLETE"
+      }
+    ],
+    "spcl_cnd": "*우대이율(최대 0.90%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 비대면 정기예금 재예치 우대이율  : 0.80%"
+  },
+  {
+    "product_name": "더(The) 특판 정기예금",
+    "bank_name": "부산은행",
+    "base_rate": 2.2,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "금융정보 및 혜택알림(Push) 동의 우대",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 우대이율 (최대 1.35%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 신규고객 또는 정기예금 중도해지고객 우대이율 0.75%p\n다. 특판우대이율 : 0.50%p(24개월 0.85%p)",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "더(The)특판 정기예금 신규고객 우대",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 0.75
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 우대이율 (최대 1.35%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 신규고객 또는 정기예금 중도해지고객 우대이율 0.75%p\n다. 특판우대이율 : 0.50%p(24개월 0.85%p)",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "1년제 기본 특판우대이율",
+        "type": "UNCONDITIONAL",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 0.5
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 우대이율 (최대 1.35%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 신규고객 또는 정기예금 중도해지고객 우대이율 0.75%p\n다. 특판우대이율 : 0.50%p(24개월 0.85%p)",
+        "parse_status": "COMPLETE"
+      }
+    ],
+    "spcl_cnd": "* 우대이율 (최대 1.35%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 신규고객 또는 정기예금 중도해지고객 우대이율 0.75%p\n다. 특판우대이율 : 0.50%p(24개월 0.85%p)"
+  },
+  {
+    "product_name": "Sh첫만남우대예금",
+    "bank_name": "SH수협은행",
+    "base_rate": 2.5,
+    "max_rate": 3.55,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "수협은행 예·적금 첫거래 우대",
+        "type": "FIRST_TRADE",
+        "tiers": [
+          {
+            "threshold": 12,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "FIRST_TRADE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 최대우대금리:1.05%\n1. 첫거래우대 : 1.0% (신규시) \n  - 최근 1년간 수협은행 예적금 활동계좌 미보유 고객포함\n2. 마케팅전체동의 : 0.05%(신규시) \n3. 스마트폰뱅킹의 상품알리기 : 0.80%(만기시)",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "상품서비스 안내 전체 동의 (마케팅 동의)",
+        "type": "MARKETING_CONSENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.05
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 최대우대금리:1.05%\n1. 첫거래우대 : 1.0% (신규시) \n  - 최근 1년간 수협은행 예적금 활동계좌 미보유 고객포함\n2. 마케팅전체동의 : 0.05%(신규시) \n3. 스마트폰뱅킹의 상품알리기 : 0.80%(만기시)",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "스마트폰 뱅킹 상품 알리기를 통한 추천",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.8
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 최대우대금리:1.05%\n1. 첫거래우대 : 1.0% (신규시) \n  - 최근 1년간 수협은행 예적금 활동계좌 미보유 고객포함\n2. 마케팅전체동의 : 0.05%(신규시) \n3. 스마트폰뱅킹의 상품알리기 : 0.80%(만기시)",
+        "parse_status": "COMPLETE"
+      }
+    ],
+    "spcl_cnd": "* 최대우대금리:1.05%\n1. 첫거래우대 : 1.0% (신규시) \n  - 최근 1년간 수협은행 예적금 활동계좌 미보유 고객포함\n2. 마케팅전체동의 : 0.05%(신규시) \n3. 스마트폰뱅킹의 상품알리기 : 0.80%(만기시)"
+  },
+  {
+    "product_name": "마이키즈 적금",
+    "bank_name": "케이뱅크",
+    "base_rate": 3.0,
+    "max_rate": 8.0,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "만 17세 미만 실명 개인 자녀 및 마이키즈 서비스 법정대리인 연결",
+        "type": "FAMILY_MEMBER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": true,
+        "payout": "AT_SIGNUP",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 입금실적에 따라 우대금리 적용\n2. 금리쿠폰을 입력시 우대금리 적용",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "전체 계약 월 수의 2/3 이상 개월 수 동안 적금 납입",
+        "type": "AUTOMATIC_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 4.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 입금실적에 따라 우대금리 적용\n2. 금리쿠폰을 입력시 우대금리 적용",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "마이키즈 출시 기념 이벤트 금리우대쿠폰 적용",
+        "type": "MARKETING_EVENT",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 1.0
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "AT_MATURITY",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 입금실적에 따라 우대금리 적용\n2. 금리쿠폰을 입력시 우대금리 적용",
+        "parse_status": "COMPLETE"
+      }
+    ],
+    "spcl_cnd": "1. 입금실적에 따라 우대금리 적용\n2. 금리쿠폰을 입력시 우대금리 적용"
   },
   {
     "product_name": "iM함께예금",
@@ -82,7 +387,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유",
         "type": "OTHER",
         "tiers": [
@@ -91,7 +395,7 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -174,97 +478,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "* 최고",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.45,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 최고우대금리: 연0.45%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": 300000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 전월 총수신 평잔 30만원 이상 또는 상품 가입 전 첫만남플러스통장 보유"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 상품 가입 전 당행 주택청약상품 보유"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 신규일 \"iM함께적금\" 동시 가입 및 만기(12회 불입) 보유"
-      },
-      {
-        "condition_name": "오픈뱅킹 등록",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 당행 오픈뱅킹서비스에 다른 은행 계좌 등록"
-      },
-      {
-        "condition_name": "각 연0.10%p",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "각 연0.10%p"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 해당 상품을 인터넷/모바일뱅킹을 통해 가입: 연0.05%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 최고우대금리: 연0.45%p\n- 전월 총수신 평잔 30만원 이상 또는 상품 가입 전 첫만남플러스통장 보유\n- 상품 가입 전 당행 주택청약상품 보유\n- 신규일 \"iM함께적금\" 동시 가입 및 만기(12회 불입) 보유 \n- 당행 오픈뱅킹서비스에 다른 은행 계좌 등록\n각 연0.10%p                       \n* 해당 상품을 인터넷/모바일뱅킹을 통해 가입: 연0.05%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "* 최고우대금리: 연0.45%p\n- 전월 총수신 평잔 30만원 이상 또는 상품 가입 전 첫만남플러스통장 보유\n- 상품 가입 전 당행 주택청약상품 보유\n- 신규일 \"iM함께적금\" 동시 가입 및 만기(12회 불입) 보유 \n- 당행 오픈뱅킹서비스에 다른 은행 계좌 등록\n각 연0.10%p                       \n* 해당 상품을 인터넷/모바일뱅킹을 통해 가입: 연0.05%p"
@@ -277,7 +497,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "주택청약종합저축 보유 또는 카드 결제실적 보유",
         "type": "OTHER",
         "tiers": [
@@ -309,71 +528,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "* 최고",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.25,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 최고우대금리 : 연0.25%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 가입일(재예치일)로부터 3개월 이내 아래 1가지 이상 요건 충족시"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "당행 주택청약종합저축 보유"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "당행 신용(체크)카드 결제실적 보유(결제금액 출금기준)"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 해당 상품을 인터넷/모바일뱅킹을 통해 가입 : 연0.05%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 최고우대금리 : 연0.25%p\n- 가입일(재예치일)로부터 3개월 이내 아래 1가지 이상 요건 충족시\n① 당행 주택청약종합저축 보유\n② 당행 신용(체크)카드 결제실적 보유(결제금액 출금기준)\n* 해당 상품을 인터넷/모바일뱅킹을 통해 가입 : 연0.05%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "* 최고우대금리 : 연0.25%p\n- 가입일(재예치일)로부터 3개월 이내 아래 1가지 이상 요건 충족시\n① 당행 주택청약종합저축 보유\n② 당행 신용(체크)카드 결제실적 보유(결제금액 출금기준)\n* 해당 상품을 인터넷/모바일뱅킹을 통해 가입 : 연0.05%p"
@@ -386,69 +547,36 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
+        "condition_name": "부산은행 우대금리 조건",
+        "type": "UNCONDITIONAL",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.85
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*우대이율"
-      },
-      {
-        "condition_name": "3~5개월 특판",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.7,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3~5개월 특판우대이율 : 0.70%"
-      },
-      {
-        "condition_name": "6~11개월 특판",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.6,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "6~11개월 특판 우대이율: 0.60%"
-      },
-      {
-        "condition_name": "12개월 특판",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.45,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "12개월 특판 우대이율 : 0.45%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*우대이율\n가. 3~5개월 특판우대이율 : 0.70%\n나. 6~11개월 특판 우대이율: 0.60%\n다. 12개월 특판 우대이율 : 0.45%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "*우대이율\n가. 3~5개월 특판우대이율 : 0.70%\n나. 6~11개월 특판 우대이율: 0.60%\n다. 12개월 특판 우대이율 : 0.45%"
   },
   {
-    "product_name": "더(The) 특판 정기예금",
-    "bank_name": "부산은행",
-    "base_rate": 2.2,
-    "max_rate": 3.55,
+    "product_name": "미즈월복리정기예금",
+    "bank_name": "광주은행",
+    "base_rate": 3.5,
+    "max_rate": 3.7,
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "요구불예금 평잔",
         "type": "AVG_BALANCE",
         "tiers": [
@@ -461,7 +589,7 @@
             "rate_bonus": 0.2
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -485,159 +613,28 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "CARD_BUDGET",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 1.35,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 우대이율 (최대 1.35%p)"
-      },
-      {
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.75,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규고객 또는 정기예금 중도해지고객 우대이율 0.75%p"
-      },
-      {
-        "condition_name": "특판",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "특판우대이율 : 0.50%p(24개월 0.85%p)"
-      }
-    ],
-    "spcl_cnd": "* 우대이율 (최대 1.35%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 신규고객 또는 정기예금 중도해지고객 우대이율 0.75%p\n다. 특판우대이율 : 0.50%p(24개월 0.85%p)"
-  },
-  {
-    "product_name": "더(The) 레벨업 정기예금",
-    "bank_name": "부산은행",
-    "base_rate": 2.65,
-    "max_rate": 3.55,
-    "rate_by_term": null,
-    "conditions": [
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.9,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*우대이율(최대 0.90%p)"
-      },
-      {
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.8,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "비대면 정기예금 재예치 우대이율  : 0.80%"
-      }
-    ],
-    "spcl_cnd": "*우대이율(최대 0.90%p)\n가. 모바일뱅킹 금융정보 및 혜택알림 동의 우대이율 : 0.10%p\n나. 비대면 정기예금 재예치 우대이율  : 0.80%"
-  },
-  {
-    "product_name": "미즈월복리정기예금",
-    "bank_name": "광주은행",
-    "base_rate": 3.49,
-    "max_rate": 3.69,
-    "rate_by_term": null,
-    "conditions": [
-      {
-        "condition_name": "요구불평잔",
-        "type": "OTHER",
-        "threshold": 3000000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "요구불평잔 : 0.2% -300만원이상 0.1%, 500만원이상 0.2%"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": 3000000,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신용(체크)카드결제실적 : 0.1% -전월결제금 300만원이상 0.05%, 500만원이상 0.1%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "▶ 최고우대금리 0.2% \n ① 요구불평잔 : 0.2% -300만원이상 0.1%, 500만원이상 0.2%\n ② 신용(체크)카드결제실적 : 0.1% -전월결제금 300만원이상 0.05%, 500만원이상 0.1%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "▶ 최고우대금리 0.2% \n ① 요구불평잔 : 0.2% -300만원이상 0.1%, 500만원이상 0.2%\n ② 신용(체크)카드결제실적 : 0.1% -전월결제금 300만원이상 0.05%, 500만원이상 0.1%"
   },
   {
-    "product_name": "스마트모아Dream정기예금",
+    "product_name": "굿스타트예금",
     "bank_name": "광주은행",
-    "base_rate": 3.39,
-    "max_rate": 3.59,
+    "base_rate": 3.3,
+    "max_rate": 3.8,
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "최근 1년 정기예금 첫거래",
         "type": "FIRST_TRADE",
         "tiers": [
@@ -669,208 +666,55 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": 10000000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "▶ 1년미만, 1천만원이상 0.10%p"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": 10000000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "▶ 1년이상, 1천만원이상 0.20%p"
-      }
-    ],
-    "spcl_cnd": "▶ 1년미만, 1천만원이상 0.10%p\n▶ 1년이상, 1천만원이상 0.20%p"
-  },
-  {
-    "product_name": "굿스타트예금",
-    "bank_name": "광주은행",
-    "base_rate": 3.29,
-    "max_rate": 3.79,
-    "rate_by_term": null,
-    "conditions": [
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.4,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "첫예금거래 : 0.4% -최근1년동안 정기예금 계좌 신규 또는 해지이력이 없는경우"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "개인(신용)정보 수집이용동의 : 0.1% -만기일전일까지 유지시"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "▶ 최고우대금리 0.5% \n ① 첫예금거래 : 0.4% -최근1년동안 정기예금 계좌 신규 또는 해지이력이 없는경우\n ② 개인(신용)정보 수집이용동의 : 0.1% -만기일전일까지 유지시",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "▶ 최고우대금리 0.5% \n ① 첫예금거래 : 0.4% -최근1년동안 정기예금 계좌 신규 또는 해지이력이 없는경우\n ② 개인(신용)정보 수집이용동의 : 0.1% -만기일전일까지 유지시"
   },
   {
-    "product_name": "제주Dream\n정기예금\n(개인/만기\n지급식)",
+    "product_name": "제주Dream 정기예금 (개인/만기 지급식)",
     "bank_name": "제주은행",
     "base_rate": 2.3,
     "max_rate": 2.4,
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "우대금리 조건",
+        "condition_name": "제주은행 우대금리 조건",
         "type": "OTHER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "최고 연 0.1%p(항목별 0.1%p)"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": 100000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "적립식예금 잔액 10만원 이상 보유"
-      },
-      {
-        "condition_name": "탑스, 주거래 고객",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "탑스, 주거래 고객"
-      },
-      {
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": 100000,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "결제계좌(가맹점) 전월 입금액 10만원 이상"
-      },
-      {
-        "condition_name": "비과세종합저축 대상 고객",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "비과세종합저축 대상 고객"
-      },
-      {
-        "condition_name": "다자녀(3인이상 자녀)가정",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "다자녀(3인이상 자녀)가정"
-      },
-      {
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": null,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "탐나는 J연금통장 가입고객"
-      },
-      {
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": null,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "국민연금안심통장 가입고객"
-      },
-      {
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": null,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "공무원연금안심통장 가입고객"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "최고 연 0.1%p(항목별 0.1%p)\n①급여이체\n②적립식예금 잔액 10만원 이상 보유\n③탑스, 주거래 고객\n④결제계좌(가맹점) 전월 입금액 10만원 이상 \n⑤비과세종합저축 대상 고객\n⑥다자녀(3인이상 자녀)가정\n⑦탐나는 J연금통장 가입고객\n⑧국민연금안심통장 가입고객\n⑨공무원연금안심통장 가입고객",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "최고 연 0.1%p(항목별 0.1%p)\n①급여이체\n②적립식예금 잔액 10만원 이상 보유\n③탑스, 주거래 고객\n④결제계좌(가맹점) 전월 입금액 10만원 이상 \n⑤비과세종합저축 대상 고객\n⑥다자녀(3인이상 자녀)가정\n⑦탐나는 J연금통장 가입고객\n⑧국민연금안심통장 가입고객\n⑨공무원연금안심통장 가입고객"
   },
   {
-    "product_name": "J정기예금\n(만기지급식)",
+    "product_name": "J정기예금 (만기지급식)",
     "bank_name": "제주은행",
     "base_rate": 2.0,
     "max_rate": 3.7,
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "비대면 채널 가입",
         "type": "CHANNEL",
         "tiers": [
@@ -902,71 +746,25 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "- 아래의",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 아래의 우대요건 충족시 최고 0.5%p 추가 우대"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "비대면 채널 가입시 0.3%제공(신규시제공)"
-      },
-      {
-        "condition_name": "(단, 이벤트시 디지털 채널에 고시한",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "(단, 이벤트시 디지털 채널에 고시한 우대금리를 추가 적용할 수 있음)"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규일로부터 만기달 제외한 계약기간의 1/2이상 매월 Jbank로그인 시 0.2%제공(만기시제공)"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "- 아래의 우대요건 충족시 최고 0.5%p 추가 우대 \n①비대면 채널 가입시 0.3%제공(신규시제공)  \n(단, 이벤트시 디지털 채널에 고시한 우대금리를 추가 적용할 수 있음)\n②신규일로부터 만기달 제외한 계약기간의 1/2이상 매월 Jbank로그인 시 0.2%제공(만기시제공)",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "- 아래의 우대요건 충족시 최고 0.5%p 추가 우대 \n①비대면 채널 가입시 0.3%제공(신규시제공)  \n(단, 이벤트시 디지털 채널에 고시한 우대금리를 추가 적용할 수 있음)\n②신규일로부터 만기달 제외한 계약기간의 1/2이상 매월 Jbank로그인 시 0.2%제공(만기시제공)"
   },
   {
-    "product_name": "스마일드림 \n정기예금\n(개인/선이자\n지급식)",
+    "product_name": "스마일드림 정기예금 (개인/선이자 지급식)",
     "bank_name": "제주은행",
     "base_rate": 1.9,
     "max_rate": 2.85,
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "김만덕나눔적금 보유 또는 만기 해지",
         "type": "PRODUCT_HOLDING",
         "tiers": [
@@ -998,71 +796,25 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-아래의 우대요건 충족시 최고0.3% 추가우대(신규시제공)"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
->>>>>>> Stashed changes
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "김만덕나눔적금 보유 또는 김만적 나눔적금 만기 해지고객 0.2%우대(가입시제공)"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "예금가입시 탐나는전 체크카드 보유고객 0.1%우대(가입시제공)"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "(단, 이벤트시 영업점,디지털채널에 고시한 우대금리를 추가 적용할 수 있음)"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "-아래의 우대요건 충족시 최고0.3% 추가우대(신규시제공)\n①김만덕나눔적금 보유 또는 김만적 나눔적금 만기 해지고객 0.2%우대(가입시제공)\n②예금가입시 탐나는전 체크카드 보유고객 0.1%우대(가입시제공)\n(단, 이벤트시 영업점,디지털채널에 고시한 우대금리를 추가 적용할 수 있음)",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "-아래의 우대요건 충족시 최고0.3% 추가우대(신규시제공)\n①김만덕나눔적금 보유 또는 김만적 나눔적금 만기 해지고객 0.2%우대(가입시제공)\n②예금가입시 탐나는전 체크카드 보유고객 0.1%우대(가입시제공)\n(단, 이벤트시 영업점,디지털채널에 고시한 우대금리를 추가 적용할 수 있음)"
   },
   {
-    "product_name": "JB 123 정기예금\n (만기일시지급식)",
+    "product_name": "JB 123 정기예금 (만기일시지급식)",
     "bank_name": "전북은행",
     "base_rate": 3.21,
     "max_rate": 3.81,
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "자동재예치 회차 우대",
         "type": "LOYALTY",
         "tiers": [
@@ -1122,110 +874,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "자동재예치 우대이율"
-      },
-      {
-        "condition_name": "1회차 0.1%,",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1회차 0.1%,"
-      },
-      {
-        "condition_name": "2회차 0.2%,",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2회차 0.2%,"
-      },
-      {
-        "condition_name": "3회차 0.3%",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3회차 0.3%"
-      },
-      {
-        "condition_name": "(이벤트",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "(이벤트우대이율)"
-      },
-      {
-        "condition_name": "2026.5.28~12.31 까지",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2026.5.28~12.31 까지"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1)가입일직전 6개월 동안 당행 원화 정기예금 보유이력이 없는 경우 0.50%"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2.개인(신용)정보 수집/이용 동의한 경우(단, 상품서비스 안내수단 전체 동의한 경우에 한함) 0.10%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "자동재예치 우대이율\n1회차 0.1%,\n2회차 0.2%,\n3회차 0.3%\n\n(이벤트우대이율)\n2026.5.28~12.31 까지\n1)가입일직전 6개월 동안 당행 원화 정기예금 보유이력이 없는 경우 0.50%\n2.개인(신용)정보 수집/이용 동의한 경우(단, 상품서비스 안내수단 전체 동의한 경우에 한함) 0.10%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "자동재예치 우대이율\n1회차 0.1%,\n2회차 0.2%,\n3회차 0.3%\n\n(이벤트우대이율)\n2026.5.28~12.31 까지\n1)가입일직전 6개월 동안 당행 원화 정기예금 보유이력이 없는 경우 0.50%\n2.개인(신용)정보 수집/이용 동의한 경우(단, 상품서비스 안내수단 전체 동의한 경우에 한함) 0.10%"
@@ -1238,17 +893,24 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "마케팅/혜택알림 동의",
+        "condition_name": "전북은행 우대금리 조건",
         "type": "MARKETING_AGREE",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 마케팅동의고객 0.10%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 마케팅동의고객 0.10%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "1. 마케팅동의고객 0.10%"
@@ -1261,7 +923,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "가입·재예치 금액 2천만원 이상",
         "type": "MIN_DEPOSIT",
         "tiers": [
@@ -1270,7 +931,7 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -1353,97 +1014,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규시 가입(재예치)금액 20백만원 이상인 경우 0.10%"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규시 금리우대쿠폰을 등록한 경우 0.20%"
-      },
-      {
-        "condition_name": "오픈뱅킹 등록",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
->>>>>>> Stashed changes
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "경남은행 오픈뱅킹 서비스를 가입한 경우 0.10%"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "(만기시까지 해당서비스 유지하는 경우)"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "자동재예치를 통해 가입한 경우 0.05%"
-      },
-      {
-        "condition_name": "(금리",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "(금리우대쿠폰과 중복적용 불가)"
-      },
-      {
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규(재예치)시 마케팅동의 및 모바일메시지 수신동의 0.10%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "①신규시 가입(재예치)금액 20백만원 이상인 경우 0.10%\n②신규시 금리우대쿠폰을 등록한 경우 0.20% \n③경남은행 오픈뱅킹 서비스를 가입한 경우 0.10%\n(만기시까지 해당서비스 유지하는 경우)\n④자동재예치를 통해 가입한 경우 0.05%\n(금리우대쿠폰과 중복적용 불가)\n⑤신규(재예치)시 마케팅동의 및 모바일메시지 수신동의 0.10%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "①신규시 가입(재예치)금액 20백만원 이상인 경우 0.10%\n②신규시 금리우대쿠폰을 등록한 경우 0.20% \n③경남은행 오픈뱅킹 서비스를 가입한 경우 0.10%\n(만기시까지 해당서비스 유지하는 경우)\n④자동재예치를 통해 가입한 경우 0.05%\n(금리우대쿠폰과 중복적용 불가)\n⑤신규(재예치)시 마케팅동의 및 모바일메시지 수신동의 0.10%"
@@ -1456,7 +1033,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "마케팅 및 모바일메시지 수신 동의",
         "type": "MARKETING_AGREE",
         "tiers": [
@@ -1508,45 +1084,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "마케팅동의 및 모바일메시지 수신동의 0.05%"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규고객 우대(최근 12개월 신규이력·해지이력 미보유) 0.10%"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 1.4,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "이벤트금리(비대면금리) 최대 1.40% (3개월 0.55% / 6, 9개월 0.90% / 12개월 1.40%)"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "①마케팅동의 및 모바일메시지 수신동의 0.05%\n②신규고객 우대(최근 12개월 신규이력·해지이력 미보유) 0.10%\n③이벤트금리(비대면금리) 최대 1.40% (3개월 0.55% / 6, 9개월 0.90% / 12개월 1.40%)",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "①마케팅동의 및 모바일메시지 수신동의 0.05%\n②신규고객 우대(최근 12개월 신규이력·해지이력 미보유) 0.10%\n③이벤트금리(비대면금리) 최대 1.40% (3개월 0.55% / 6, 9개월 0.90% / 12개월 1.40%)"
@@ -1559,7 +1103,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "거래기간 5년 이상 및 마케팅 동의",
         "type": "OTHER",
         "tiers": [
@@ -1588,7 +1131,7 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "SALARY_TRANSFER",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -1608,48 +1151,16 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "CARD_BUDGET",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "경남은행 거래기간 5년이상 + 마케팅동의 고객 0.20%"
-      },
-      {
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": null,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "급여, 연금, 가맹점대금 입금 시 0.10%"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "당행 카드 결제실적 보유 시 0.10%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "①경남은행 거래기간 5년이상 + 마케팅동의 고객 0.20%\n②급여, 연금, 가맹점대금 입금 시 0.10%\n③당행 카드 결제실적 보유 시 0.10%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "①경남은행 거래기간 5년이상 + 마케팅동의 고객 0.20%\n②급여, 연금, 가맹점대금 입금 시 0.10%\n③당행 카드 결제실적 보유 시 0.10%"
@@ -1662,7 +1173,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "최초 신규 고객",
         "type": "FIRST_TRADE",
         "tiers": [
@@ -1734,84 +1244,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "최고 연 0.20%p",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "최고 연 0.20%p"
-      },
-      {
-        "condition_name": "-고객별",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-고객별 우대 : 최고 연 0.05%p"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 최초신규고객 : 연 0.05%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2. 재예치고객 : 연 0.05%p"
-      },
-      {
-        "condition_name": "3. 장기거래고객",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3. 장기거래고객 : 연 0.05%p"
-      },
-      {
-        "condition_name": "-주거래",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.15,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-주거래우대 : 연 0.15%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "최고 연 0.20%p\n\n-고객별 우대 : 최고 연 0.05%p\n 1. 최초신규고객 : 연 0.05%p\n 2. 재예치고객 : 연 0.05%p\n 3. 장기거래고객 : 연 0.05%p\n\n-주거래우대 : 연 0.15%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "최고 연 0.20%p\n\n-고객별 우대 : 최고 연 0.05%p\n 1. 최초신규고객 : 연 0.05%p\n 2. 재예치고객 : 연 0.05%p\n 3. 장기거래고객 : 연 0.05%p\n\n-주거래우대 : 연 0.15%p"
@@ -1824,7 +1263,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "정기예금 미보유",
         "type": "FIRST_TRADE",
         "tiers": [
@@ -1856,45 +1294,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "※가산금리 최고 연 0.2%",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "※가산금리 최고 연 0.2%"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 정기예금 미보유 : 연 0.1%"
-      },
-      {
-        "condition_name": "- 소득이체",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 소득이체 : 연 0.1%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "※가산금리 최고 연 0.2%\n- 정기예금 미보유 : 연 0.1%\n- 소득이체 : 연 0.1%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "※가산금리 최고 연 0.2%\n- 정기예금 미보유 : 연 0.1%\n- 소득이체 : 연 0.1%"
@@ -1907,7 +1313,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "급여이체 50만원 이상",
         "type": "SALARY_TRANSFER",
         "tiers": [
@@ -1916,7 +1321,7 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "SALARY_TRANSFER",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -1939,32 +1344,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": 500000,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 급여이체실적(50만원 이상)이 있는 경우 : 0.1%p"
-      },
-      {
-        "condition_name": "2. 트리플 회전",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
->>>>>>> Stashed changes
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2. 트리플 회전 우대이율 :  4회전기간부터 0.1%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 급여이체실적(50만원 이상)이 있는 경우 : 0.1%p\n2. 트리플 회전 우대이율 :  4회전기간부터 0.1%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "1. 급여이체실적(50만원 이상)이 있는 경우 : 0.1%p\n2. 트리플 회전 우대이율 :  4회전기간부터 0.1%p"
@@ -1977,7 +1363,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "온실가스 줄이기 실천서약 동의",
         "type": "OTHER",
         "tiers": [
@@ -2049,71 +1434,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.4,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "※ 우대금리 최대한도 : 0.4%p(연%, 세전)"
-      },
-      {
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 온실가스 줄이기 실천서약서 동의 : 0.1%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2. 통장미발급 : 0.1%p"
-      },
-      {
-        "condition_name": "3. 손하나로인증 서비스 등록",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3. 손하나로인증 서비스 등록 : 0.1%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "4. NH내가Green초록세상적금 동시 보유 : 0.1%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "※ 우대금리 최대한도 : 0.4%p(연%, 세전)\n1. 온실가스 줄이기 실천서약서 동의 : 0.1%p\n2. 통장미발급 : 0.1%p\n3. 손하나로인증 서비스 등록 : 0.1%p\n4. NH내가Green초록세상적금 동시 보유 : 0.1%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "※ 우대금리 최대한도 : 0.4%p(연%, 세전)\n1. 온실가스 줄이기 실천서약서 동의 : 0.1%p\n2. 통장미발급 : 0.1%p\n3. 손하나로인증 서비스 등록 : 0.1%p\n4. NH내가Green초록세상적금 동시 보유 : 0.1%p"
@@ -2126,7 +1453,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "고향사랑기부금 납부",
         "type": "OTHER",
         "tiers": [
@@ -2147,7 +1473,27 @@
         "parse_status": "COMPLETE"
       },
       {
-        "condition_name": "만 65세 이상 또는 만 19~34세 고객",
+        "condition_name": "만 65세 이상 고령자 우대",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": null,
+        "required_months": null,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 고향사랑기부금 납부고객 우대 : 0.3%p\n\n2-1. 만65세 이상 고령자 우대 : 0.1%p\n2-2. 만 19~34세 MZ고객 우대 : 0.1%p\n\n3. 고향사랑 특별금리 : 0.05%p (금리시장상황에 따라 변동 가능)\n - 고향사랑 특별금리는 상품 가입고객 모두에게 적용",
+        "parse_status": "COMPLETE"
+      },
+      {
+        "condition_name": "만 19~34세 MZ고객 우대",
         "type": "OTHER",
         "tiers": [
           {
@@ -2178,84 +1524,25 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "1. 고향사랑기부금 납부고객",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 고향사랑기부금 납부고객 우대 : 0.3%p"
-      },
-      {
-        "condition_name": "2-1. 만65세 이상 고령자",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2-1. 만65세 이상 고령자 우대 : 0.1%p"
-      },
-      {
-        "condition_name": "2-2. 만 19~34세 MZ고객",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2-2. 만 19~34세 MZ고객 우대 : 0.1%p"
-      },
-      {
-        "condition_name": "3. 고향사랑 특별금리",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3. 고향사랑 특별금리 : 0.05%p (금리시장상황에 따라 변동 가능)"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 고향사랑 특별금리는 상품 가입고객 모두에게 적용"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 고향사랑기부금 납부고객 우대 : 0.3%p\n\n2-1. 만65세 이상 고령자 우대 : 0.1%p\n2-2. 만 19~34세 MZ고객 우대 : 0.1%p\n\n3. 고향사랑 특별금리 : 0.05%p (금리시장상황에 따라 변동 가능)\n - 고향사랑 특별금리는 상품 가입고객 모두에게 적용",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "1. 고향사랑기부금 납부고객 우대 : 0.3%p\n\n2-1. 만65세 이상 고령자 우대 : 0.1%p\n2-2. 만 19~34세 MZ고객 우대 : 0.1%p\n\n3. 고향사랑 특별금리 : 0.05%p (금리시장상황에 따라 변동 가능)\n - 고향사랑 특별금리는 상품 가입고객 모두에게 적용"
   },
   {
-    "product_name": "Sh해양플라스틱Zero!예금\n(만기일시지급식)",
+    "product_name": "Sh해양플라스틱Zero!예금 (만기일시지급식)",
     "bank_name": "수협은행",
     "base_rate": 3.26,
     "max_rate": 3.61,
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "해양플라스틱 감축 서약",
         "type": "OTHER",
         "tiers": [
@@ -2327,162 +1614,16 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "* 최대",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.35,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 최대우대금리:0.35%"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 해양플라스틱감축서약 : 0.1% (신규시)"
-      },
-      {
-        "condition_name": "2. 봉사활동 또는 상품홍보",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.15,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2. 봉사활동 또는 상품홍보 : 0.15% (만기시)"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3. 입출금통장 최초신규 : 0.1% (만기시)"
-      },
-      {
-        "condition_name": "공과금/자동이체",
-        "type": "AUTO_TRANSFER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "4. 자동이체 출금실적 : 0.1% (만기시)"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 수협신용카드 / 당행 펀드 또는 적금 / 수협체크카드"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 최대우대금리:0.35%\n1. 해양플라스틱감축서약 : 0.1% (신규시) \n2. 봉사활동 또는 상품홍보 : 0.15% (만기시) \n3. 입출금통장 최초신규 : 0.1% (만기시)\n4. 자동이체 출금실적 : 0.1% (만기시)\n - 수협신용카드 / 당행 펀드 또는 적금 / 수협체크카드",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "* 최대우대금리:0.35%\n1. 해양플라스틱감축서약 : 0.1% (신규시) \n2. 봉사활동 또는 상품홍보 : 0.15% (만기시) \n3. 입출금통장 최초신규 : 0.1% (만기시)\n4. 자동이체 출금실적 : 0.1% (만기시)\n - 수협신용카드 / 당행 펀드 또는 적금 / 수협체크카드"
-  },
-  {
-    "product_name": "Sh첫만남우대예금",
-    "bank_name": "수협은행",
-    "base_rate": 2.7,
-    "max_rate": 3.75,
-    "rate_by_term": null,
-    "conditions": [
-      {
-        "condition_name": "* 최대",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 1.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 최대우대금리:1.05%"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 1.0,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 첫거래우대 : 1.0% (신규시)"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 최근 1년간 수협은행 예적금 활동계좌 미보유 고객포함"
-      },
-      {
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2. 마케팅전체동의 : 0.05%(신규시)"
-      },
-      {
-        "condition_name": "3. 스마트폰뱅킹의 상품알리기",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.8,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3. 스마트폰뱅킹의 상품알리기 : 0.80%(만기시)"
-      }
-    ],
-    "spcl_cnd": "* 최대우대금리:1.05%\n1. 첫거래우대 : 1.0% (신규시) \n  - 최근 1년간 수협은행 예적금 활동계좌 미보유 고객포함\n2. 마케팅전체동의 : 0.05%(신규시) \n3. 스마트폰뱅킹의 상품알리기 : 0.80%(만기시)"
   },
   {
     "product_name": "카카오뱅크 정기예금",
@@ -2492,17 +1633,24 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
+        "condition_name": "주식회사 카카오뱅크 우대금리 조건",
+        "type": "OTHER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "※복잡한 우대조건 없이 가입가능한 정기예금"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "※복잡한 우대조건 없이 가입가능한 정기예금",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "※복잡한 우대조건 없이 가입가능한 정기예금"
@@ -2515,7 +1663,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "급여·연금 이체",
         "type": "SALARY_TRANSFER",
         "tiers": [
@@ -2524,7 +1671,7 @@
             "rate_bonus": 0.7
           }
         ],
-        "resource": "NONE",
+        "resource": "SALARY_TRANSFER",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -2564,7 +1711,7 @@
             "rate_bonus": 0.3
           }
         ],
-        "resource": "NONE",
+        "resource": "CARD_BUDGET",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -2587,84 +1734,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1.우리은행 입출식 계좌에서 각 항목별 실적 월 수가 계약기간의 1/2이상인 경우"
-      },
-      {
-        "condition_name": "급여/연금 이체",
-        "type": "SALARY_TRANSFER",
-        "threshold": null,
-        "resource": "SALARY_TRANSFER",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.7,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "급여/연금 이체:연 0.7%p"
-      },
-      {
-        "condition_name": "공과금/자동이체",
-        "type": "AUTO_TRANSFER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "공과금 자동이체 출금: 0.3%p"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": 100000,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "우리카드사 신용/체크카드 결제 10만원 이상: 연 0.3%p"
-      },
-      {
-        "condition_name": "마케팅/혜택알림 동의",
-        "type": "MARKETING_AGREE",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2.상품서비스 마케팅 동의 항목 중 전화(휴대폰) 및 SMS항목을 모두 동의 후 만기까지 유지 : 연 0.1%p"
-      },
-      {
-        "condition_name": "3.금리쿠폰을 적용",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "3.금리쿠폰을 적용"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1.우리은행 입출식 계좌에서 각 항목별 실적 월 수가 계약기간의 1/2이상인 경우\n가.급여/연금 이체:연 0.7%p\n나.공과금 자동이체 출금: 0.3%p\n다.우리카드사 신용/체크카드 결제 10만원 이상: 연 0.3%p\n2.상품서비스 마케팅 동의 항목 중 전화(휴대폰) 및 SMS항목을 모두 동의 후 만기까지 유지 : 연 0.1%p\n3.금리쿠폰을 적용",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "1.우리은행 입출식 계좌에서 각 항목별 실적 월 수가 계약기간의 1/2이상인 경우\n가.급여/연금 이체:연 0.7%p\n나.공과금 자동이체 출금: 0.3%p\n다.우리카드사 신용/체크카드 결제 10만원 이상: 연 0.3%p\n2.상품서비스 마케팅 동의 항목 중 전화(휴대폰) 및 SMS항목을 모두 동의 후 만기까지 유지 : 연 0.1%p\n3.금리쿠폰을 적용"
@@ -2677,7 +1753,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "우리꿈통장·WON통장에 연결 가입",
         "type": "PRODUCT_HOLDING",
         "tiers": [
@@ -2709,45 +1784,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 아래 각 항(가, 나)의 조건을 충족하는 경우 합산 최대 연 0.2%p 우대"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "이 적금을 우리꿈통장, WON통장에 연결하여 가입하는 경우 : 0.1%p"
-      },
-      {
-        "condition_name": "오픈뱅킹 등록",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "우리 오픈뱅킹 서비스에 타행계좌가 등록되어 있는 경우 : 연 0.1%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "1. 아래 각 항(가, 나)의 조건을 충족하는 경우 합산 최대 연 0.2%p 우대\n가. 이 적금을 우리꿈통장, WON통장에 연결하여 가입하는 경우 : 0.1%p\n나. 우리 오픈뱅킹 서비스에 타행계좌가 등록되어 있는 경우 : 연 0.1%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "1. 아래 각 항(가, 나)의 조건을 충족하는 경우 합산 최대 연 0.2%p 우대\n가. 이 적금을 우리꿈통장, WON통장에 연결하여 가입하는 경우 : 0.1%p\n나. 우리 오픈뱅킹 서비스에 타행계좌가 등록되어 있는 경우 : 연 0.1%p"
@@ -2760,7 +1803,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유",
         "type": "OTHER",
         "tiers": [
@@ -2769,7 +1811,7 @@
             "rate_bonus": 0.1
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -2852,97 +1894,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "*최고",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.85,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*최고우대금리:연0.85%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": 300000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유:연0.10%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-당행 주택청약상품 보유"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-신규일 \"iM함께예금\" 동시 가입 및 만기 보유"
-      },
-      {
-        "condition_name": "각 연0.20%p",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "각 연0.20%p"
-      },
-      {
-        "condition_name": "오픈뱅킹 등록",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "-당행 오픈뱅킹서비스에 다른 은행 계좌 등록:연0.30%p"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*해당 상품을 인터넷/모바일뱅킹을 통해 가입:연0.05%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*최고우대금리:연0.85%p\n-전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유:연0.10%p\n-당행 주택청약상품 보유 \n-신규일 \"iM함께예금\" 동시 가입 및 만기 보유 \n각 연0.20%p\n-당행 오픈뱅킹서비스에 다른 은행 계좌 등록:연0.30%p                       \n*해당 상품을 인터넷/모바일뱅킹을 통해 가입:연0.05%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "*최고우대금리:연0.85%p\n-전월 총수신 평잔 30만원 이상 또는 첫만남플러스통장 보유:연0.10%p\n-당행 주택청약상품 보유 \n-신규일 \"iM함께예금\" 동시 가입 및 만기 보유 \n각 연0.20%p\n-당행 오픈뱅킹서비스에 다른 은행 계좌 등록:연0.30%p                       \n*해당 상품을 인터넷/모바일뱅킹을 통해 가입:연0.05%p"
@@ -2955,17 +1913,24 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "우대금리 조건",
+        "condition_name": "부산은행 우대금리 조건",
         "type": "OTHER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.9
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.55,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*우대이율 6개월제 최대 0.55%, 12개월제 최대 0.90%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*우대이율 6개월제 최대 0.55%, 12개월제 최대 0.90%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "*우대이율 6개월제 최대 0.55%, 12개월제 최대 0.90%"
@@ -2978,102 +1943,84 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "조건 달성여부에 따라",
+        "condition_name": "부산은행 우대금리 조건",
         "type": "OTHER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.5
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "조건 달성여부에 따라 우대금리 적용"
-      },
-      {
-        "condition_name": "*개인형",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*개인형 우대이율: 최대0.5%"
-      },
-      {
-        "condition_name": "*기업형(개인사업자 및 법인)",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.4,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*기업형(개인사업자 및 법인)우대이율: 최대0.4%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "조건 달성여부에 따라 우대금리 적용\n*개인형 우대이율: 최대0.5%\n*기업형(개인사업자 및 법인)우대이율: 최대0.4%",
+        "parse_status": "FAILED"
       }
     ],
     "spcl_cnd": "조건 달성여부에 따라 우대금리 적용\n*개인형 우대이율: 최대0.5%\n*기업형(개인사업자 및 법인)우대이율: 최대0.4%"
   },
   {
-    "product_name": "BNK내맘대로 \n적금",
+    "product_name": "BNK내맘대로 적금",
     "bank_name": "부산은행",
     "base_rate": 2.9,
     "max_rate": 3.1,
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "우대금리 조건",
+        "condition_name": "부산은행 우대금리 조건",
         "type": "OTHER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.2
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*우대이율 최대 0.2%"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.05,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 신규시 우대이율 0.05% 및 해지시 우대이율 최대 0.15%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*우대이율 최대 0.2%\n- 신규시 우대이율 0.05% 및 해지시 우대이율 최대 0.15%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "*우대이율 최대 0.2%\n- 신규시 우대이율 0.05% 및 해지시 우대이율 최대 0.15%"
   },
   {
-    "product_name": "부산이라 좋다\nBig적금",
+    "product_name": "부산이라 좋다 Big적금",
     "bank_name": "부산은행",
     "base_rate": 2.6,
     "max_rate": 4.8,
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "우대금리 조건",
+        "condition_name": "부산은행 우대금리 조건",
         "type": "OTHER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.2
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 2.0,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "*우대이율 6개월 미만 최대2.00%, 6개월 이상 2.20%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "*우대이율 6개월 미만 최대2.00%, 6개월 이상 2.20%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "*우대이율 6개월 미만 최대2.00%, 6개월 이상 2.20%"
@@ -3086,43 +2033,24 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "우대금리 조건",
+        "condition_name": "부산은행 우대금리 조건",
         "type": "OTHER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 2.5
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 2.5,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 우대이율 최대 2.5%"
-      },
-      {
-        "condition_name": "- 공통",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 2.0,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 공통 우대이율 최대 2%"
-      },
-      {
-        "condition_name": "- 가입자격별",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "- 가입자격별 우대이율 최대 0.5%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 우대이율 최대 2.5%\n- 공통 우대이율 최대 2%\n- 가입자격별 우대이율 최대 0.5%",
+        "parse_status": "FAILED"
       }
     ],
     "spcl_cnd": "* 우대이율 최대 2.5%\n- 공통 우대이율 최대 2%\n- 가입자격별 우대이율 최대 0.5%"
@@ -3135,7 +2063,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "여행스케치외화적금V 동일자 가입",
         "type": "PRODUCT_HOLDING",
         "tiers": [
@@ -3164,7 +2091,7 @@
             "rate_bonus": 0.2
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -3184,7 +2111,7 @@
             "rate_bonus": 0.3
           }
         ],
-        "resource": "NONE",
+        "resource": "CARD_BUDGET",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -3207,71 +2134,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "▶ 최고",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 1.2,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "▶ 최고우대금리 1.20%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "해피라이프_여행스케치외화적금V 동일자가입 0.5%p"
-      },
-      {
-        "condition_name": "해지원금 기준 500만원이상",
-        "type": "OTHER",
-        "threshold": 5000000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "해지원금 기준 500만원이상 : 최고0.2%p"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": 3000000,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신용(체크)카드사용실적300만원이상:최고 0.3%p"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "개인(신용)정보 동의: 0.2%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "▶ 최고우대금리 1.20%p  \n①해피라이프_여행스케치외화적금V 동일자가입 0.5%p \n②해지원금 기준 500만원이상 : 최고0.2%p\n③신용(체크)카드사용실적300만원이상:최고 0.3%p\n④개인(신용)정보 동의: 0.2%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "▶ 최고우대금리 1.20%p  \n①해피라이프_여행스케치외화적금V 동일자가입 0.5%p \n②해지원금 기준 500만원이상 : 최고0.2%p\n③신용(체크)카드사용실적300만원이상:최고 0.3%p\n④개인(신용)정보 동의: 0.2%p"
@@ -3284,7 +2153,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "전라남도 관광지 방문 인증",
         "type": "OTHER",
         "tiers": [
@@ -3313,7 +2181,7 @@
             "rate_bonus": 0.3
           }
         ],
-        "resource": "NONE",
+        "resource": "CARD_BUDGET",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -3336,45 +2204,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 1.5,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "예금가입일~만기일전일까지 당행이선정한 전라남도 관광지 방문 인증시 : 최고 1.5%p"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": 3000000,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신용(체크)카드사용실적300만원이상:최고 0.3%p"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": null,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "개인(신용)정보 동의: 0.1%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "▶ 최고우대금리 1.9%p \n①예금가입일~만기일전일까지 당행이선정한 전라남도 관광지 방문 인증시 : 최고 1.5%p\n②신용(체크)카드사용실적300만원이상:최고 0.3%p\n③개인(신용)정보 동의: 0.1%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "▶ 최고우대금리 1.9%p \n①예금가입일~만기일전일까지 당행이선정한 전라남도 관광지 방문 인증시 : 최고 1.5%p\n②신용(체크)카드사용실적300만원이상:최고 0.3%p\n③개인(신용)정보 동의: 0.1%p"
@@ -3387,7 +2223,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "VIP 고객 선정",
         "type": "OTHER",
         "tiers": [
@@ -3419,45 +2254,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "▶ 최고",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "▶ 최고우대금리 0.50%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "이 예금가입시 VIP고객이거나 가입일 이후부터 만기일전일까지 VIP고객에 선정된 경험이 있는 경우 : 0.3%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": 5000000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.2,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "이 예금 가입일에 정기예금 500만원이상(만기 1년이상) 가입하고 만기일 전일까지 유지한 경우 : 0.2%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "▶ 최고우대금리 0.50%p  \n①이 예금가입시 VIP고객이거나 가입일 이후부터 만기일전일까지 VIP고객에 선정된 경험이 있는 경우 : 0.3%p \n②이 예금 가입일에 정기예금 500만원이상(만기 1년이상) 가입하고 만기일 전일까지 유지한 경우 : 0.2%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "▶ 최고우대금리 0.50%p  \n①이 예금가입시 VIP고객이거나 가입일 이후부터 만기일전일까지 VIP고객에 선정된 경험이 있는 경우 : 0.3%p \n②이 예금 가입일에 정기예금 500만원이상(만기 1년이상) 가입하고 만기일 전일까지 유지한 경우 : 0.2%p"
@@ -3470,7 +2273,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "자투리 출금계좌 평잔 50만원 이상",
         "type": "AVG_BALANCE",
         "tiers": [
@@ -3479,7 +2281,7 @@
             "rate_bonus": 0.8
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -3519,7 +2321,7 @@
             "rate_bonus": 0.5
           }
         ],
-        "resource": "NONE",
+        "resource": "CASH_BALANCE",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -3542,71 +2344,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "* 거래조건에 따라 최고 2.1%p",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 2.1,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 거래조건에 따라 최고 2.1%p 우대금리 적용"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": 500000,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.8,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "자투리 출금계좌 평잔 50만원 이상 유지 : 0.8%p"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "첫거래고객 or JBANK저금통적금 1개월 내 재신규 : 0.5%p"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": 300000,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신규가입 시점에서 적금 목표금액 최소 30만원 이상 설정하고, 적금 신규일로부터 3개월 내 잔액이 목표금액 이상인 경우 :0.5%p"
-      },
-      {
-        "condition_name": "추천인",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "추천인 우대금리 : 0.30%p"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "* 거래조건에 따라 최고 2.1%p 우대금리 적용\n① 자투리 출금계좌 평잔 50만원 이상 유지 : 0.8%p\n② 첫거래고객 or JBANK저금통적금 1개월 내 재신규 : 0.5%p\n③ 신규가입 시점에서 적금 목표금액 최소 30만원 이상 설정하고, 적금 신규일로부터 3개월 내 잔액이 목표금액 이상인 경우 :0.5%p\n④ 추천인 우대금리 : 0.30%p",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "* 거래조건에 따라 최고 2.1%p 우대금리 적용\n① 자투리 출금계좌 평잔 50만원 이상 유지 : 0.8%p\n② 첫거래고객 or JBANK저금통적금 1개월 내 재신규 : 0.5%p\n③ 신규가입 시점에서 적금 목표금액 최소 30만원 이상 설정하고, 적금 신규일로부터 3개월 내 잔액이 목표금액 이상인 경우 :0.5%p\n④ 추천인 우대금리 : 0.30%p"
@@ -3619,7 +2363,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "매월 1회 이상 지속 납입",
         "type": "OTHER",
         "tiers": [
@@ -3668,7 +2411,7 @@
             "rate_bonus": 0.5
           }
         ],
-        "resource": "NONE",
+        "resource": "CARD_BUDGET",
         "period_months": null,
         "required_months": null,
         "hard_requirement": false,
@@ -3691,58 +2434,13 @@
         "resource": "NONE",
         "period_months": null,
         "required_months": null,
-=======
-        "condition_name": "매월 1회이상 지속적 납입시",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
->>>>>>> Stashed changes
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "매월 1회이상 지속적 납입시:1년제: 0.50%"
-      },
-      {
-        "condition_name": "목표 금액 달성",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "목표 금액 달성:0.50%"
-      },
-      {
-        "condition_name": "카드 사용 실적",
-        "type": "CARD_SPEND",
-        "threshold": 100000,
-        "resource": "CARD_BUDGET",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "신용카드,체크카드 합산 사용액 월10만원 이상 사용: 0.50%"
-      },
-      {
-        "condition_name": "* 청년이니까응원합니다 이벤트",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.5,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "* 청년이니까응원합니다 이벤트 : 0.50%"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "①매월 1회이상 지속적 납입시:1년제: 0.50%\n② 목표 금액 달성:0.50%\n③ 신용카드,체크카드 합산 사용액 월10만원 이상 사용: 0.50%\n* 청년이니까응원합니다 이벤트 : 0.50%",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "①매월 1회이상 지속적 납입시:1년제: 0.50%\n② 목표 금액 달성:0.50%\n③ 신용카드,체크카드 합산 사용액 월10만원 이상 사용: 0.50%\n* 청년이니까응원합니다 이벤트 : 0.50%"
@@ -3755,7 +2453,6 @@
     "rate_by_term": null,
     "conditions": [
       {
-<<<<<<< Updated upstream
         "condition_name": "비대면 채널 신규",
         "type": "CHANNEL",
         "tiers": [
@@ -3814,110 +2511,6 @@
         "selectable": null,
         "source_text": "최고 0.4%p 추가 우대금리 제공\n1. 비대면채널 신규시 0.1%p\n2. 아래의 조건 충족시 0.3%p 추가 우대금리 제공\n①탐나는 J 직장인통장\n②탐나는 J 주거래통장\n가입고객이 기본우대 요건 충족 후 이 상품 가입시 0.1%p\n③달리자 파킹통장 가입 고객이 이 상품 가입시 0.3%p\n(단, ①, ②, ③항은 중복적용 불가)",
         "parse_status": "COMPLETE"
-=======
-        "condition_name": "최고 0.4%p 추가",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.4,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "최고 0.4%p 추가 우대금리 제공"
-      },
-      {
-        "condition_name": "첫거래/신규고객",
-        "type": "FIRST_TRADE",
-        "threshold": null,
-        "resource": "FIRST_TRADE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "1. 비대면채널 신규시 0.1%p"
-      },
-      {
-        "condition_name": "우대금리 조건",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "2. 아래의 조건 충족시 0.3%p 추가 우대금리 제공"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "탐나는 J 직장인통장"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "탐나는 J 주거래통장"
-      },
-      {
-        "condition_name": "가입고객이 기본",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "가입고객이 기본우대 요건 충족 후 이 상품 가입시 0.1%p"
-      },
-      {
-        "condition_name": "상품 보유/재예치",
-        "type": "PRODUCT_HOLDING",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.3,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "달리자 파킹통장 가입 고객이 이 상품 가입시 0.3%p"
-      },
-      {
-        "condition_name": "항은 중복적용 불가)",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "항은 중복적용 불가)"
->>>>>>> Stashed changes
       }
     ],
     "spcl_cnd": "최고 0.4%p 추가 우대금리 제공\n1. 비대면채널 신규시 0.1%p\n2. 아래의 조건 충족시 0.3%p 추가 우대금리 제공\n①탐나는 J 직장인통장\n②탐나는 J 주거래통장\n가입고객이 기본우대 요건 충족 후 이 상품 가입시 0.1%p\n③달리자 파킹통장 가입 고객이 이 상품 가입시 0.3%p\n(단, ①, ②, ③항은 중복적용 불가)"
@@ -3930,32 +2523,56 @@
     "rate_by_term": null,
     "conditions": [
       {
-        "condition_name": "추가",
-        "type": "OTHER",
-        "threshold": null,
-        "resource": "NONE",
-        "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
-        "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "추가우대금리 :"
-      },
-      {
-        "condition_name": "공과금/자동이체",
+        "condition_name": "전북은행 우대금리 조건",
         "type": "AUTO_TRANSFER",
-        "threshold": null,
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
         "resource": "NONE",
         "period_months": 12,
-        "required_months": 6,
-        "rate_bonus": 0.1,
+        "required_months": 12,
         "hard_requirement": false,
-        "payout": "AT_MATURITY",
-        "parse_status": "COMPLETE",
-        "source_text": "당행 계좌간 자동이체를 통해 이 예금으로 자동이체 된 금액에 0.1% 금리 우대"
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "추가우대금리 :\n당행 계좌간 자동이체를 통해 이 예금으로 자동이체 된 금액에 0.1% 금리 우대",
+        "parse_status": "COMPLETE"
       }
     ],
     "spcl_cnd": "추가우대금리 :\n당행 계좌간 자동이체를 통해 이 예금으로 자동이체 된 금액에 0.1% 금리 우대"
+  },
+  {
+    "product_name": "JB 다이렉트적금(정액적립식)",
+    "bank_name": "전북은행",
+    "base_rate": 3.6,
+    "max_rate": 3.7,
+    "rate_by_term": null,
+    "conditions": [
+      {
+        "condition_name": "전북은행 우대금리 조건",
+        "type": "AUTO_TRANSFER",
+        "tiers": [
+          {
+            "threshold": null,
+            "rate_bonus": 0.1
+          }
+        ],
+        "resource": "NONE",
+        "period_months": 12,
+        "required_months": 12,
+        "hard_requirement": false,
+        "payout": "ALL_OR_NOTHING",
+        "branch": null,
+        "exclusive_group": null,
+        "selectable": null,
+        "source_text": "추가우대금리 :\n당행 계좌간 자동이체를 통해 6회이상 입금한 경우 \n연 0.1% 금리우대",
+        "parse_status": "COMPLETE"
+      }
+    ],
+    "spcl_cnd": "추가우대금리 :\n당행 계좌간 자동이체를 통해 6회이상 입금한 경우 \n연 0.1% 금리우대"
   }
 ]

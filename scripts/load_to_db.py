@@ -22,20 +22,18 @@ Spring 프로젝트와 분리된 독립 Python 스크립트.
     5. NOT NULL 컬럼 기본값 치환: resource=null -> "NONE", rate_bonus=null -> 0
     6. 이미 DB에 있는 product_id는 skip (중복 insert 방지)
 
-=== 아직 확정 안 됨 (하람 확인 중) - TODO 함수 골격만 존재, pass 상태 ===
-    - resolve_term_fields: 대표 만기(period_months) 및 그에 따른 base_rate/max_rate/max_limit 선택 규칙
-      raw_products.json의 options[]는 상품 하나에 여러 만기(save_trm)의 금리를 담고 있어
-      Product 테이블의 단일 period_months/base_rate/max_rate 로 어떻게 대표값을 뽑을지 미정.
-    - split_tiers_to_rows: 계단식 조건(tiers 길이 2개 이상, 17건)을 product_condition
-      여러 행으로 분리하는 방식 미정.
-    - resolve_selection_type: ProductCondition.selection_type(TIERED/CHOICE/SINGLE)을
-      parsed_conditions.json의 tiers 길이 / selectable / 상품 최상위 selection_rule.max_select
-      로부터 어떻게 산출할지 미정.
-    - hard_requirement, selection_rule(상품 최상위) 저장 여부: 현재 스키마에 대응 컬럼이 없어
-      컬럼 추가 여부까지 포함해 미정. 컬럼이 추가되기 전까지는 그냥 버려진다.
-
-    위 TODO가 채워지지 않은 상품/조건은 실제 적재 시 자동으로 skip 되고, 그 사유가 출력된다.
-    TODO 함수들을 구현하면 이 스크립트를 --dry-run 없이 그대로 실행해 적재할 수 있다.
+=== 하람 확인 후 확정 (구현 완료) ===
+    - resolve_term_fields: raw_products.json의 options[]를 save_trm(만기)별로 그룹핑해
+      만기마다 별도의 Product row를 만든다 (동일 만기에 rsrv_type 등으로 옵션이 중복되면
+      intr_rate2가 더 높은 쪽을 대표값으로 선택). 만기가 2개 이상이면 product_id에
+      "_{개월}M" 접미사를 붙여 별도 상품으로 분리한다.
+    - split_tiers_to_rows: tiers를 전부 product_condition 행으로 저장한다
+      (한도/조건 선택은 엔진이 런타임에 수행).
+    - resolve_selection_type: tiers 길이가 2 이상이면 TIERED, 그 외에 조건이
+      selectable=True이고 상품 최상위 selection_rule.max_select가 있으면 CHOICE(N중M선택),
+      나머지는 SINGLE.
+    - hard_requirement, selectable, selection_rule(상품 최상위)/max_select는
+      스키마에 컬럼이 추가되어 각각 product_conditions/products row에 포함해 저장한다.
 """
 from __future__ import annotations
 
@@ -163,71 +161,123 @@ def normalize_rate_bonus(rate_bonus) -> Decimal:
 
 
 # ---------------------------------------------------------------------------
-# TODO (하람 확인 중) - 함수 골격만 존재, 구현 전까지 None을 반환해 자동 skip 된다.
+# 하람 확인 후 확정된 산출 규칙
 # ---------------------------------------------------------------------------
 
-def resolve_term_fields(raw_product: dict) -> dict | None:
+def resolve_term_fields(raw_product: dict) -> list[dict] | None:
     """
-    TODO(하람 확인 중): 대표 만기(period_months) 선택 규칙 미확정.
+    raw_product["options"]를 만기(save_trm)별로 그룹핑해 만기마다 하나씩
+    {"period_months", "base_rate", "max_rate", "max_limit"} 딕셔너리를 만든다.
 
-    raw_product["options"]는 상품 하나에 여러 만기(save_trm)별 금리(intr_rate/intr_rate2)를
-    담고 있는데, Product 테이블은 상품당 period_months/base_rate/max_rate가 각각 1개뿐이라
-    어느 만기를 대표값으로 쓸지 결정이 필요하다.
+    동일 만기에 옵션이 여럿(예: 자유적립식/정액적립식)이면 우대금리(intr_rate2)가
+    더 높은 쪽을 그 만기의 대표값으로 선택한다.
 
-    구현 시 반환 형식 예시:
-        {"period_months": int, "base_rate": Decimal, "max_rate": Decimal, "max_limit": int | None}
+    반환: 만기 개월수 오름차순 리스트. 만기가 여러 개면 build_product_rows에서
+    만기마다 별도 상품(product_id 분리)으로 취급한다. 유효한 옵션이 하나도 없으면 None.
     """
-    # TODO: 하람 답변 후 구현
-    pass
+    options = raw_product.get("options") or []
+    max_limit = raw_product.get("max_limit")
+
+    by_term: dict[int, dict] = {}
+    for opt in options:
+        try:
+            months = int(opt.get("save_trm"))
+        except (TypeError, ValueError):
+            continue
+
+        rate = opt.get("intr_rate")
+        rate2 = opt.get("intr_rate2")
+        if rate is None or rate2 is None:
+            continue
+
+        existing = by_term.get(months)
+        if existing is None or rate2 > existing["intr_rate2"]:
+            by_term[months] = {"intr_rate": rate, "intr_rate2": rate2}
+
+    if not by_term:
+        return None
+
+    return [
+        {
+            "period_months": months,
+            "base_rate": Decimal(str(vals["intr_rate"])),
+            "max_rate": Decimal(str(vals["intr_rate2"])),
+            "max_limit": max_limit,
+        }
+        for months, vals in sorted(by_term.items())
+    ]
 
 
 def resolve_selection_type(condition: dict, selection_rule: dict | None) -> str | None:
     """
-    TODO(하람 확인 중): ProductCondition.selection_type(TIERED/CHOICE/SINGLE) 산출 규칙 미확정.
-
-    parsed_conditions.json에는 selection_type이 직접 없고 대신
-    condition["tiers"](길이), condition["selectable"], 상품 최상위 selection_rule.max_select 가 있다.
+    ProductCondition.selection_type 산출 규칙 (하람 확인):
+      - tiers 길이가 2개 이상이면 TIERED (계단식)
+      - (TIERED가 아니면서) selectable=True이고 상품 최상위 selection_rule.max_select가
+        있으면 CHOICE (N중M선택)
+      - 그 외는 SINGLE
     """
-    # TODO: 하람 답변 후 구현
-    pass
+    tiers = condition.get("tiers") or []
+    if len(tiers) >= 2:
+        return "TIERED"
+
+    if condition.get("selectable") and selection_rule and selection_rule.get("max_select"):
+        return "CHOICE"
+
+    return "SINGLE"
 
 
 def split_tiers_to_rows(condition: dict) -> list[dict] | None:
     """
-    TODO(하람 확인 중): 계단식 조건(tiers 길이 2개 이상, 96개 상품 중 17건)을
-    product_condition 여러 행으로 분리하는 방식 미확정.
-
-    구현 시 반환 형식 예시 (tier 개수만큼): [{"threshold": ..., "rate_bonus": ...}, ...]
+    tiers를 전부 product_condition 행으로 저장한다 (어떤 tier를 적용할지는
+    엔진이 런타임에 선택). tiers가 없으면 None을 반환해 해당 조건은 skip 된다.
     """
-    # TODO: 하람 답변 후 구현
-    pass
+    tiers = condition.get("tiers")
+    if not tiers:
+        return None
+
+    return [{"threshold": tier.get("threshold"), "rate_bonus": tier.get("rate_bonus")} for tier in tiers]
 
 
-def build_product_row(matched: MatchedProduct) -> dict | None:
-    """products 테이블 insert용 row. TODO(resolve_term_fields) 미구현이면 None."""
-    term_fields = resolve_term_fields(matched.raw_product)
-    if term_fields is None:
+def build_product_rows(matched: MatchedProduct) -> list[dict] | None:
+    """products 테이블 insert용 row 목록.
+
+    resolve_term_fields가 만기별로 나눠준 값 각각을 별도 상품 row로 만든다.
+    만기가 2개 이상이면 base product_id에 "_{개월}M" 접미사를 붙여 상품을 분리하고,
+    만기가 1개뿐이면 기존 product_id를 그대로 사용한다 (하위 호환).
+    resolve_term_fields가 None이면 None을 반환해 skip 된다.
+    """
+    term_fields_list = resolve_term_fields(matched.raw_product)
+    if term_fields_list is None:
         return None
 
     parsed = matched.parsed_entry.get("parsed") or {}
     selection_rule = parsed.get("selection_rule") or {}
-    return {
-        "product_id": matched.product_id,
-        "bank_name": matched.bank_name,
-        "product_name": matched.product_name,
-        "product_type": resolve_product_type(matched.ptype),
-        "base_rate": term_fields["base_rate"],
-        "max_rate": term_fields["max_rate"],
-        "max_limit": term_fields.get("max_limit"),
-        "period_months": term_fields["period_months"],
-        "is_verified": False,
-        "selection_rule": "MAX_SELECT" if selection_rule.get("max_select") else None,
-        "max_select": selection_rule.get("max_select"),
-    }
+    multi_term = len(term_fields_list) > 1
+
+    rows = []
+    for term_fields in term_fields_list:
+        product_id = (
+            f"{matched.product_id}_{term_fields['period_months']}M"
+            if multi_term else matched.product_id
+        )
+        rows.append({
+            "product_id": product_id,
+            "bank_name": matched.bank_name,
+            "product_name": matched.product_name,
+            "product_type": resolve_product_type(matched.ptype),
+            "base_rate": term_fields["base_rate"],
+            "max_rate": term_fields["max_rate"],
+            "max_limit": term_fields.get("max_limit"),
+            "period_months": term_fields["period_months"],
+            "is_verified": False,
+            "selection_rule": "MAX_SELECT" if selection_rule.get("max_select") else None,
+            "max_select": selection_rule.get("max_select"),
+        })
+    return rows
 
 
 def build_condition_rows(product_id: str, condition: dict, selection_rule: dict | None) -> list[dict] | None:
-    """product_conditions 테이블 insert용 row 목록. TODO 미구현이면 None."""
+    """product_conditions 테이블 insert용 row 목록. tiers가 없는 등 산출 불가하면 None."""
     selection_type = resolve_selection_type(condition, selection_rule)
     tiers = split_tiers_to_rows(condition)
     if selection_type is None or tiers is None:
@@ -334,36 +384,47 @@ def insert_condition(cursor, condition_row: dict) -> None:
 
 def run_load(matched: list[MatchedProduct], conn) -> None:
     with conn.cursor() as cur:
-        existing = get_existing_product_ids(cur, [m.product_id for m in matched])
-
-        inserted_products = 0
-        skipped_existing = 0
+        # 만기별로 상품이 분리될 수 있어(build_product_rows), 먼저 전체 product row를
+        # 만든 뒤 실제 insert될 product_id 전체를 대상으로 기존 존재 여부를 조회한다.
+        per_matched_rows: list[tuple[MatchedProduct, list[dict]]] = []
         skipped_todo = 0
-        inserted_conditions = 0
 
         for m in matched:
-            if m.product_id in existing:
-                skipped_existing += 1
-                continue
-
-            product_row = build_product_row(m)
-            if product_row is None:
+            product_rows = build_product_rows(m)
+            if product_rows is None:
                 skipped_todo += 1
                 print(f"  [TODO 미구현으로 skip] {m.product_name} ({m.bank_name})")
                 continue
+            per_matched_rows.append((m, product_rows))
 
-            insert_product(cur, product_row)
-            inserted_products += 1
+        all_product_ids = [row["product_id"] for _, rows in per_matched_rows for row in rows]
+        existing = get_existing_product_ids(cur, all_product_ids)
 
+        inserted_products = 0
+        skipped_existing = 0
+        inserted_conditions = 0
+
+        for m, product_rows in per_matched_rows:
             parsed = m.parsed_entry.get("parsed") or {}
             selection_rule = parsed.get("selection_rule")
-            for condition in parsed.get("conditions", []):
-                rows = build_condition_rows(m.product_id, condition, selection_rule)
-                if rows is None:
+            conditions = parsed.get("conditions", [])
+
+            for product_row in product_rows:
+                product_id = product_row["product_id"]
+                if product_id in existing:
+                    skipped_existing += 1
                     continue
-                for row in rows:
-                    insert_condition(cur, row)
-                    inserted_conditions += 1
+
+                insert_product(cur, product_row)
+                inserted_products += 1
+
+                for condition in conditions:
+                    rows = build_condition_rows(product_id, condition, selection_rule)
+                    if rows is None:
+                        continue
+                    for row in rows:
+                        insert_condition(cur, row)
+                        inserted_conditions += 1
 
         conn.commit()
 
@@ -405,9 +466,6 @@ def main() -> None:
     if args.dry_run:
         print("\n[dry-run] DB에 연결하지 않았습니다. 실제 적재는 --dry-run 없이 실행하세요.")
         return
-
-    print("\nTODO 항목(대표 만기 선택 / tier 분리 / selection_type 산출)이 아직 확정되지 않았습니다.")
-    print("해당 상품/조건은 자동으로 skip 되며, 하람 확인 후 TODO 함수들을 구현하면 그대로 적재됩니다.")
 
     conn = get_connection()
     try:
