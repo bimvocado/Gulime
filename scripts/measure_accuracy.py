@@ -1,8 +1,13 @@
 """
-data/parsed_conditions.json (LLM 파싱 결과)와 data/validation_set.json (정답지, 42개)을
-(product_name, bank_name)으로 매칭해 파싱 정확도를 측정한다.
+data/parsed_conditions_v2.json (LLM 파싱 결과, 정식 버전)와 data/validation_set.json
+(정답지, 42개)을 (product_name, bank_name)으로 매칭해 파싱 정확도를 측정한다.
 
-채점 대상은 validation_set.json에 있는 42개 상품뿐이다. parsed_conditions.json에만
+정식 버전: parsed_conditions_v2.json / accuracy_report_v2.json (기본값)
+롤백용:   parsed_conditions.json / accuracy_report.json
+         (--parsed parsed_conditions.json --report accuracy_report.json 로 재현 가능)
+자세한 채택 경위는 docs/parser-prompt-v2-adoption.md 참고.
+
+채점 대상은 validation_set.json에 있는 42개 상품뿐이다. 파싱 결과 파일에만
 있는 나머지 상품은 채점에서 제외된다.
 
 매칭 키는 (product_name, bank_name)이지만, bank_name은 collect_and_merge.py의
@@ -25,10 +30,13 @@ conditions 비교 방식:
 측정 필드: type, threshold, resource, rate_bonus (오차 0.01 이내면 정답)
 
 사용법:
-    python scripts/measure_accuracy.py
+    python scripts/measure_accuracy.py             # v2(정식) 채점
+    python scripts/measure_accuracy.py --parsed parsed_conditions.json --report accuracy_report.json
+                                                     # v1 롤백 재현
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from difflib import SequenceMatcher
@@ -43,9 +51,7 @@ from collect_and_merge import canonical_bank_name  # noqa: E402
 
 ROOT = SCRIPTS_DIR.parent
 DATA_DIR = ROOT / "data"
-PARSED_PATH = DATA_DIR / "parsed_conditions.json"
 VALIDATION_PATH = DATA_DIR / "validation_set.json"
-REPORT_PATH = DATA_DIR / "accuracy_report.json"
 
 RATE_BONUS_TOLERANCE = 0.01
 FIELDS = ["type", "threshold", "resource", "rate_bonus"]
@@ -150,8 +156,25 @@ def find_best_condition_match(
     return candidates[0]
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--parsed", type=str, default="parsed_conditions_v2.json",
+        help="data/ 아래 채점 대상 파싱 결과 파일명 (기본값: parsed_conditions_v2.json, 정식 버전)",
+    )
+    parser.add_argument(
+        "--report", type=str, default="accuracy_report_v2.json",
+        help="data/ 아래 저장할 리포트 파일명 (기본값: accuracy_report_v2.json, 정식 버전)",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
-    parsed_entries = load_json(PARSED_PATH)
+    args = parse_args()
+    parsed_path = DATA_DIR / args.parsed
+    report_path = DATA_DIR / args.report
+
+    parsed_entries = load_json(parsed_path)
     validation_entries = load_json(VALIDATION_PATH)
     parsed_by_key = index_parsed(parsed_entries)
 
@@ -284,7 +307,7 @@ def main() -> None:
     }
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    with open(REPORT_PATH, "w", encoding="utf-8") as f:
+    with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
@@ -318,7 +341,7 @@ def main() -> None:
             f"{w['field']}: 정답={w['expected']!r} vs 파싱={w['actual']!r}"
         )
 
-    print(f"\n리포트 저장: {REPORT_PATH}")
+    print(f"\n리포트 저장: {report_path}")
 
 
 if __name__ == "__main__":
