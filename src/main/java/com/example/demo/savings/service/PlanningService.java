@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PlanningService {
 
+    private static final int MAX_LADDER_SLOTS = 3;
+    private static final long MIN_LUMP_SUM_SLOT_AMOUNT = 1_000_000L;
+
     private final ProductCatalog productCatalog;
     private final PortfolioOptimizer optimizer = new PortfolioOptimizer();
     private final RoadmapEngine roadmapEngine = new RoadmapEngine();
@@ -34,22 +37,25 @@ public class PlanningService {
 
         java.util.List<AllocationSlot> slots = new java.util.ArrayList<>();
 
-        // 1. 목돈/예금 슬롯 (12개월 고정 -> targetMonths 반영)
+        // 목돈과 월 저축액을 최대 3개로 나누고 가입월을 한 달씩 엇갈리게 합니다.
         if (allocatable > 0L) {
-            slots.add(new AllocationSlot(
+            addLadderSlots(
+                    slots,
                     AllocationType.LUMP_SUM,
                     allocatable,
-                    targetMonths
-            ));
+                    targetMonths,
+                    lumpSumSlotCount(allocatable)
+            );
         }
 
-        // 2. 월 적금 슬롯 (12개월 고정 -> targetMonths 반영 및 총액 재계산)
         if (domainProfile.monthlySaving() > 0L) {
-            slots.add(new AllocationSlot(
+            addLadderSlots(
+                    slots,
                     AllocationType.MONTHLY_SAVING,
                     domainProfile.monthlySaving() * (long) targetMonths,
-                    targetMonths
-            ));
+                    targetMonths,
+                    Math.min(MAX_LADDER_SLOTS, targetMonths)
+            );
         }
 
         if (slots.isEmpty()) {
@@ -72,9 +78,36 @@ public class PlanningService {
                         .map(allocation -> new SelectedAllocation(
                                 allocation.slotIndex(),
                                 allocation.productId(),
-                                allocation.amount()
+                                allocation.amount(),
+                                allocation.startMonth()
                         ))
                         .toList()
         );
+    }
+
+    private int lumpSumSlotCount(long allocatable) {
+        return (int) Math.max(1L, Math.min(
+                MAX_LADDER_SLOTS,
+                allocatable / MIN_LUMP_SUM_SLOT_AMOUNT
+        ));
+    }
+
+    private void addLadderSlots(
+            java.util.List<AllocationSlot> slots,
+            AllocationType type,
+            long totalAmount,
+            int termMonths,
+            int slotCount
+    ) {
+        long baseAmount = totalAmount / slotCount;
+        long remainder = totalAmount % slotCount;
+        for (int index = 0; index < slotCount; index++) {
+            slots.add(new AllocationSlot(
+                    type,
+                    baseAmount + (index < remainder ? 1L : 0L),
+                    termMonths,
+                    index
+            ));
+        }
     }
 }

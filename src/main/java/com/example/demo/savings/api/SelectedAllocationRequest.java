@@ -7,7 +7,11 @@ import jakarta.validation.constraints.Positive;
 public record SelectedAllocationRequest(
         @Min(0) int slotIndex,
         @NotBlank String productId,
-        @Positive long amount
+        @Positive long amount,
+        @Min(0) int startMonth
 ) {
+    public SelectedAllocationRequest(int slotIndex, String productId, long amount) {
+        this(slotIndex, productId, amount, 0);
+    }
 }
 

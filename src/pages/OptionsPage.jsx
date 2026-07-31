@@ -19,6 +19,7 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
             lumpSum: 20000000,
             emergencyFund: 3000000,
             monthlySaving: 1000000,
+            targetMonths: 12,
             cardSpend6m: [250000, 300000, 200000, 280000, 320000, 220000],
             cardBudgetCap: 300000,
             existingBanks: []
@@ -101,6 +102,11 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                     optionsData.options.map((opt, idx) => {
                         const isBest = idx === 1; // 가운데(균형형) 플랜을 대표 추천으로 표기
                         const isExceeded = opt.isBudgetExceeded || opt.exceeded || false;
+                        const scheduleLabel = opt.optionType === 'STABLE'
+                            ? '월별 풍차형 · 1개월 간격 가입'
+                            : opt.optionType === 'AGGRESSIVE'
+                                ? '즉시 분산형 · 첫 달 모두 가입'
+                                : '혼합형 · 일부 즉시, 일부 순차 가입';
 
                         return (
                             <div
@@ -134,7 +140,10 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                     <h3 className="text-lg font-black text-amber-950 mb-1">
                                         {opt.title || (idx === 0 ? '원금 보장 꼭꼭 플랜' : idx === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
                                     </h3>
-                                    <p className="text-xs text-amber-700/60 mb-4 font-medium">12개월 뒤 예상 수령액</p>
+                                    <p className="text-[11px] font-extrabold text-emerald-700 mb-1">{scheduleLabel}</p>
+                                    <p className="text-xs text-amber-700/60 mb-4 font-medium">
+                                        최종 만기 {opt.completionMonth || userProfile?.targetMonths || 12}개월차 예상 수령액
+                                    </p>
 
                                     {/* 예상 수령액 및 금리 비교 카드 */}
                                     <div className="bg-amber-50/50 p-4 rounded-2xl mb-4 border border-amber-100 space-y-2">
@@ -152,6 +161,20 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                                 실제 기대 {opt.expectedRate || '3.80'}%
                                             </span>
                                         </div>
+                                    </div>
+
+                                    <div className="space-y-2 mb-5">
+                                        {(opt.allocations || []).map((allocation) => (
+                                            <div key={allocation.slotIndex} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px]">
+                                                <div className="flex justify-between font-extrabold text-amber-950">
+                                                    <span>{allocation.startMonth + 1}개월차 · {allocation.productName}</span>
+                                                    <span>{(allocation.amount / 10000).toLocaleString()}만원</span>
+                                                </div>
+                                                <p className="mt-1 text-amber-700/70">
+                                                    {allocation.bankName} · {allocation.maturityMonth}개월차 만기
+                                                </p>
+                                            </div>
+                                        ))}
                                     </div>
 
                                     <div className="text-xs font-semibold text-amber-800 space-y-1.5 mb-6">

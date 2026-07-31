@@ -6,6 +6,7 @@ public record PortfolioResponse(
         String optionType,
         long expectedFinalAmount,
         long expectedTotalReturn,
+        int completionMonth,
         double weightedExpectedRate,
         String riskLevel,
         double riskScore,
