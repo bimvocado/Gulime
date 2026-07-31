@@ -38,7 +38,7 @@ public class JpaProductCatalog implements ProductCatalog {
                 product.getProductId(),
                 product.getProductName(),
                 product.getBankName(),
-                enumValue(ProductType.class, product.getProductType(), ProductType.DEPOSIT),
+                productType(product.getProductType()),
                 product.getPeriodMonths(),
                 0L,
                 product.getMaxLimit() == null ? Long.MAX_VALUE : product.getMaxLimit(),
@@ -46,6 +46,16 @@ public class JpaProductCatalog implements ProductCatalog {
                 ratio(product.getMaxRate()),
                 product.getConditions().stream().map(condition -> mapCondition(product, condition)).toList()
         );
+    }
+
+    private ProductType productType(String raw) {
+        if (raw == null) return ProductType.DEPOSIT;
+        return switch (raw.toUpperCase(Locale.ROOT)) {
+            case "SAVING", "SAVINGS" -> ProductType.SAVING;
+            case "PARKING" -> ProductType.PARKING;
+            case "DEPOSIT" -> ProductType.DEPOSIT;
+            default -> ProductType.DEPOSIT;
+        };
     }
 
     private com.example.demo.savings.domain.ProductCondition mapCondition(
