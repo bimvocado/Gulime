@@ -22,7 +22,6 @@ import java.util.Map;
 
 public final class RoadmapEngine {
 
-    private static final int HORIZON_MONTHS = 12;
     private final ProductEvaluator evaluator = new ProductEvaluator();
 
     public RoadmapResponse create(
@@ -30,6 +29,11 @@ public final class RoadmapEngine {
             UserProfile profile,
             List<SelectedAllocation> selections
     ) {
+        int lastStartMonth = selections.stream()
+                .mapToInt(SelectedAllocation::startMonth)
+                .max()
+                .orElse(0);
+        int horizonMonths = profile.targetMonths() + lastStartMonth;
         Map<String, ProductEvaluation> evaluations = new LinkedHashMap<>();
         for (SavingsProduct product : catalog) {
             evaluations.put(
@@ -87,7 +91,19 @@ public final class RoadmapEngine {
                     selection.productId()
             );
             SavingsProduct product = evaluation.product();
-            validateTerm(product);
+            validateTerm(product, selection.startMonth(), horizonMonths);
+
+            milestones.add(new RoadmapMilestoneResponse(
+                    selection.startMonth(),
+                    "SUBSCRIPTION",
+                    product.productId(),
+                    product.productName(),
+                    selection.amount(),
+                    selection.startMonth() == 0
+                            ? "상품 가입을 시작합니다."
+                            : "대기 자금을 배분해 풍차형 상품 가입을 시작합니다.",
+                    false
+            ));
 
             if (product.productType() == ProductType.SAVING) {
                 long monthlyAmount = monthlyAmount(
@@ -96,7 +112,7 @@ public final class RoadmapEngine {
                 );
                 validateAmount(product, monthlyAmount);
                 savings.add(new InitialSavingResponse(
-                        0,
+                        selection.startMonth(),
                         product.productId(),
                         product.productName(),
                         monthlyAmount,
@@ -110,18 +126,19 @@ public final class RoadmapEngine {
                 expectedTotalReturn += savingReturn;
                 totalPrincipal += selection.amount();
                 milestones.add(new RoadmapMilestoneResponse(
-                        product.termMonths(),
+                        selection.startMonth() + product.termMonths(),
                         "SAVING_MATURITY",
                         product.productId(),
                         product.productName(),
                         selection.amount() + savingReturn,
                         "월 적금 납입이 종료되고 예상 원금과 이자를 수령합니다.",
-                        product.termMonths() < HORIZON_MONTHS
+                        selection.startMonth() + product.termMonths()
+                                < horizonMonths
                 ));
             } else {
                 validateAmount(product, selection.amount());
                 deposits.add(new InitialDepositResponse(
-                        0,
+                        selection.startMonth(),
                         product.productId(),
                         product.productName(),
                         selection.amount(),
@@ -133,7 +150,9 @@ public final class RoadmapEngine {
                         catalog,
                         evaluations,
                         evaluation,
-                        selection.amount()
+                        selection.amount(),
+                        selection.startMonth(),
+                        horizonMonths
                 );
             }
 
@@ -174,16 +193,18 @@ public final class RoadmapEngine {
             List<SavingsProduct> catalog,
             Map<String, ProductEvaluation> evaluations,
             ProductEvaluation initial,
-            long initialAmount
+            long initialAmount,
+            int startMonth,
+            int horizonMonths
     ) {
-        int month = 0;
+        int month = startMonth;
         long amount = initialAmount;
         long totalReturn = 0L;
         ProductEvaluation current = initial;
 
-        while (month < HORIZON_MONTHS
+        while (month < horizonMonths
                 && month + current.product().termMonths()
-                <= HORIZON_MONTHS) {
+                <= horizonMonths) {
             int term = current.product().termMonths();
             long interest = Math.round(
                     amount * current.expectedRate() * term / 12.0
@@ -199,10 +220,10 @@ public final class RoadmapEngine {
                     current.product().productName(),
                     amount,
                     "예상 원금과 이자를 수령합니다.",
-                    month < HORIZON_MONTHS
+                    month < horizonMonths
             ));
 
-            int remaining = HORIZON_MONTHS - month;
+            int remaining = horizonMonths - month;
             if (remaining == 0) {
                 break;
             }
@@ -349,15 +370,11 @@ public final class RoadmapEngine {
                                 + "의 필수조건을 만족하지 못합니다."
                 );
             }
-            card += evaluation.resourceDemand().cardBudget();
-            salary += evaluation.resourceDemand().salaryTransfer();
-            cash += evaluation.resourceDemand().cashBalance();
+            card = Math.max(card, evaluation.resourceDemand().cardBudget());
+            salary = Math.max(salary, evaluation.resourceDemand().salaryTransfer());
+            cash = Math.max(cash, evaluation.resourceDemand().cashBalance());
             evaluation.resourceDemand().firstTradeByBank()
-                    .forEach((bank, count) -> firstTrade.merge(
-                            bank,
-                            count,
-                            Integer::sum
-                    ));
+                    .forEach((bank, count) -> firstTrade.merge(bank, count, Math::max));
         }
 
         if (card > profile.cardBudgetCap()) {
@@ -397,11 +414,15 @@ public final class RoadmapEngine {
         return evaluation;
     }
 
-    private void validateTerm(SavingsProduct product) {
+    private void validateTerm(
+            SavingsProduct product,
+            int startMonth,
+            int horizonMonths
+    ) {
         if (product.termMonths() <= 0
-                || product.termMonths() > HORIZON_MONTHS) {
+                || startMonth + product.termMonths() > horizonMonths) {
             throw new IllegalArgumentException(
-                    "1~12개월 상품만 현재 로드맵에서 지원합니다."
+                    "상품 만기가 목표 기간을 벗어납니다."
             );
         }
     }

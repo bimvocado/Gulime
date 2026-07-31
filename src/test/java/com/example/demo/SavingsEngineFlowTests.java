@@ -118,6 +118,38 @@ class SavingsEngineFlowTests {
                 .filter(option -> option.optionType().equals("BALANCED"))
                 .findFirst()
                 .orElseThrow();
+        var stable = options.options().stream()
+                .filter(option -> option.optionType().equals("STABLE"))
+                .findFirst()
+                .orElseThrow();
+        var aggressive = options.options().stream()
+                .filter(option -> option.optionType().equals("AGGRESSIVE"))
+                .findFirst()
+                .orElseThrow();
+        assertThat(stable.allocations())
+                .extracting(allocation -> allocation.startMonth())
+                .contains(0, 1, 2);
+        assertThat(balanced.allocations())
+                .extracting(allocation -> allocation.startMonth())
+                .contains(0, 1)
+                .doesNotContain(2);
+        assertThat(aggressive.allocations())
+                .allSatisfy(allocation ->
+                        assertThat(allocation.startMonth()).isZero());
+        assertThat(stable.completionMonth())
+                .isGreaterThanOrEqualTo(balanced.completionMonth());
+        assertThat(balanced.completionMonth())
+                .isGreaterThanOrEqualTo(aggressive.completionMonth());
+        assertThat(options.options())
+                .flatExtracting(option -> option.allocations())
+                .allSatisfy(allocation -> assertThat(allocation.maturityMonth())
+                        .isEqualTo(allocation.startMonth()
+                                + allocation.termMonths()));
+        assertThat(balanced.allocations().stream()
+                .filter(allocation -> allocation.allocationType().equals("LUMP_SUM"))
+                .map(allocation -> allocation.productId())
+                .distinct())
+                .hasSizeGreaterThan(1);
 
         RoadmapResponse roadmap = planningService.roadmap(
                 new RoadmapRequest(
@@ -127,13 +159,18 @@ class SavingsEngineFlowTests {
                                         new SelectedAllocationRequest(
                                                 allocation.slotIndex(),
                                                 allocation.productId(),
-                                                allocation.amount()
+                                                allocation.amount(),
+                                                allocation.startMonth()
                                         ))
                                 .toList()
                 )
         );
         assertThat(roadmap.initialAllocation()).isNotNull();
         assertThat(roadmap.milestones()).isNotEmpty();
+        assertThat(roadmap.milestones())
+                .filteredOn(milestone -> milestone.eventType().equals("SUBSCRIPTION"))
+                .extracting(milestone -> milestone.month())
+                .contains(0, 1);
         assertThat(roadmap.finalConfirmationRisks()).isNotNull();
         assertThat(roadmap.summary()).isNotNull();
         assertThat(objectMapper.writeValueAsString(roadmap))
@@ -210,8 +247,8 @@ class SavingsEngineFlowTests {
                         6_000_000L,
                         0L,
                         0L,
+                        12,
                         List.of(
-                                ,
                                 0L,
                                 0L,
                                 0L,

@@ -74,14 +74,20 @@ public final class ProductEvaluator {
 
             if (evaluation.achievable()) {
                 switch (condition.resource()) {
-                    case CARD_BUDGET -> cardBudget += safeThreshold(condition);
-                    case SALARY_TRANSFER -> salaryTransfer++;
+                    case CARD_BUDGET -> cardBudget = Math.max(
+                            cardBudget,
+                            safeThreshold(condition)
+                    );
+                    case SALARY_TRANSFER -> salaryTransfer = 1;
                     case FIRST_TRADE -> firstTradeByBank.merge(
                             product.bankName(),
                             1,
-                            Integer::sum
+                            Math::max
                     );
-                    case CASH_BALANCE -> cashBalance += safeThreshold(condition);
+                    case CASH_BALANCE -> cashBalance = Math.max(
+                            cashBalance,
+                            safeThreshold(condition)
+                    );
                     case NONE -> {
                     }
                 }

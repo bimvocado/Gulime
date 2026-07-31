@@ -9,6 +9,8 @@ public record AllocationResponse(
         long amount,
         long monthlyAmount,
         int termMonths,
+        int startMonth,
+        int maturityMonth,
         double expectedRate,
         long requiredCardResource,
         String status,

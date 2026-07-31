@@ -18,6 +18,7 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
             lumpSum: 20000000,
             emergencyFund: 3000000,
             monthlySaving: 1000000,
+            targetMonths: 12,
             cardSpend6m: [250000, 300000, 200000, 280000, 320000, 220000],
             cardBudgetCap: 300000,
             existingBanks: []
@@ -109,52 +110,54 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                         <span className="text-rose-600">🔥 수익 우대</span>
                     </div>
                 </div>
+            </Card>
 
-                {/* 3가지 카드 선택지 (모바일 세로형 카드 스크롤) */}
-                <div className="space-y-4">
-                    {optionsData?.options && optionsData.options.length > 0 ? (
-                        optionsData.options.map((opt, idx) => {
-                            const isBest = idx === 1; // 가운데(균형형) 플랜을 대표 추천으로 표기
-                            const isExceeded = opt.isBudgetExceeded || opt.exceeded || false;
+            {/* 3가지 카드 선택지 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {optionsData?.options && optionsData.options.length > 0 ? (
+                    optionsData.options.map((opt, idx) => {
+                        const isBest = idx === 1; // 가운데(균형형) 플랜을 대표 추천으로 표기
+                        const isExceeded = opt.isBudgetExceeded || opt.exceeded || false;
+                        const scheduleLabel = opt.optionType === 'STABLE'
+                            ? '월별 풍차형 · 1개월 간격 가입'
+                            : opt.optionType === 'AGGRESSIVE'
+                                ? '즉시 분산형 · 첫 달 모두 가입'
+                                : '혼합형 · 일부 즉시, 일부 순차 가입';
 
-                            return (
-                                <div
-                                    key={opt.optionId || opt.id || idx}
-                                    className={`rounded-2xl p-5 border transition-all relative flex flex-col justify-between ${
-                                        isExceeded
-                                            ? 'bg-slate-100 border-slate-300 opacity-60'
-                                            : `bg-white border-slate-200 ${
-                                                isBest
-                                                    ? 'ring-2 ring-amber-400 shadow-md shadow-amber-500/10'
-                                                    : 'shadow-sm'
-                                            }`
-                                    }`}
-                                >
-                                    {/* 강력 추천 뱃지 */}
-                                    {isBest && !isExceeded && (
-                                        <div className="absolute -top-3 left-4 bg-amber-400 text-amber-950 font-black text-[10px] px-3 py-0.5 rounded-full shadow-sm border border-amber-300">
-                                            👑 굴리미 강력 추천
-                                        </div>
-                                    )}
+                        return (
+                            <div
+                                key={opt.optionId || opt.id || idx}
+                                className={`rounded-[2.5rem] p-6 border transition-all relative flex flex-col justify-between ${
+                                    isExceeded
+                                        ? 'bg-gray-100/90 border-gray-300 opacity-60'
+                                        : `bg-white border-amber-200 ${isBest ? 'shadow-xl shadow-amber-200/50 -translate-y-2 ring-2 ring-amber-300' : 'shadow-sm'}`
+                                }`}
+                            >
+                                {isBest && !isExceeded && (
+                                    <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-[11px] px-4 py-1 rounded-full shadow-sm border border-amber-200">
+                                        👑 굴리미 강력 추천
+                                    </div>
+                                )}
 
-                                    <div>
-                                        <div className="flex justify-between items-center mb-2 mt-1">
-                                            <span className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-md ${
-                                                idx === 0
-                                                    ? 'bg-blue-50 text-blue-700 border border-blue-100'
-                                                    : idx === 1
-                                                        ? 'bg-amber-100 text-amber-900 border border-amber-200'
-                                                        : 'bg-rose-50 text-rose-700 border border-rose-100'
-                                            }`}>
-                                                {opt.name || (idx === 0 ? '안정 굴리미 🛡️' : idx === 1 ? '최적 굴리미 ★' : '공격 굴리미 🚀')}
+                                <div>
+                                    <div className="flex justify-between items-center mb-3">
+                                        <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                                            idx === 0 ? 'bg-blue-100 text-blue-800' : idx === 1 ? 'bg-amber-300 text-amber-950 font-black' : 'bg-rose-100 text-rose-800'
+                                        }`}>
+                                            {opt.name || (idx === 0 ? '안정 굴리미 🛡️' : idx === 1 ? '최적 굴리미 ★' : '공격 굴리미 🚀')}
+                                        </span>
+                                        {isExceeded && (
+                                            <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full">
+                                                🚫 예산 초과
                                             </span>
 
-                                            {isExceeded && (
-                                                <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2 py-0.5 rounded-md">
-                                                    🚫 예산 초과
-                                                </span>
-                                            )}
-                                        </div>
+                                    <h3 className="text-lg font-black text-amber-950 mb-1">
+                                        {opt.title || (idx === 0 ? '원금 보장 꼭꼭 플랜' : idx === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
+                                    </h3>
+                                    <p className="text-[11px] font-extrabold text-emerald-700 mb-1">{scheduleLabel}</p>
+                                    <p className="text-xs text-amber-700/60 mb-4 font-medium">
+                                        최종 만기 {opt.completionMonth || userProfile?.targetMonths || 12}개월차 예상 수령액
+                                    </p>
 
                                         <h3 className="text-base font-black text-slate-900 mb-1">
                                             {opt.title || (idx === 0 ? '원금 보장 꼭꼭 플랜' : idx === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
@@ -189,21 +192,26 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                         </div>
                                     </div>
 
-                                    {/* 플랜 선택 버튼 */}
-                                    <Button
-                                        variant={isBest ? 'primary' : 'secondary'}
-                                        onClick={() => onNext && onNext(opt)}
-                                        disabled={isExceeded}
-                                        className={`w-full py-3 text-xs font-black rounded-xl transition-all ${
-                                            isExceeded
-                                                ? 'opacity-50 cursor-not-allowed bg-slate-200 text-slate-400 border-slate-300'
-                                                : isBest
-                                                    ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/20'
-                                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200'
-                                        }`}
-                                    >
-                                        {isExceeded ? '선택 불가 (예산 초과)' : '이 플랜 선택 & 로드맵 보기 🚀'}
-                                    </Button>
+                                    <div className="space-y-2 mb-5">
+                                        {(opt.allocations || []).map((allocation) => (
+                                            <div key={allocation.slotIndex} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px]">
+                                                <div className="flex justify-between font-extrabold text-amber-950">
+                                                    <span>{allocation.startMonth + 1}개월차 · {allocation.productName}</span>
+                                                    <span>{(allocation.amount / 10000).toLocaleString()}만원</span>
+                                                </div>
+                                                <p className="mt-1 text-amber-700/70">
+                                                    {allocation.bankName} · {allocation.maturityMonth}개월차 만기
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="text-xs font-semibold text-amber-800 space-y-1.5 mb-6">
+                                        <p>💳 필요 카드실적: <strong>월 {(opt.requiredCardSpend || opt.monthlyCardBudget || 0).toLocaleString()}원</strong></p>
+                                        <p className="text-[11px] text-amber-700/70 font-normal">
+                                            {opt.description || opt.desc || '소비 패턴에 딱 맞아 우대금리를 챙기기 제일 편해요!'}
+                                        </p>
+                                    </div>
                                 </div>
                             );
                         })

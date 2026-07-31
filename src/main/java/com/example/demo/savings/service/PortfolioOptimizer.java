@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 슬롯마다 현재 자원 예산 안에서 가장 점수가 높은 상품을 선택하는 Greedy 최적화기입니다.
@@ -44,21 +46,21 @@ public final class PortfolioOptimizer {
         List<PortfolioCandidate> candidates = List.of(
                 buildGreedyCandidate(
                         "STABLE",
-                        slots,
+                        scheduleSlots(slots, "STABLE"),
                         evaluations,
                         profile,
                         riskTolerance
                 ),
                 buildGreedyCandidate(
                         "BALANCED",
-                        slots,
+                        scheduleSlots(slots, "BALANCED"),
                         evaluations,
                         profile,
                         riskTolerance
                 ),
                 buildGreedyCandidate(
                         "AGGRESSIVE",
-                        slots,
+                        scheduleSlots(slots, "AGGRESSIVE"),
                         evaluations,
                         profile,
                         riskTolerance
@@ -130,6 +132,34 @@ public final class PortfolioOptimizer {
         );
     }
 
+    private List<AllocationSlot> scheduleSlots(
+            List<AllocationSlot> slots,
+            String optionType
+    ) {
+        Map<AllocationType, Integer> positions = new HashMap<>();
+        List<AllocationSlot> scheduled = new ArrayList<>();
+        for (AllocationSlot slot : slots) {
+            int position = positions.merge(
+                    slot.allocationType(),
+                    1,
+                    Integer::sum
+            ) - 1;
+            int startMonth = switch (optionType) {
+                case "STABLE" -> position;
+                case "BALANCED" -> position / 2;
+                case "AGGRESSIVE" -> 0;
+                default -> slot.startMonth();
+            };
+            scheduled.add(new AllocationSlot(
+                    slot.allocationType(),
+                    slot.amount(),
+                    slot.termMonths(),
+                    startMonth
+            ));
+        }
+        return scheduled;
+    }
+
     private PortfolioCandidate buildGreedyCandidate(
             String optionType,
             List<AllocationSlot> slots,
@@ -142,32 +172,37 @@ public final class PortfolioOptimizer {
         for (int slotIndex = 0; slotIndex < slots.size(); slotIndex++) {
             AllocationSlot slot = slots.get(slotIndex);
             final int currentSlotIndex = slotIndex;
+            Set<String> selectedProductIds = selected.stream()
+                    .map(allocation -> allocation.product().product().productId())
+                    .collect(Collectors.toSet());
 
-            // 1차 시도: 모든 제약조건(Feasible, 금액한도, 기간) 만족하는 최적 상품
+            Comparator<ProductEvaluation> ranking = Comparator
+                    .comparingDouble((ProductEvaluation evaluation) ->
+                            greedyScore(evaluation, optionType, riskTolerance))
+                    .reversed()
+                    .thenComparing(evaluation -> evaluation.product().productId());
+
+            // 풍차 슬롯끼리는 서로 다른 상품을 우선 선택합니다.
             ProductEvaluation chosen = evaluations.stream()
                     .filter(evaluation -> compatible(slot, evaluation.product()))
                     .filter(evaluation -> amountWithinLimit(slot, evaluation.product()))
-                    .sorted(Comparator
-                            .comparingDouble((ProductEvaluation evaluation) ->
-                                    greedyScore(evaluation, optionType, riskTolerance))
-                            .reversed()
-                            .thenComparing(evaluation -> evaluation.product().productId()))
-                    .filter(evaluation -> {
-                        List<PortfolioAllocation> tentative = new ArrayList<>(selected);
-                        tentative.add(new PortfolioAllocation(currentSlotIndex, slot, evaluation));
-                        return isFeasible(buildCandidate(tentative), profile);
-                    })
+                    .filter(evaluation -> !selectedProductIds.contains(
+                            evaluation.product().productId()))
+                    .sorted(ranking)
+                    .filter(evaluation -> isFeasibleWith(
+                            selected, currentSlotIndex, slot, evaluation, profile))
                     .findFirst()
-                    // 🎯 2차 시도 (Fallback): 기간 조건은 빼고 "타입(SAVING 등)"만 맞는 상품 중 1위 무조건 선택
+                    // 고유 상품이 부족할 때만 중복을 허용하되 다른 제약은 유지합니다.
                     .orElseGet(() -> evaluations.stream()
-                            // 🎯 compatible 대신 compatibleTypeOnly 사용! (기간 제약 완화)
-                            .filter(evaluation -> compatibleTypeOnly(slot, evaluation.product()))
-                            .sorted(Comparator.comparingDouble((ProductEvaluation evaluation) ->
-                                            greedyScore(evaluation, optionType, riskTolerance))
-                                    .reversed())
+                            .filter(evaluation -> compatible(slot, evaluation.product()))
+                            .filter(evaluation -> amountWithinLimit(slot, evaluation.product()))
+                            .sorted(ranking)
+                            .filter(evaluation -> isFeasibleWith(
+                                    selected, currentSlotIndex, slot, evaluation, profile))
                             .findFirst()
                             .orElseThrow(() -> new IllegalArgumentException(
-                                    slot.allocationType() + " 슬롯에 타입이 일치하는 DB 상품이 전혀 없습니다."
+                                    slot.allocationType() + " 슬롯 " + currentSlotIndex
+                                            + "에 배분 가능한 상품이 없습니다."
                             ))
                     );
 
@@ -181,12 +216,16 @@ public final class PortfolioOptimizer {
         return buildCandidate(selected);
     }
 
-    private boolean compatibleTypeOnly(
+    private boolean isFeasibleWith(
+            List<PortfolioAllocation> selected,
+            int slotIndex,
             AllocationSlot slot,
-            SavingsProduct product
+            ProductEvaluation evaluation,
+            UserProfile profile
     ) {
-        // Fallback용: compatible과 동일하게 타입 매칭 진행
-        return compatible(slot, product);
+        List<PortfolioAllocation> tentative = new ArrayList<>(selected);
+        tentative.add(new PortfolioAllocation(slotIndex, slot, evaluation));
+        return isFeasible(buildCandidate(tentative), profile);
     }
     private boolean compatible(
             AllocationSlot slot,
@@ -197,10 +236,12 @@ public final class PortfolioOptimizer {
         }
 
         if (slot.allocationType() == AllocationType.MONTHLY_SAVING) {
-            return product.productType() == ProductType.SAVING;
+            return product.productType() == ProductType.SAVING
+                    && product.termMonths() <= slot.termMonths();
         }
 
-        return product.productType() != ProductType.SAVING;
+        return product.productType() != ProductType.SAVING
+                && product.termMonths() <= slot.termMonths();
     }
 
     private boolean amountWithinLimit(
@@ -262,8 +303,8 @@ public final class PortfolioOptimizer {
 
             double durationFactor = slot.allocationType()
                     == AllocationType.MONTHLY_SAVING
-                    ? (slot.termMonths() + 1.0) / 24.0
-                    : slot.termMonths() / 12.0;
+                    ? (product.product().termMonths() + 1.0) / 24.0
+                    : product.product().termMonths() / 12.0;
             expectedReturn += slot.amount()
                     * product.expectedRate()
                     * durationFactor;
@@ -272,15 +313,12 @@ public final class PortfolioOptimizer {
                     * durationFactor;
             variance += riskWon * riskWon;
 
-            card += product.resourceDemand().cardBudget();
-            salary += product.resourceDemand().salaryTransfer();
-            cash += product.resourceDemand().cashBalance();
+            // 같은 월의 소비·급여·잔액 조건은 여러 상품에 공동으로 충족될 수 있습니다.
+            card = Math.max(card, product.resourceDemand().cardBudget());
+            salary = Math.max(salary, product.resourceDemand().salaryTransfer());
+            cash = Math.max(cash, product.resourceDemand().cashBalance());
             product.resourceDemand().firstTradeByBank()
-                    .forEach((bank, count) -> firstTrade.merge(
-                            bank,
-                            count,
-                            Integer::sum
-                    ));
+                    .forEach((bank, count) -> firstTrade.merge(bank, count, Math::max));
         }
 
         return new PortfolioCandidate(
@@ -305,6 +343,12 @@ public final class PortfolioOptimizer {
                 profile.lumpSum() - profile.emergencyFund()
         );
         if (candidate.lumpSumPrincipal() > allocatable
+                || candidate.allocations().stream()
+                .filter(allocation -> allocation.slot().allocationType()
+                        == AllocationType.MONTHLY_SAVING)
+                .mapToLong(allocation -> allocation.slot().amount()
+                        / allocation.product().product().termMonths())
+                .sum() > profile.monthlySaving()
                 || candidate.cardBudgetUsed() > profile.cardBudgetCap()
                 || candidate.salaryTransferUsed()
                 > (profile.salaryTransferable() ? 1 : 0)
@@ -341,6 +385,11 @@ public final class PortfolioOptimizer {
                 0L,
                 profile.lumpSum() - profile.emergencyFund()
         );
+        int completionMonth = candidate.allocations().stream()
+                .mapToInt(allocation -> allocation.slot().startMonth()
+                        + allocation.product().product().termMonths())
+                .max()
+                .orElse(0);
 
         List<AllocationResponse> allocations = candidate.allocations().stream()
                 .map(allocation -> new AllocationResponse(
@@ -355,6 +404,9 @@ public final class PortfolioOptimizer {
                                 ? monthlyAmount(allocation.slot())
                                 : 0L,
                         allocation.product().product().termMonths(),
+                        allocation.slot().startMonth(),
+                        allocation.slot().startMonth()
+                                + allocation.product().product().termMonths(),
                         toPercent(allocation.product().expectedRate()),
                         allocation.product().resourceDemand().cardBudget(),
                         "SELECTED",
@@ -366,6 +418,7 @@ public final class PortfolioOptimizer {
                 optionType,
                 candidate.principal() + expectedReturn,
                 expectedReturn,
+                completionMonth,
                 round(weightedRate, 6),
                 riskLevel(riskScore),
                 round(riskScore, 6),
