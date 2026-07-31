@@ -26,7 +26,7 @@ public class Product {
     private String productName;
 
     @Column(name = "product_type", nullable = false, length = 20)
-    private String productType; // SAVINGS, DEPOSIT, PARKING
+    private String productType; // SAVING, DEPOSIT, PARKING
 
     @Column(name = "base_rate", nullable = false, precision = 4, scale = 2)
     private BigDecimal baseRate;

@@ -1,12 +1,18 @@
 """
-data/parsed_conditions.json + data/raw_products.json 을 Neon PostgreSQL의
+data/parsed_conditions_v2.json(정식 버전) + data/raw_products.json 을 Neon PostgreSQL의
 products / product_conditions 테이블에 적재한다.
+
+정식 버전: parsed_conditions_v2.json (기본값)
+롤백용:   parsed_conditions.json (--parsed parsed_conditions.json 로 재현 가능)
+자세한 채택 경위는 docs/parser-prompt-v2-adoption.md 참고.
+(주의: 314건은 이미 v1 결과로 DB에 적재되어 있음. v2로 재적재하려면 별도 논의 필요.)
 
 Spring 프로젝트와 분리된 독립 Python 스크립트.
 
 사용법:
     python scripts/load_to_db.py --dry-run   # 매칭 결과만 확인 (DB 연결 없음)
-    python scripts/load_to_db.py             # 실제 적재
+    python scripts/load_to_db.py             # 실제 적재 (v2 기준)
+    python scripts/load_to_db.py --parsed parsed_conditions.json --dry-run   # v1 롤백 재현
 
 필요 조건:
     - 프로젝트 루트 .env 에 DB_URL / DB_USERNAME / DB_PASSWORD 설정
@@ -16,7 +22,7 @@ Spring 프로젝트와 분리된 독립 Python 스크립트.
     1. product_id = raw_products.json의 fin_co_no + fin_prdt_cd 조합
        (collect_and_merge.py의 조인 키와 동일한 방식)
     2. parsed_conditions.json <-> raw_products.json 매칭: (product_name, bank_name) 완전 일치
-    3. product_type: raw_products.json의 "deposit" -> DEPOSIT, "saving" -> SAVINGS
+    3. product_type: raw_products.json의 "deposit" -> DEPOSIT, "saving" -> SAVING
        (PARKING 분류 기준이 원본 데이터에 없어 사용하지 않음)
     4. is_verified: 전부 False
     5. NOT NULL 컬럼 기본값 치환: resource=null -> "NONE", rate_bonus=null -> 0
@@ -50,11 +56,11 @@ import os
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 RAW_PRODUCTS_PATH = DATA_DIR / "raw_products.json"
-PARSED_CONDITIONS_PATH = DATA_DIR / "parsed_conditions.json"
+PARSED_CONDITIONS_PATH = DATA_DIR / "parsed_conditions_v2.json"
 
 # raw_products.json 최상위 키 -> Product.product_type
 # PARKING은 원본 데이터에 분류 기준이 없어 사용하지 않는다 (product_type 매핑 확정 사항 #3).
-PRODUCT_TYPE_MAP = {"deposit": "DEPOSIT", "saving": "SAVINGS"}
+PRODUCT_TYPE_MAP = {"deposit": "DEPOSIT", "saving": "SAVING"}
 
 
 @dataclass
@@ -95,8 +101,8 @@ def load_raw_products() -> dict[tuple[str, str], tuple[str, dict]]:
     return index
 
 
-def load_parsed_conditions() -> list[dict]:
-    with open(PARSED_CONDITIONS_PATH, "r", encoding="utf-8") as f:
+def load_parsed_conditions(path: Path) -> list[dict]:
+    with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -445,17 +451,22 @@ def parse_args() -> argparse.Namespace:
         "--dry-run", action="store_true",
         help="DB에 연결하지 않고 (product_name, bank_name) 매칭 결과 건수만 출력",
     )
+    parser.add_argument(
+        "--parsed", type=str, default="parsed_conditions_v2.json",
+        help="data/ 아래 적재할 파싱 결과 파일명 (기본값: parsed_conditions_v2.json, 정식 버전)",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
+    parsed_path = DATA_DIR / args.parsed
 
     raw_index = load_raw_products()
-    parsed_entries = load_parsed_conditions()
+    parsed_entries = load_parsed_conditions(parsed_path)
     matched, unmatched = match_products(raw_index, parsed_entries)
 
-    print(f"parsed_conditions.json 총 {len(parsed_entries)}건")
+    print(f"{args.parsed} 총 {len(parsed_entries)}건")
     print(f"raw_products.json 매칭 성공: {len(matched)}건")
     print(f"매칭 실패: {len(unmatched)}건")
     if unmatched:

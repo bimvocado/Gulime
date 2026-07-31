@@ -1,19 +1,26 @@
 """
-prompts/parsing_prompt_v1.txt 를 사용해 data/raw_products.json 의 spcl_cnd(우대조건 원문)를
-업스테이지 Solar LLM으로 구조화된 JSON으로 파싱한다.
+prompts/parsing_prompt_v2.txt(정식 버전) 를 사용해 data/raw_products.json 의
+spcl_cnd(우대조건 원문)를 업스테이지 Solar LLM으로 구조화된 JSON으로 파싱한다.
+
+정식 버전: parsing_prompt_v2.txt / parsed_conditions_v2.json (기본값)
+롤백용:   parsing_prompt_v1.txt / parsed_conditions.json
+         (--prompt parsing_prompt_v1.txt --output parsed_conditions.json 로 재현 가능)
+자세한 채택 경위는 docs/parser-prompt-v2-adoption.md 참고.
 
 Spring 프로젝트와 분리된 독립 Python 스크립트.
 
 사용법:
-    python scripts/parse_conditions.py            # 전체 상품 파싱
+    python scripts/parse_conditions.py            # 전체 상품 파싱 (v2 프롬프트, 기본값)
     python scripts/parse_conditions.py --limit 5   # 앞 5개만 테스트
+    python scripts/parse_conditions.py --prompt parsing_prompt_v1.txt --output parsed_conditions.json
+                                                    # v1 롤백 재현
 
 필요 조건:
     - 프로젝트 루트 .env 에 UPSTAGE_API_KEY 설정
     - pip install -r scripts/requirements.txt
 
 재개:
-    - data/parsed_conditions.json 에 이미 기록된 (product_name, bank_name) 항목은
+    - --output 으로 지정한 결과 파일에 이미 기록된 (product_name, bank_name) 항목은
       다시 호출하지 않고 건너뛴다. 중간에 끊겨도 그대로 재실행하면 이어서 진행된다.
 """
 from __future__ import annotations
@@ -31,9 +38,9 @@ from openai import OpenAI
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
-PROMPT_PATH = ROOT / "prompts" / "parsing_prompt_v1.txt"
+PROMPT_PATH = ROOT / "prompts" / "parsing_prompt_v2.txt"
 RAW_PRODUCTS_PATH = DATA_DIR / "raw_products.json"
-OUTPUT_PATH = DATA_DIR / "parsed_conditions.json"
+OUTPUT_PATH = DATA_DIR / "parsed_conditions_v2.json"
 
 MODEL = "solar-pro3"
 CALL_DELAY_SEC = 0.5
@@ -160,11 +167,22 @@ def parse_args() -> argparse.Namespace:
         "--limit", type=int, default=None,
         help="처음 N개 상품만 처리 (테스트용, 예: --limit 5)",
     )
+    parser.add_argument(
+        "--prompt", type=str, default="parsing_prompt_v2.txt",
+        help="prompts/ 아래 프롬프트 파일명 (기본값: parsing_prompt_v2.txt, 정식 버전)",
+    )
+    parser.add_argument(
+        "--output", type=str, default="parsed_conditions_v2.json",
+        help="data/ 아래 결과 파일명 (기본값: parsed_conditions_v2.json, 정식 버전)",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
+    global PROMPT_PATH, OUTPUT_PATH
     args = parse_args()
+    PROMPT_PATH = ROOT / "prompts" / args.prompt
+    OUTPUT_PATH = DATA_DIR / args.output
 
     api_key = load_api_key()
     client = OpenAI(api_key=api_key, base_url="https://api.upstage.ai/v1")
