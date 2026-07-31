@@ -96,6 +96,13 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                 </div>
             </Card>
 
+                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-400">
+                        <span className="text-blue-600">🛡️ 안전 우대</span>
+                        <span className="text-rose-600">🔥 수익 우대</span>
+                    </div>
+                </div>
+            </Card>
+
             {/* 3가지 카드 선택지 */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {optionsData?.options && optionsData.options.length > 0 ? (
@@ -134,8 +141,6 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                             <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full">
                                                 🚫 예산 초과
                                             </span>
-                                        )}
-                                    </div>
 
                                     <h3 className="text-lg font-black text-amber-950 mb-1">
                                         {opt.title || (idx === 0 ? '원금 보장 꼭꼭 플랜' : idx === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
@@ -205,6 +210,74 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                 )}
             </div>
 
+                                        <h3 className="text-base font-black text-slate-900 mb-1">
+                                            {opt.title || (idx === 0 ? '원금 보장 꼭꼭 플랜' : idx === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
+                                        </h3>
+
+                                        {/* 예상 수령액 및 금리 비교 카드 */}
+                                        <div className="bg-slate-50 p-3.5 rounded-xl my-3 border border-slate-100 space-y-1.5">
+                                            <div>
+                                                <span className="text-[10px] text-slate-400 font-bold block">12개월 뒤 예상 수령액</span>
+                                                <span className="text-xl font-black text-slate-900 block">
+                                                    {opt.totalAmount ? `${(opt.totalAmount / 10000).toLocaleString()}만원` : `${((opt.expectedAmount || 33000000) / 10000).toLocaleString()}만원`}
+                                                </span>
+                                            </div>
+
+                                            <div className="pt-2 border-t border-slate-200/60 flex justify-between items-center text-xs">
+                                                <span className="text-slate-400 line-through text-[11px]">
+                                                    광고 연 {opt.advertisedRate || opt.maxRate || '5.50'}%
+                                                </span>
+                                                <span className="font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100 text-[11px]">
+                                                    실제 기대 연 {opt.expectedRate || '3.80'}%
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="text-xs text-slate-600 space-y-1 mb-4">
+                                            <p className="font-bold text-[11px]">
+                                                💳 필요 카드실적: <span className="text-slate-900 font-black">월 {(opt.requiredCardSpend || opt.monthlyCardBudget || 0).toLocaleString()}원</span>
+                                            </p>
+                                            <p className="text-[11px] text-slate-400 leading-snug">
+                                                {opt.description || opt.desc || '소비 패턴에 딱 맞아 우대금리를 챙기기 제일 편해요!'}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2 mb-5">
+                                        {(opt.allocations || []).map((allocation) => (
+                                            <div key={allocation.slotIndex} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px]">
+                                                <div className="flex justify-between font-extrabold text-amber-950">
+                                                    <span>{allocation.startMonth + 1}개월차 · {allocation.productName}</span>
+                                                    <span>{(allocation.amount / 10000).toLocaleString()}만원</span>
+                                                </div>
+                                                <p className="mt-1 text-amber-700/70">
+                                                    {allocation.bankName} · {allocation.maturityMonth}개월차 만기
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    <div className="text-xs font-semibold text-amber-800 space-y-1.5 mb-6">
+                                        <p>💳 필요 카드실적: <strong>월 {(opt.requiredCardSpend || opt.monthlyCardBudget || 0).toLocaleString()}원</strong></p>
+                                        <p className="text-[11px] text-amber-700/70 font-normal">
+                                            {opt.description || opt.desc || '소비 패턴에 딱 맞아 우대금리를 챙기기 제일 편해요!'}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <div className="bg-white rounded-2xl p-8 text-center border border-slate-200 space-y-2 my-4">
+                            <span className="text-3xl block">🎲</span>
+                            <p className="font-bold text-slate-700 text-xs">
+                                {isLoading ? "백엔드 최적 파레토 플랜 산출 중..." : "플랜 데이터를 불러오는 중입니다."}
+                            </p>
+                        </div>
+                    )}
+                </div>
+            </main>
+
+            {/* 하단 고정 스티키 컨트롤 바 (Mobile Bottom Bar) */}
             {/* 이전/다음 버튼 */}
             {onPrev && (
                 <div className="flex justify-start">
