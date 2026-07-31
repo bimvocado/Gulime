@@ -14,10 +14,12 @@ public record ProductSimulationResponse(
         double profileAchievableMaxRate,
         List<ConditionDiagnosticResponse> conditionEvaluations,
         List<ExcludedConditionResponse> excludedConditions,
+        List<ConfirmationQuestionResponse> confirmationQuestions,
         SensitivityResponse sensitivityAnalysis
 ) {
     public ProductSimulationResponse {
         conditionEvaluations = List.copyOf(conditionEvaluations);
         excludedConditions = List.copyOf(excludedConditions);
+        confirmationQuestions = List.copyOf(confirmationQuestions);
     }
 }

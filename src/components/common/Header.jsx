@@ -2,59 +2,43 @@ import React from 'react';
 
 export default function Header({ activeTab, setActiveTab }) {
     const tabs = [
-        { id: 'simulation', label: '1. 자산 진단', emoji: '🎲' },
-        { id: 'options', label: '2. 맞춤 플랜', emoji: '✨' },
-        { id: 'roadmap', label: '3. 로드맵', emoji: '🗺️' }
+        { id: 'simulation', label: '1. 자산 굴리기', emoji: '🎲' },
+        { id: 'options', label: '2. 3가지 맞춤 플랜', emoji: '✨' },
+        { id: 'roadmap', label: '3. 12개월 지도', emoji: '🗺️' }
     ];
 
     return (
-        /* 스마트폰 화면비 고정 (Max-Width 430px 모바일 상단 바) */
-        <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-amber-100/80 max-w-[430px] mx-auto w-full">
-            <div className="px-4 py-3">
-                {/* 상단: 로고 및 타이틀 */}
-                <div className="flex items-center justify-between mb-2.5">
-                    <div
-                        className="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform"
-                        onClick={() => setActiveTab('simulation')}
-                    >
-                        <div className="w-8 h-8 bg-amber-300 rounded-xl flex items-center justify-center text-sm font-black text-slate-800 shadow-sm">
-                            🟡
-                        </div>
-                        <div>
-                            <div className="flex items-center gap-1.5">
-                                <span className="text-base font-black text-amber-950 tracking-tight">굴리미</span>
-                                <span className="text-[9px] bg-amber-100 text-amber-800 font-extrabold px-1.5 py-0.2 rounded-md">
-                                    AI
-                                </span>
-                            </div>
-                        </div>
+        <header className="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-amber-100 shadow-sm">
+            <div className="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
+                {/* 귀여운 굴리미 로고 */}
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('simulation')}>
+                    <div className="w-11 h-11 bg-amber-300 rounded-2xl flex items-center justify-center text-xl font-black text-slate-800 shadow-md shadow-amber-200/50 transform hover:rotate-6 transition">
+                        🟡
                     </div>
-
-                    {/* 현재 진행 중인 단계 표시 */}
-                    <div className="text-[11px] font-extrabold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/60">
-                        {tabs.find(t => t.id === activeTab)?.label}
+                    <div>
+            <span className="text-xl font-black text-amber-950 tracking-tight flex items-center gap-1.5">
+              굴리미 <span className="text-[11px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-200">Gulime AI</span>
+            </span>
+                        <p className="text-[11px] text-amber-600/70 font-medium">내 자산 차곡차곡 굴리기</p>
                     </div>
                 </div>
 
-                {/* 하단: 모바일 최적화 3단계 스텝 탭 (터치영역 확보) */}
-                <nav className="grid grid-cols-3 gap-1 bg-amber-50/80 p-1 rounded-xl border border-amber-100/80">
-                    {tabs.map((tab) => {
-                        const isActive = activeTab === tab.id;
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`py-1.5 px-1 rounded-lg text-[11px] font-bold transition-all flex items-center justify-center gap-1 active:scale-95 ${
-                                    isActive
-                                        ? 'bg-amber-300 text-amber-950 shadow-sm font-black'
-                                        : 'text-amber-800/60 hover:text-amber-900'
-                                }`}
-                            >
-                                <span className="text-xs">{tab.emoji}</span>
-                                <span className="truncate">{tab.label.split('. ')[1]}</span>
-                            </button>
-                        );
-                    })}
+                {/* 탭 네비게이션 */}
+                <nav className="flex bg-amber-50/80 p-1.5 rounded-2xl border border-amber-100/80">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                                activeTab === tab.id
+                                    ? 'bg-amber-300 text-amber-950 shadow-sm shadow-amber-200 scale-105'
+                                    : 'text-amber-800/60 hover:text-amber-900 hover:bg-amber-100/50'
+                            }`}
+                        >
+                            <span>{tab.emoji}</span>
+                            <span>{tab.label}</span>
+                        </button>
+                    ))}
                 </nav>
             </div>
         </header>

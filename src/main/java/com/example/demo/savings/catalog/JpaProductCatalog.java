@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -36,8 +37,8 @@ public class JpaProductCatalog implements ProductCatalog {
     private SavingsProduct mapProduct(Product product) {
         return new SavingsProduct(
                 product.getProductId(),
-                product.getProductName(),
-                product.getBankName(),
+                repairMojibake(product.getProductName()),
+                repairMojibake(product.getBankName()),
                 productType(product.getProductType()),
                 product.getPeriodMonths(),
                 0L,
@@ -67,8 +68,8 @@ public class JpaProductCatalog implements ProductCatalog {
         Integer maxSelect = selectable ? product.getMaxSelect() : null;
         return new com.example.demo.savings.domain.ProductCondition(
                 String.valueOf(condition.getConditionId()),
-                fallback(condition.getConditionName(), condition.getSourceText()),
-                condition.getSourceText(),
+                repairMojibake(fallback(condition.getConditionName(), condition.getSourceText())),
+                repairMojibake(condition.getSourceText()),
                 type,
                 condition.getThreshold(),
                 resource(condition.getResource(), type),
@@ -105,6 +106,7 @@ public class JpaProductCatalog implements ProductCatalog {
             case "CHANNEL", "CHANNEL_USE", "ELECTRONIC_BANKING" -> ConditionType.CHANNEL_USE;
             case "MARKETING_AGREE", "MARKETING_AGREEMENT", "MARKETING_CONSENT",
                     "MARKETING_EVENT", "MYDATA" -> ConditionType.MARKETING_CONSENT;
+            case "UNCONDITIONAL" -> ConditionType.UNCONDITIONAL;
             default -> ConditionType.OTHER;
         };
     }
@@ -127,6 +129,22 @@ public class JpaProductCatalog implements ProductCatalog {
 
     private String fallback(String value, String fallback) {
         return value == null || value.isBlank() ? fallback : value;
+    }
+
+    private String repairMojibake(String value) {
+        if (value == null || containsHangul(value)) {
+            return value;
+        }
+        String decoded = new String(
+                value.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+        );
+        return containsHangul(decoded) ? decoded : value;
+    }
+
+    private boolean containsHangul(String value) {
+        return value.codePoints().anyMatch(codePoint ->
+                codePoint >= 0xAC00 && codePoint <= 0xD7A3);
     }
 
     private <E extends Enum<E>> E enumValue(Class<E> type, String value, E fallback) {

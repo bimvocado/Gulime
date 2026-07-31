@@ -257,7 +257,12 @@ class SavingsEngineFlowTests {
                                 0L
                         ),
                         0L,
-                        List.of()
+                        List.of(),
+                        twelveMonth.conditions().stream()
+                                .collect(java.util.stream.Collectors.toMap(
+                                        condition -> condition.conditionId(),
+                                        ignored -> true
+                                ))
                 )
         );
 

@@ -54,7 +54,11 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                             </span>
                         </h1>
                     </div>
+                    <Button variant="outline" className="text-xs py-2.5 px-4 bg-white/90">
+                        📅 Google 달력에 캘린더 등록
+                    </Button>
                 </div>
+            </div>
 
             <Card title="풍차 가입·만기 타임라인" icon="🗺️" subtitle="가입월을 한 달씩 엇갈려 만기도 순차적으로 돌아옵니다.">
                 <div className="relative pl-6 border-l-2 border-amber-300 space-y-8 my-4">
@@ -78,56 +82,48 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                 </div>
             </Card>
 
-            {/* 하단 고정 액션 컨트롤 바 (Mobile Bottom Sticky Bar) */}
-            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-40 flex gap-2">
+            {/* 최종 확정 하단 버튼 세트 */}
+            <div className="flex gap-4 pt-2">
                 {onPrev && (
                     <button
                         onClick={onPrev}
-                        className="w-1/3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all text-xs border border-slate-200 active:scale-[0.98]"
+                        className="w-1/3 py-4 bg-amber-100 hover:bg-amber-200 text-amber-900 font-black rounded-2xl transition-all text-sm"
                     >
-                        👈 다시 고르기
+                        👈 플랜 다시 고르기
                     </button>
                 )}
                 <Button
                     onClick={() => setIsModalOpen(true)}
-                    className={`py-3 text-xs font-black rounded-xl transition-all shadow-md active:scale-[0.98] ${
-                        onPrev ? 'w-2/3' : 'w-full'
-                    } ${
-                        isConfirmed
-                            ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-emerald-500/20'
-                            : 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20'
-                    }`}
+                    className={`text-base py-4 ${onPrev ? 'w-2/3' : 'w-full'} ${isConfirmed ? 'bg-emerald-500 hover:bg-emerald-600' : ''}`}
                 >
-                    {isConfirmed ? '✅ 로드맵 확정 완료됨' : '🚀 최종 확정하기'}
+                    {isConfirmed ? '✅ 로드맵 확정 완료됨' : '🚀 이 로드맵으로 최종 확정하기'}
                 </Button>
             </div>
 
-            {/* ⚠️ 리스크 고지 팝업 모달 (모바일 맞춤) */}
+            {/* ⚠️ 리스크 고지 팝업 모달 */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fadeIn">
-                    <div className="bg-white rounded-2xl p-5 max-w-[360px] w-full border border-slate-200 shadow-2xl space-y-4">
-                        <div className="text-center space-y-1">
-                            <span className="text-3xl block mb-1">⚠️</span>
-                            <h3 className="text-base font-black text-slate-900">최종 확정 전 확인해 주세요</h3>
-                            <p className="text-[10px] text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded-full inline-block">
-                                우대금리 이행 리스크 고지서
-                            </p>
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+                    <div className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full border-2 border-amber-300 shadow-2xl space-y-6">
+                        <div className="text-center space-y-2">
+                            <span className="text-4xl">⚠️</span>
+                            <h3 className="text-xl font-black text-amber-950">최종 확정 전 꼭 확인해 주세요!</h3>
+                            <p className="text-xs text-amber-800/70 font-semibold">굴리미 우대금리 이행 리스크 고지서</p>
                         </div>
 
-                        <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[11px] text-slate-600 space-y-1.5 font-medium leading-tight">
-                            <p>• 입력하신 소비 패턴 기준 <strong>기대금리(E[r])</strong>입니다.</p>
-                            <p>• 실적 미달(카드 사용량 부족, 급여이체 중단 등) 시 <strong>우대금리가 적용되지 않아 최종 만기 이자가 변동</strong>될 수 있습니다.</p>
+                        <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-2 font-medium leading-relaxed">
+                            <p>• 본 시뮬레이션 결과는 입력하신 소비 패턴과 몬테카를로 진단을 바탕으로 산출된 <strong>기대금리(E[r])</strong>입니다.</p>
+                            <p>• 실적 미달(카드 사용량 부족, 급여이체 중단 등) 시 <strong>약정된 우대금리가 적용되지 않아 최종 만기 이자가 변동</strong>될 수 있습니다.</p>
                             <p>• 중도 해지 시 약정 금리가 아닌 중도해지 금리가 적용됩니다.</p>
                         </div>
 
-                        <div className="flex gap-2 pt-1">
+                        <div className="flex gap-3">
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="w-1/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs"
+                                className="w-1/3 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-2xl text-xs"
                             >
                                 취소
                             </button>
-                            <Button onClick={handleConfirm} className="w-2/3 py-2.5 text-xs bg-amber-500 text-white font-black rounded-xl">
+                            <Button onClick={handleConfirm} className="w-2/3 py-3 text-xs">
                                 동의하고 확정하기 ✨
                             </Button>
                         </div>

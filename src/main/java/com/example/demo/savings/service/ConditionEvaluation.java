@@ -11,7 +11,8 @@ public record ConditionEvaluation(
         double variancePlusProbability,
         double varianceMinusProbability,
         String reason,
-        boolean selected
+        boolean selected,
+        boolean confirmationRequired
 ) {
     public ConditionEvaluation withSelected(boolean selected) {
         return new ConditionEvaluation(
@@ -23,7 +24,8 @@ public record ConditionEvaluation(
                 variancePlusProbability,
                 varianceMinusProbability,
                 reason,
-                selected
+                selected,
+                confirmationRequired
         );
     }
 }

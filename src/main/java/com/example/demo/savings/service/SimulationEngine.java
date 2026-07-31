@@ -2,6 +2,7 @@ package com.example.demo.savings.service;
 
 import com.example.demo.savings.api.CardBudgetResponse;
 import com.example.demo.savings.api.ConditionDiagnosticResponse;
+import com.example.demo.savings.api.ConfirmationQuestionResponse;
 import com.example.demo.savings.api.ExcludedConditionResponse;
 import com.example.demo.savings.api.ProductSimulationResponse;
 import com.example.demo.savings.api.RangeResponse;
@@ -13,6 +14,7 @@ import com.example.demo.savings.domain.UserProfile;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Comparator;
 import java.util.List;
 
 public final class SimulationEngine {
@@ -26,7 +28,8 @@ public final class SimulationEngine {
         List<ProductSimulationResponse> productResults = products.stream()
                 .map(product -> toResponse(
                         evaluator.evaluate(product, profile),
-                        profile
+                        profile,
+                        products.size() == 1
                 ))
                 .toList();
 
@@ -42,7 +45,8 @@ public final class SimulationEngine {
 
     private ProductSimulationResponse toResponse(
             ProductEvaluation evaluation,
-            UserProfile profile
+            UserProfile profile,
+            boolean includeConfirmationQuestions
     ) {
         List<ConditionDiagnosticResponse> conditions = evaluation.conditions().stream()
                 .filter(ConditionEvaluation::selected)
@@ -91,6 +95,23 @@ public final class SimulationEngine {
         excluded = java.util.stream.Stream.concat(excluded.stream(), unselected.stream())
                 .toList();
 
+        List<ConfirmationQuestionResponse> confirmationQuestions = evaluation.conditions()
+                .stream()
+                .filter(ignored -> includeConfirmationQuestions)
+                .filter(ConditionEvaluation::confirmationRequired)
+                .sorted(Comparator
+                        .comparingDouble((ConditionEvaluation condition) ->
+                                condition.condition().rateBonus())
+                        .reversed()
+                        .thenComparing(condition -> condition.condition().conditionId()))
+                .limit(3)
+                .map(condition -> new ConfirmationQuestionResponse(
+                        condition.condition().conditionId(),
+                        condition.condition().conditionName() + " 조건을 충족할 수 있나요?",
+                        toPercent(condition.condition().rateBonus())
+                ))
+                .toList();
+
         double sensitivityMinPercent = toPercent(Math.min(
                 evaluation.variancePlusRate(),
                 evaluation.varianceMinusRate()
@@ -119,6 +140,7 @@ public final class SimulationEngine {
                 toPercent(evaluation.profileAchievableMaxRate()),
                 conditions,
                 excluded,
+                confirmationQuestions,
                 new SensitivityResponse(
                         30,
                         new RangeResponse(
@@ -136,6 +158,9 @@ public final class SimulationEngine {
     }
 
     private String conditionStatus(ConditionEvaluation evaluation) {
+        if (evaluation.confirmationRequired()) {
+            return "NEEDS_CONFIRMATION";
+        }
         if (!evaluation.achievable() || evaluation.probability() == 0.0) {
             return "FAILED";
         }

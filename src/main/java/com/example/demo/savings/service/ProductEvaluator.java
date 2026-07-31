@@ -137,10 +137,38 @@ public final class ProductEvaluator {
                     profile.lumpSum() - profile.emergencyFund() >= safeThreshold(condition),
                     "배분 가능 현금이 조건 금액보다 적습니다."
             );
+            case UNCONDITIONAL -> binary(condition, true, null);
             case CARD_PAYMENT_ACCOUNT, CARD_OWNERSHIP, PRODUCT_HOLDING,
                     TRANSFER_COUNT, CHANNEL_USE, MARKETING_CONSENT, OTHER ->
-                    binary(condition, true, null);
+                    confirmation(condition, profile);
         };
+    }
+
+    private ConditionEvaluation confirmation(
+            ProductCondition condition,
+            UserProfile profile
+    ) {
+        Boolean answer = profile.conditionAnswers().get(condition.conditionId());
+        if (answer != null) {
+            return binary(
+                    condition,
+                    answer,
+                    answer ? null : "사용자가 달성할 수 없다고 확인한 조건입니다."
+            );
+        }
+
+        return new ConditionEvaluation(
+                condition,
+                true,
+                0.5,
+                0.0,
+                1.0,
+                1.0,
+                0.0,
+                "정확한 금리 계산을 위해 사용자 확인이 필요한 조건입니다.",
+                true,
+                true
+        );
     }
 
     private ConditionEvaluation cardSpend(
@@ -174,7 +202,8 @@ public final class ProductEvaluator {
                 result.variancePlusProbability(),
                 result.varianceMinusProbability(),
                 null,
-                true
+                true,
+                false
         );
     }
 
@@ -193,7 +222,8 @@ public final class ProductEvaluator {
                 probability,
                 probability,
                 achievable ? null : failureReason,
-                true
+                true,
+                false
         );
     }
 

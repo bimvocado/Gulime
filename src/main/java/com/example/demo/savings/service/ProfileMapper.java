@@ -18,7 +18,8 @@ final class ProfileMapper {
                 profile.targetMonths(), // 👈 🎯 targ 오타 수정 및 targetMonths 순서에 맞춰 배치
                 profile.cardSpend6m(),
                 profile.cardBudgetCap(),
-                profile.existingBanks()
+                profile.existingBanks(),
+                profile.conditionAnswers()
         );
     }
 }
