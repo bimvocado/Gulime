@@ -11,10 +11,12 @@ export default function SimulationPage({ onNext }) {
     const [targetMonths, setTargetMonths] = useState(12); // 👈 [추가] 목표 저축 기간 (기본 12개월)
     const [cardSpend6m, setCardSpend6m] = useState([250000, 300000, 200000, 280000, 320000, 220000]);
     const [cardBudgetCap, setCardBudgetCap] = useState(300000);
-    const [existingBank, setExistingBank] = useState("KB");
+    const [existingBank, setExistingBank] = useState("국민은행");
 
     const [isLoading, setIsLoading] = useState(false);
     const [resultData, setResultData] = useState(null);
+    const [conditionAnswers, setConditionAnswers] = useState({});
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
     const handleCardSpendChange = (index, value) => {
         const updated = [...cardSpend6m];
@@ -22,11 +24,7 @@ export default function SimulationPage({ onNext }) {
         setCardSpend6m(updated);
     };
 
-    const handleRunSimulation = async () => {
-        setIsLoading(true);
-
-        // ProfileRequest 규격 (targetMonths 추가)
-        const profilePayload = {
+    const buildProfilePayload = (answers = conditionAnswers) => ({
             employment: employment,
             salaryTransferable: Boolean(salaryTransferable),
             lumpSum: Math.max(0, Number(lumpSum)),
@@ -35,12 +33,17 @@ export default function SimulationPage({ onNext }) {
             targetMonths: Number(targetMonths) || 12, // 👈 [추가] 백엔드로 목표 기간 전달
             cardSpend6m: cardSpend6m.map(v => Math.max(0, Number(v))),
             cardBudgetCap: Math.max(0, Number(cardBudgetCap)),
-            existingBanks: [existingBank]
-        };
+            existingBanks: [existingBank],
+            conditionAnswers: answers
+    });
+
+    const requestSimulation = async (productIds, answers = conditionAnswers) => {
+        setIsLoading(true);
+        const profilePayload = buildProfilePayload(answers);
 
         const requestBody = {
             profile: profilePayload,
-            productIds: null
+            productIds
         };
 
         try {
@@ -58,17 +61,32 @@ export default function SimulationPage({ onNext }) {
             const data = await response.json();
             console.log("백엔드 시뮬레이션 응답 성공:", data);
             setResultData(data);
-
-            if (onNext) {
-                onNext(profilePayload);
-            }
-
         } catch (error) {
             console.error("API 연동 에러:", error);
             alert(`시뮬레이션 오류:\n${error.message}`);
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleRunSimulation = () => {
+        setSelectedProductId(null);
+        requestSimulation(null);
+    };
+
+    const handleProductDetail = (productId) => {
+        setSelectedProductId(productId);
+        requestSimulation([productId]);
+    };
+
+    const handleConditionAnswer = (conditionId, answer) => {
+        const nextAnswers = { ...conditionAnswers, [conditionId]: answer };
+        setConditionAnswers(nextAnswers);
+        requestSimulation([selectedProductId], nextAnswers);
+    };
+
+    const handleContinue = () => {
+        onNext?.(buildProfilePayload());
     };
 
     return (
@@ -170,11 +188,11 @@ export default function SimulationPage({ onNext }) {
                                     onChange={(e) => setExistingBank(e.target.value)}
                                     className="w-full px-3.5 py-3 bg-amber-50/60 border border-amber-200/80 rounded-2xl text-amber-950 font-bold"
                                 >
-                                    <option value="KB">KB국민은행</option>
-                                    <option value="SHINHAN">신한은행</option>
-                                    <option value="WOORI">우리은행</option>
-                                    <option value="HANA">하나은행</option>
-                                    <option value="KAKAO">카카오뱅크</option>
+                                    <option value="국민은행">KB국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="하나은행">하나은행</option>
+                                    <option value="카카오뱅크">카카오뱅크</option>
                                 </select>
                             </div>
 
@@ -238,19 +256,83 @@ export default function SimulationPage({ onNext }) {
                             <p className="text-xs font-black text-amber-900">
                                 🎯 총 {resultData.products.length}개 상품 진단 완료!
                             </p>
+                            {selectedProductId && (
+                                <button
+                                    type="button"
+                                    onClick={handleRunSimulation}
+                                    className="text-xs font-extrabold text-amber-700 hover:text-amber-900"
+                                >
+                                    ← 전체 상품 결과로 돌아가기
+                                </button>
+                            )}
                             {resultData.products.slice(0, 10).map((prod, idx) => (
                                 <Card key={prod.productId || idx} title={prod.productName} subtitle={`${prod.bankName || '은행'} | ${prod.termMonths || 12}개월`}>
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center p-3 bg-amber-50/80 rounded-xl border border-amber-200">
                                             <div>
                                                 <p className="text-[10px] text-amber-700 font-bold">기본금리 → 최고금리</p>
-                                                <p className="text-xs font-black text-amber-900">{prod.baseRate}% ~ {prod.maxRate}%</p>
+                                                <p className="text-xs font-black text-amber-900">{prod.baseRate}% ~ {prod.advertisedMaxRate}%</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-[10px] text-amber-700 font-bold">굴리미 AI 기대금리 E[r]</p>
                                                 <p className="text-lg font-black text-amber-600">연 {prod.expectedRate}% 🎉</p>
                                             </div>
                                         </div>
+
+                                        {prod.confirmationQuestions?.length > 0 && (
+                                            <div className="space-y-3 rounded-2xl border border-blue-200 bg-blue-50/70 p-4">
+                                                <div>
+                                                    <p className="text-xs font-black text-blue-950">
+                                                        이 항목을 확인하면 금리를 더 정확히 계산할 수 있어요
+                                                    </p>
+                                                    <p className="mt-1 text-[11px] font-semibold text-blue-700">
+                                                        한 번에 최대 3개만 여쭤봅니다.
+                                                    </p>
+                                                </div>
+                                                {prod.confirmationQuestions.map((question) => (
+                                                    <div
+                                                        key={question.conditionId}
+                                                        className="rounded-xl border border-blue-100 bg-white p-3"
+                                                    >
+                                                        <p className="text-xs font-bold text-blue-950">
+                                                            {question.question}
+                                                        </p>
+                                                        <p className="mt-1 text-[10px] font-semibold text-blue-600">
+                                                            금리 영향 {question.rateImpact}%p
+                                                        </p>
+                                                        <div className="mt-2 flex gap-2">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleConditionAnswer(question.conditionId, true)}
+                                                                disabled={isLoading}
+                                                                className="flex-1 rounded-lg bg-blue-600 px-3 py-2 text-[11px] font-black text-white disabled:opacity-50"
+                                                            >
+                                                                가능해요
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleConditionAnswer(question.conditionId, false)}
+                                                                disabled={isLoading}
+                                                                className="flex-1 rounded-lg border border-blue-200 bg-white px-3 py-2 text-[11px] font-black text-blue-800 disabled:opacity-50"
+                                                            >
+                                                                어려워요
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {!selectedProductId && (
+                                            <button
+                                                type="button"
+                                                onClick={() => handleProductDetail(prod.productId)}
+                                                disabled={isLoading}
+                                                className="w-full rounded-xl border border-amber-300 bg-white px-4 py-2.5 text-xs font-black text-amber-900 hover:bg-amber-100 disabled:opacity-50"
+                                            >
+                                                이 상품 금리 정확히 계산하기
+                                            </button>
+                                        )}
                                     </div>
                                 </Card>
                             ))}
@@ -265,6 +347,14 @@ export default function SimulationPage({ onNext }) {
                     )}
                 </div>
             </div>
+
+            {resultData?.products?.length > 0 && (
+                <div className="flex justify-end">
+                    <Button onClick={handleContinue} disabled={isLoading}>
+                        추천 플랜 확인하기 →
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }
