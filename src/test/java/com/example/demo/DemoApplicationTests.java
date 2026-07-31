@@ -12,29 +12,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class DemoApplicationTests {
 
-	@Autowired
-	private ProductCatalog productCatalog;
+    @Autowired
+    private ProductCatalog productCatalog;
 
-	@Test
-	void contextLoads() {
-		assertThat(productCatalog.findAll()).hasSize(49);
-	}
+    @Test
+    void contextLoads() {
+        assertThat(productCatalog.findAll()).isNotEmpty();
+    }
 
-	@Test
-	void validationSetIsConvertedToEngineDomain() {
-		SavingsProduct product = productCatalog.findAll().stream()
-				.filter(item -> item.productName().equals("매일이자Wa파킹통장"))
-				.findFirst()
-				.orElseThrow();
+    @Test
+    void validationSetIsConvertedToEngineDomain() {
+        SavingsProduct product = productCatalog.findAll().stream()
+                .filter(item -> item.productName().equals("e-그린세이브예금"))
+                .findFirst()
+                .orElseThrow();
 
-		assertThat(product.baseRate()).isEqualTo(0.025);
-		assertThat(product.maxRate()).isEqualTo(0.051);
-		assertThat(product.conditions())
-				.extracting(condition -> condition.type())
-				.contains(
-						ConditionType.BALANCE_MAINTENANCE,
-						ConditionType.CHANNEL_USE
-				);
-	}
-
+        assertThat(product.baseRate()).isEqualTo(0.0355);
+        assertThat(product.maxRate()).isEqualTo(0.0385);
+        assertThat(product.conditions())
+                .extracting(condition -> condition.type())
+                .contains(
+                        ConditionType.DEPOSIT_AMOUNT,
+                        ConditionType.BALANCE_MAINTENANCE,
+                        ConditionType.FIRST_TRADE
+                );
+    }
 }

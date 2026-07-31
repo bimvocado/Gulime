@@ -12,6 +12,7 @@ public enum ConditionType {
     PRODUCT_HOLDING,
     CHANNEL_USE,
     MARKETING_CONSENT,
+    UNCONDITIONAL,
     OTHER
 }
 

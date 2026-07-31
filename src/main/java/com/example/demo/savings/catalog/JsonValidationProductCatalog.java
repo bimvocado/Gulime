@@ -492,7 +492,7 @@ public class JsonValidationProductCatalog implements ProductCatalog {
             case "MARKETING_AGREE", "MARKETING_AGREEMENT", "MARKETING_CONSENT",
                     "MARKETING_EVENT", "MYDATA" ->
                     ConditionType.MARKETING_CONSENT;
-            case "UNCONDITIONAL" -> ConditionType.OTHER;
+            case "UNCONDITIONAL" -> ConditionType.UNCONDITIONAL;
             default -> ConditionType.OTHER;
         };
     }
