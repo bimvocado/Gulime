@@ -9,11 +9,11 @@ import com.example.demo.savings.domain.AllocationType;
 import com.example.demo.savings.domain.SelectedAllocation;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class PlanningService {
-
-    private static final int MAX_LADDER_SLOTS = 3;
-    private static final long MIN_LUMP_SUM_SLOT_AMOUNT = 1_000_000L;
 
     private final ProductCatalog productCatalog;
     private final PortfolioOptimizer optimizer = new PortfolioOptimizer();
@@ -24,10 +24,7 @@ public class PlanningService {
     }
 
     public OptionsResponse options(OptionsRequest request) {
-        // ProfileMapper를 통해 DTO -> 도메인 변환
         var domainProfile = ProfileMapper.toDomain(request.profile());
-
-        // 🎯 유저가 선택한 목표 기간 (6, 12, 24, 36 등)
         int targetMonths = domainProfile.targetMonths();
 
         long allocatable = Math.max(
@@ -35,27 +32,38 @@ public class PlanningService {
                 domainProfile.lumpSum() - domainProfile.emergencyFund()
         );
 
-        java.util.List<AllocationSlot> slots = new java.util.ArrayList<>();
+        List<AllocationSlot> slots = new ArrayList<>();
 
-        // 목돈과 월 저축액을 최대 3개로 나누고 가입월을 한 달씩 엇갈리게 합니다.
+        // 1. 목돈 슬롯 (예금)
         if (allocatable > 0L) {
-            addLadderSlots(
-                    slots,
+            slots.add(new AllocationSlot(
                     AllocationType.LUMP_SUM,
                     allocatable,
                     targetMonths,
-                    lumpSumSlotCount(allocatable)
-            );
+                    0
+            ));
         }
 
+        // 2. 월 적금 슬롯
+        // 💡 [핵심 수정] 무작정 슬롯을 3개씩 넣지 말고, 적금 슬롯은 1~2개로 안전하게 할당
         if (domainProfile.monthlySaving() > 0L) {
-            addLadderSlots(
-                    slots,
+            long totalMonthlySavingBudget = domainProfile.monthlySaving() * (long) targetMonths;
+
+            // Primary 적금 슬롯 (1순위 고금리 상품용)
+            slots.add(new AllocationSlot(
                     AllocationType.MONTHLY_SAVING,
-                    domainProfile.monthlySaving() * (long) targetMonths,
+                    totalMonthlySavingBudget,
                     targetMonths,
-                    Math.min(MAX_LADDER_SLOTS, targetMonths)
-            );
+                    0
+            ));
+
+            // Secondary 적금 슬롯 (여유 자금 분산용 2순위 - 1개만 추가)
+            slots.add(new AllocationSlot(
+                    AllocationType.MONTHLY_SAVING,
+                    totalMonthlySavingBudget,
+                    targetMonths,
+                    1
+            ));
         }
 
         if (slots.isEmpty()) {
@@ -83,31 +91,5 @@ public class PlanningService {
                         ))
                         .toList()
         );
-    }
-
-    private int lumpSumSlotCount(long allocatable) {
-        return (int) Math.max(1L, Math.min(
-                MAX_LADDER_SLOTS,
-                allocatable / MIN_LUMP_SUM_SLOT_AMOUNT
-        ));
-    }
-
-    private void addLadderSlots(
-            java.util.List<AllocationSlot> slots,
-            AllocationType type,
-            long totalAmount,
-            int termMonths,
-            int slotCount
-    ) {
-        long baseAmount = totalAmount / slotCount;
-        long remainder = totalAmount % slotCount;
-        for (int index = 0; index < slotCount; index++) {
-            slots.add(new AllocationSlot(
-                    type,
-                    baseAmount + (index < remainder ? 1L : 0L),
-                    termMonths,
-                    index
-            ));
-        }
     }
 }

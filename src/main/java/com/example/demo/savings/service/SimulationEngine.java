@@ -9,6 +9,7 @@ import com.example.demo.savings.api.RangeResponse;
 import com.example.demo.savings.api.SensitivityResponse;
 import com.example.demo.savings.api.SimulateResponse;
 import com.example.demo.savings.domain.ConditionType;
+import com.example.demo.savings.domain.ProductCondition;
 import com.example.demo.savings.domain.SavingsProduct;
 import com.example.demo.savings.domain.UserProfile;
 
@@ -185,13 +186,24 @@ public final class SimulationEngine {
                             profile.cardSpend6m()
                     )
             );
+
+            ProductCondition condition = evaluation.condition();
+            long totalThreshold = condition.threshold() != null ? condition.threshold() : 0L;
+            int period = (condition.periodMonths() != null && condition.periodMonths() > 0) ? condition.periodMonths() : 1;
+            long monthlyThreshold = totalThreshold / period;
+
+            // 💡 [개선] 사용자가 알아보기 쉽게 월 필요액 및 총 필요액을 함께 안내
             return "최근 6개월 카드 사용액 평균 "
                     + mean
                     + "원, 표준편차 "
                     + standardDeviation
-                    + "원을 기준으로 "
-                    + evaluation.condition().threshold()
-                    + "원 조건의 달성확률을 계산했습니다.";
+                    + "원을 기준으로 월 평균 "
+                    + monthlyThreshold
+                    + "원 (총 "
+                    + period
+                    + "개월간 "
+                    + totalThreshold
+                    + "원) 조건의 달성확률을 계산했습니다.";
         }
         return "온보딩 프로필 기준으로 달성 가능한 조건입니다.";
     }

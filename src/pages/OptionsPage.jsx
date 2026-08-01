@@ -61,7 +61,7 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                     어떤 스타일로 굴려볼까요?
                 </h1>
                 <p className="text-amber-800/60 text-xs font-semibold">
-                    자원 제약을 꼼꼼히 계산해 도출한 파레토 최적 조합입니다.
+                    자원 제약과 우대금리 한도를 꼼꼼히 계산해 도출한 파레토 최적 스케쥴입니다.
                 </p>
             </div>
 
@@ -92,17 +92,32 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {optionsData?.options?.length > 0 ? (
                     optionsData.options.map((option, index) => {
-                        const isBest = index === 1;
-                        const isExceeded = option.isBudgetExceeded || option.exceeded || false;
-                        const scheduleLabel = option.optionType === 'STABLE'
-                            ? '월별 풍차형 · 1개월 간격 가입'
-                            : option.optionType === 'AGGRESSIVE'
-                                ? '즉시 분산형 · 첫 달 모두 가입'
-                                : '혼합형 · 일부 즉시, 일부 순차 가입';
+                        const type = option.optionType || (index === 0 ? 'STABLE' : index === 1 ? 'BALANCED' : 'AGGRESSIVE');
+
+                        // 💡 인덱스가 아닌 optionType 기반 판별 (안정성 강화)
+                        const isBest = type === 'BALANCED' || index === 1;
+                        const isExceeded = option.resourceUsage?.cardBudgetExceeded || option.resourceUsage?.cashBalanceExceeded;
+
+                        const scheduleLabel = type === 'STABLE'
+                            ? '월별 풍차형 · 리스크 분산 순차 가입'
+                            : type === 'AGGRESSIVE'
+                                ? '즉시 몰빵형 · 고금리 한도 즉시 가입'
+                                : '혼합 스케쥴형 · 가성비 우대 순차 가입';
+
+                        const planTitle = type === 'STABLE'
+                            ? '원금 보장 꼭꼭 플랜'
+                            : type === 'AGGRESSIVE'
+                                ? '최대 이자 도전 플랜'
+                                : 'AI 가성비 최고 플랜';
+
+                        // 💡 금액 수치 안전 계산
+                        const finalAmount = Math.floor((option.expectedFinalAmount || 0) / 10000);
+                        const totalReturn = Math.floor((option.expectedTotalReturn || 0) / 10000);
+                        const expectedRate = option.weightedExpectedRate ? option.weightedExpectedRate.toFixed(2) : '0.00';
 
                         return (
                             <div
-                                key={option.optionId || option.id || index}
+                                key={type || index}
                                 className={`rounded-[2.5rem] p-6 border transition-all relative flex flex-col justify-between ${
                                     isExceeded
                                         ? 'bg-gray-100/90 border-gray-300 opacity-60'
@@ -118,13 +133,13 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                                            index === 0
+                                            type === 'STABLE'
                                                 ? 'bg-blue-100 text-blue-800'
-                                                : index === 1
+                                                : type === 'BALANCED'
                                                     ? 'bg-amber-300 text-amber-950 font-black'
                                                     : 'bg-rose-100 text-rose-800'
                                         }`}>
-                                            {option.name || (index === 0 ? '안정 굴리미 🛡️' : index === 1 ? '최적 굴리미 ★' : '공격 굴리미 🚀')}
+                                            {type === 'STABLE' ? '안정형' : type === 'AGGRESSIVE' ? '수익형' : '최적형'}
                                         </span>
                                         {isExceeded && (
                                             <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full">
@@ -134,52 +149,58 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                     </div>
 
                                     <h3 className="text-lg font-black text-amber-950 mb-1">
-                                        {option.title || (index === 0 ? '원금 보장 꼭꼭 플랜' : index === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
+                                        {planTitle}
                                     </h3>
                                     <p className="text-[11px] font-extrabold text-emerald-700 mb-1">
                                         {scheduleLabel}
                                     </p>
                                     <p className="text-xs text-amber-700/60 mb-4 font-medium">
-                                        최종 만기 {option.completionMonth || userProfile?.targetMonths || 12}개월차 예상 수령액
+                                        최종 만기 {option.completionMonth || 12}개월차 예상 수령액
                                     </p>
 
                                     <div className="bg-amber-50/50 p-4 rounded-2xl mb-4 border border-amber-100 space-y-2">
                                         <span className="text-2xl font-black text-amber-950 block">
-                                            {option.totalAmount
-                                                ? `${(option.totalAmount / 10000).toLocaleString()}만원`
-                                                : `${((option.expectedAmount || 33000000) / 10000).toLocaleString()}만원`}
+                                            {finalAmount.toLocaleString()}만원
                                         </span>
                                         <div className="pt-2 border-t border-amber-200/40 flex justify-between items-center text-xs">
-                                            <span className="text-amber-700/70 line-through">
-                                                광고 연 {option.advertisedRate || option.maxRate || '5.50'}%
+                                            <span className="text-amber-700/70">
+                                                기대 수익 +{totalReturn.toLocaleString()}만원
                                             </span>
                                             <span className="font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
-                                                실제 기대 {option.expectedRate || '3.80'}%
+                                                실제 기대 {expectedRate}%
                                             </span>
                                         </div>
                                     </div>
 
+                                    {/* 개별 적금/예금 스케쥴 카드 */}
                                     <div className="space-y-2 mb-5">
-                                        {(option.allocations || []).map((allocation) => (
-                                            <div key={allocation.slotIndex} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px]">
-                                                <div className="flex justify-between font-extrabold text-amber-950">
-                                                    <span>{allocation.startMonth + 1}개월차 · {allocation.productName}</span>
-                                                    <span>{(allocation.amount / 10000).toLocaleString()}만원</span>
-                                                </div>
-                                                <p className="mt-1 text-amber-700/70">
-                                                    {allocation.bankName} · {allocation.maturityMonth}개월차 만기
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
+                                        {(option.allocations || []).map((allocation, aIdx) => {
+                                            const startMonthDisplay = allocation.startMonth === 0
+                                                ? '1개월차(즉시)'
+                                                : `${(allocation.startMonth || 0) + 1}개월차`;
 
-                                    <div className="text-xs font-semibold text-amber-800 space-y-1.5 mb-6">
-                                        <p>
-                                            💳 필요 카드실적: <strong>월 {(option.requiredCardSpend || option.monthlyCardBudget || 0).toLocaleString()}원</strong>
-                                        </p>
-                                        <p className="text-[11px] text-amber-700/70 font-normal">
-                                            {option.description || option.desc || '소비 패턴에 딱 맞아 우대금리를 챙기기 제일 편해요!'}
-                                        </p>
+                                            const monthlyAmt = Math.floor((allocation.monthlyAmount || 0) / 10000);
+                                            const totalAmt = Math.floor((allocation.amount || 0) / 10000);
+
+                                            return (
+                                                <div key={allocation.slotIndex ?? aIdx} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px] shadow-2xs">
+                                                    <div className="flex justify-between font-extrabold text-amber-950 mb-0.5">
+                                                        <span className="text-amber-900 font-black">
+                                                            🗓️ {startMonthDisplay} · {allocation.productName || '추천 상품'}
+                                                        </span>
+                                                        <span className="text-emerald-700 font-black">
+                                                            {monthlyAmt > 0
+                                                                ? `월 ${monthlyAmt.toLocaleString()}만원`
+                                                                : `${totalAmt.toLocaleString()}만원`}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex justify-between text-[10px] text-amber-700/70 pt-1 border-t border-amber-50">
+                                                        <span>{allocation.bankName || '금융사'}</span>
+                                                        <span>만기 {allocation.maturityMonth || 12}개월차</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 

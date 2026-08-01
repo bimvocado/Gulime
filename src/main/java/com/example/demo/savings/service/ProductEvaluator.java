@@ -74,9 +74,10 @@ public final class ProductEvaluator {
 
             if (evaluation.achievable()) {
                 switch (condition.resource()) {
+                    // 💡 [수정] 카드 실적 총액을 산정 기간(periodMonths)으로 나누어 '월 필요 카드 실적'으로 계산!
                     case CARD_BUDGET -> cardBudget = Math.max(
                             cardBudget,
-                            safeThreshold(condition)
+                            monthlyThreshold(condition)
                     );
                     case SALARY_TRANSFER -> salaryTransfer = 1;
                     case FIRST_TRADE -> firstTradeByBank.merge(
@@ -139,7 +140,7 @@ public final class ProductEvaluator {
             );
             case UNCONDITIONAL -> binary(condition, true, null);
             case CARD_PAYMENT_ACCOUNT, CARD_OWNERSHIP, PRODUCT_HOLDING,
-                    TRANSFER_COUNT, CHANNEL_USE, MARKETING_CONSENT, OTHER ->
+                 TRANSFER_COUNT, CHANNEL_USE, MARKETING_CONSENT, OTHER ->
                     confirmation(condition, profile);
         };
     }
@@ -175,22 +176,27 @@ public final class ProductEvaluator {
             ProductCondition condition,
             UserProfile profile
     ) {
-        boolean achievable = profile.cardBudgetCap() >= condition.threshold();
+        // 💡 [수정] 월 카드 예산 상한(cardBudgetCap)과 '월 단위 필요 실적(monthlyThreshold)'을 비교!
+        long requiredMonthly = monthlyThreshold(condition);
+        boolean achievable = profile.cardBudgetCap() >= requiredMonthly;
+
         if (!achievable) {
             return binary(
                     condition,
                     false,
-                    "카드 예산 상한이 조건 금액보다 낮습니다."
+                    "월 카드 예산 상한이 필요 월 카드 실적보다 낮습니다."
             );
         }
 
         long conditionSeed = MONTE_CARLO_SEED + condition.conditionId().hashCode();
+
+        // 💡 [수정] 몬테카롤로 시뮬레이션에도 월 단위 필요 실적을 기준으로 넘겨줌
         MonteCarloResult result = monteCarlo.simulateCardCondition(
                 profile.cardSpend6m(),
                 profile.cardBudgetCap(),
-                condition.threshold(),
-                condition.periodMonths(),
-                condition.requiredMonths(),
+                requiredMonthly,
+                condition.periodMonths() != null ? condition.periodMonths() : 1,
+                condition.requiredMonths() != null ? condition.requiredMonths() : 1,
                 conditionSeed
         );
         return new ConditionEvaluation(
@@ -232,7 +238,6 @@ public final class ProductEvaluator {
     ) {
         Set<ConditionEvaluation> active = new LinkedHashSet<>(candidates);
 
-        // 한 논리 조건의 계단식 구간은 누적하지 않고 가장 유리한 한 구간만 적용합니다.
         retainBestPerGroup(
                 active,
                 item -> item.condition().tierGroup(),
@@ -240,14 +245,12 @@ public final class ProductEvaluator {
         );
         retainBestBranch(active);
 
-        // 동일 exclusive_group은 중복 적용할 수 없습니다.
         retainBestPerGroup(
                 active,
                 item -> item.condition().exclusiveGroup(),
                 ignored -> 1
         );
 
-        // 선택형 상품은 상품 레벨 max_select만큼 자동으로 최선의 조건을 고릅니다.
         retainBestPerGroup(
                 active,
                 item -> item.condition().selectionGroup(),
@@ -312,8 +315,8 @@ public final class ProductEvaluator {
                 .max(Comparator
                         .<Map.Entry<String, List<ConditionEvaluation>>>
                                 comparingDouble(entry -> entry.getValue().stream()
-                                        .mapToDouble(this::expectedContribution)
-                                        .sum())
+                                .mapToDouble(this::expectedContribution)
+                                .sum())
                         .thenComparing(Map.Entry::getKey))
                 .map(Map.Entry::getKey)
                 .orElseThrow();
@@ -345,5 +348,13 @@ public final class ProductEvaluator {
     private long safeThreshold(ProductCondition condition) {
         return condition.threshold() == null ? 0L : condition.threshold();
     }
-}
 
+    // 💡 [신규 추가] 총 조건 실적 금액을 산정 개월 수로 나눈 '월 평균 카드 필요 실적' 계산
+    private long monthlyThreshold(ProductCondition condition) {
+        long threshold = safeThreshold(condition);
+        int period = (condition.periodMonths() != null && condition.periodMonths() > 0)
+                ? condition.periodMonths()
+                : 1;
+        return threshold / period;
+    }
+}

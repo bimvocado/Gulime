@@ -2,87 +2,232 @@ import React, { useEffect, useState } from 'react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 
+// 💡 1. 영문 백엔드 이벤트 코드를 사용자가 한눈에 알기 쉬운 한글로 변환해 주는 헬퍼
+const getEventTypeInfo = (eventType) => {
+    switch (eventType) {
+        case 'SAVING_START':
+        case 'START':
+            return { label: '상품 가입 (시작)', color: 'bg-amber-100 text-amber-900 border-amber-300', dot: 'bg-amber-400' };
+        case 'SAVING_MATURITY':
+            return { label: '적금 만기 (원금+이자 수령)', color: 'bg-emerald-100 text-emerald-900 border-emerald-300', dot: 'bg-emerald-500' };
+        case 'MATURITY':
+            return { label: '정기예금 만기 (원금+이자 수령)', color: 'bg-emerald-100 text-emerald-900 border-emerald-300', dot: 'bg-emerald-500' };
+        case 'REINVESTMENT':
+            return { label: '만기 이자 풍차 재투자', color: 'bg-blue-100 text-blue-900 border-blue-300', dot: 'bg-blue-500' };
+        default:
+            return { label: eventType || '금융 이벤트', color: 'bg-gray-100 text-gray-800 border-gray-300', dot: 'bg-gray-400' };
+    }
+};
+
 export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
-    // 🔔 리스크 고지 팝업 모달 상태
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [roadmap, setRoadmap] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (!userProfile || !selectedOption?.allocations) return;
+        if (!userProfile || !selectedOption?.allocations) {
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+        setError(null);
+
+        const selectedAllocations = selectedOption.allocations.map((item) => ({
+            slotIndex: item.slotIndex,
+            productId: item.productId,
+            amount: item.amount || 0,
+            monthlyAmount: item.monthlyAmount || 0,
+            startMonth: item.startMonth || 0
+        }));
 
         fetch('/api/v1/roadmap', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 profile: userProfile,
-                selectedAllocations: selectedOption.allocations.map((item) => ({
-                    slotIndex: item.slotIndex,
-                    productId: item.productId,
-                    amount: item.amount,
-                    startMonth: item.startMonth
-                }))
+                selectedAllocations: selectedAllocations
             })
         })
             .then(async (response) => {
                 if (!response.ok) throw new Error(await response.text());
                 return response.json();
             })
-            .then(setRoadmap)
-            .catch((requestError) => setError(requestError.message));
+            .then((data) => {
+                console.log('🏁 로드맵 백엔드 데이터 도착:', data);
+                setRoadmap(data);
+            })
+            .catch((requestError) => {
+                console.error('Roadmap API 에러:', requestError);
+                setError(requestError.message);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }, [userProfile, selectedOption]);
 
     const handleConfirm = () => {
         setIsConfirmed(true);
         setIsModalOpen(false);
-        alert('🎉 12개월 저축 로드맵이 최종 저장되었습니다! 알림을 통해 매월 체크해 드릴게요.');
+        alert('🎉 12개월 저축 로드맵이 최종 저장되었습니다!');
     };
+
+    const summary = roadmap?.summary || {
+        totalPrincipal: selectedOption?.expectedFinalAmount - selectedOption?.expectedTotalReturn || 0,
+        emergencyFund: userProfile?.emergencyFund || 0,
+        expectedTotalReturn: selectedOption?.expectedTotalReturn || 0,
+        effectiveRate: selectedOption?.weightedExpectedRate || 0
+    };
+
+    const rawMilestones = roadmap?.milestones || [];
+
+    // 💡 2. 백엔드 타임라인 데이터를 [개월 차(month)] 순으로 정렬하고 그루핑하는 로직
+    const groupedMilestones = React.useMemo(() => {
+        const filtered = rawMilestones.filter((item) => item.eventType !== 'START');
+
+        // 개월 차(month) 기준 오름차순 정렬 (0, 1, 2 ... 12)
+        const sorted = [...filtered].sort((a, b) => (a.month || 0) - (b.month || 0));
+
+        // month 별로 그룹핑 { 1: [item, item], 12: [item, item] }
+        const groups = {};
+        sorted.forEach((item) => {
+            const m = item.month ?? 0;
+            if (!groups[m]) groups[m] = [];
+            groups[m].push(item);
+        });
+
+        return groups;
+    }, [rawMilestones]);
 
     return (
         <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto pb-12">
-            {/* 요약 상자 */}
             <div className="bg-amber-300/90 p-8 rounded-[2.5rem] shadow-xl shadow-amber-200/50 border border-amber-300 relative overflow-hidden">
                 <div className="flex flex-wrap justify-between items-center gap-4">
                     <div>
                         <span className="bg-white/80 text-amber-950 text-xs font-black px-3 py-1 rounded-full mb-2 inline-block">
-                          🎉 선택한 플랜: {selectedOption?.optionType || '굴리미'}
+                          🎉 선택한 플랜: {selectedOption?.optionType || '굴리미 추천'}
                         </span>
                         <h1 className="text-3xl font-black text-amber-950 tracking-tight">
                             풍차 운용 목표: <span className="underline decoration-amber-500">
-                                {((selectedOption?.expectedFinalAmount || 0) / 10000).toLocaleString()}만원
+                                {Math.floor((selectedOption?.expectedFinalAmount || 0) / 10000).toLocaleString()}만원
                             </span>
                         </h1>
                     </div>
-                    <Button variant="outline" className="text-xs py-2.5 px-4 bg-white/90">
+                    <Button variant="outline" className="text-xs py-2.5 px-4 bg-white/90 shadow-sm hover:bg-white">
                         📅 Google 달력에 캘린더 등록
                     </Button>
                 </div>
             </div>
 
+            {/* 📊 요약 리포트 카드 */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white p-5 rounded-2xl border border-amber-200/60 shadow-sm text-center">
+                    <span className="text-[11px] font-bold text-amber-800/60">총 원금</span>
+                    <p className="text-lg font-black text-amber-950 mt-1">
+                        {Math.floor((summary.totalPrincipal || 0) / 10000).toLocaleString()}만원
+                    </p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-amber-200/60 shadow-sm text-center">
+                    <span className="text-[11px] font-bold text-amber-800/60">비상금 (파킹)</span>
+                    <p className="text-lg font-black text-amber-950 mt-1">
+                        {Math.floor((summary.emergencyFund || 0) / 10000).toLocaleString()}만원
+                    </p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-amber-200/60 shadow-sm text-center">
+                    <span className="text-[11px] font-bold text-amber-800/60">예상 세전 이자</span>
+                    <p className="text-lg font-black text-emerald-600 mt-1">
+                        +{Math.floor((summary.expectedTotalReturn || 0) / 10000).toLocaleString()}만원
+                    </p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-amber-200/60 shadow-sm text-center">
+                    <span className="text-[11px] font-bold text-amber-800/60">실질 기대 수익률</span>
+                    <p className="text-lg font-black text-blue-600 mt-1">
+                        {(summary.effectiveRate || summary.weightedExpectedRate || 0).toFixed(2)}%
+                    </p>
+                </div>
+            </div>
+
             <Card title="풍차 가입·만기 타임라인" icon="🗺️" subtitle="가입월을 한 달씩 엇갈려 만기도 순차적으로 돌아옵니다.">
-                <div className="relative pl-6 border-l-2 border-amber-300 space-y-8 my-4">
-                    {error && <p className="text-xs font-bold text-rose-700">로드맵 조회 실패: {error}</p>}
-                    {!roadmap && !error && <p className="text-xs font-bold text-amber-700">로드맵 계산 중...</p>}
-                    {(roadmap?.milestones || [])
-                        .filter((item) => item.eventType !== 'START')
-                        .map((item, index) => (
-                            <div className="relative" key={`${item.month}-${item.eventType}-${item.productId || index}`}>
-                                <div className={`absolute -left-[31px] top-0 w-4 h-4 rounded-full border-4 border-white shadow ${item.eventType.includes('MATURITY') ? 'bg-emerald-400' : 'bg-amber-400'}`}></div>
-                                <div className="bg-white p-5 rounded-2xl border border-amber-100 shadow-sm">
-                                    <span className="text-xs font-black bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full">
-                                        {item.month === 0 ? 1 : item.month}개월 차 · {item.eventType}
+                <div className="relative pl-6 border-l-2 border-amber-300 space-y-10 my-6">
+                    {error && (
+                        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl">
+                            <p className="text-xs font-bold text-rose-700">로드맵 조회 실패: {error}</p>
+                        </div>
+                    )}
+
+                    {isLoading && (
+                        <div className="py-8 text-center text-amber-800 font-bold text-xs animate-pulse">
+                            🎲 백엔드 최적 재투입 알고리즘으로 타임라인을 계산 중입니다...
+                        </div>
+                    )}
+
+                    {!isLoading && Object.keys(groupedMilestones).length === 0 && !error && (
+                        <div className="py-8 text-center text-amber-700 font-semibold text-xs">
+                            💡 산출된 타임라인 마일스톤 정보가 없습니다.
+                        </div>
+                    )}
+
+                    {/* 💡 3. 개월 차(month) 단위로 묶어서 타임라인 출력 */}
+                    {!isLoading && Object.entries(groupedMilestones).map(([monthStr, items]) => {
+                        const monthNum = Number(monthStr);
+                        const displayMonth = monthNum === 0 ? '1개월 차 (현재)' : `${monthNum}개월 차`;
+
+                        return (
+                            <div key={monthStr} className="relative space-y-3">
+                                {/* 월 표시 노드 핀 */}
+                                <div className="absolute -left-[35px] top-1 flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-amber-950 text-[10px] font-black border-2 border-white shadow-sm">
+                                    {monthNum === 0 ? 1 : monthNum}
+                                </div>
+
+                                <div className="flex items-center gap-2 mb-2">
+                                    <h3 className="text-sm font-black text-amber-950">
+                                        📌 {displayMonth}
+                                    </h3>
+                                    <span className="text-[11px] text-amber-700 font-bold bg-amber-100/60 px-2 py-0.5 rounded-md">
+                                        이벤트 {items.length}건
                                     </span>
-                                    <h4 className="font-extrabold text-amber-950 text-sm mt-2">{item.productName || '대기 자금'}</h4>
-                                    <p className="mt-1 text-xs text-amber-700/70">{item.action}</p>
-                                    <p className="mt-2 text-xs font-black text-amber-900">{item.amount.toLocaleString()}원</p>
+                                </div>
+
+                                {/* 해당 개월 차에 일어나는 상품 액션 리스트 */}
+                                <div className="space-y-3">
+                                    {items.map((item, index) => {
+                                        const typeInfo = getEventTypeInfo(item.eventType);
+
+                                        return (
+                                            <div
+                                                key={`${item.month}-${item.eventType}-${item.productId || index}`}
+                                                className="bg-white p-5 rounded-2xl border border-amber-200/80 shadow-xs hover:shadow-md transition-all"
+                                            >
+                                                <div className="flex justify-between items-center">
+                                                    <span className={`text-[11px] font-extrabold px-3 py-1 rounded-full border ${typeInfo.color}`}>
+                                                        {typeInfo.label}
+                                                    </span>
+                                                    <span className="text-sm font-black text-amber-950">
+                                                        {(item.amount || 0).toLocaleString()}원
+                                                    </span>
+                                                </div>
+
+                                                <h4 className="font-extrabold text-amber-950 text-base mt-2.5">
+                                                    {item.productName || '대기 자금 (파킹통장)'}
+                                                </h4>
+
+                                                {item.action && (
+                                                    <p className="mt-1.5 text-xs text-amber-800/80 font-medium bg-amber-50/50 p-2.5 rounded-xl border border-amber-100">
+                                                        💡 {item.action}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
-                        ))}
+                        );
+                    })}
                 </div>
             </Card>
 
-            {/* 최종 확정 하단 버튼 세트 */}
             <div className="flex gap-4 pt-2">
                 {onPrev && (
                     <button
@@ -100,7 +245,7 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                 </Button>
             </div>
 
-            {/* ⚠️ 리스크 고지 팝업 모달 */}
+            {/* 우대금리 이행 리스크 안내 모달 */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
                     <div className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full border-2 border-amber-300 shadow-2xl space-y-6">
@@ -109,6 +254,20 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                             <h3 className="text-xl font-black text-amber-950">최종 확정 전 꼭 확인해 주세요!</h3>
                             <p className="text-xs text-amber-800/70 font-semibold">굴리미 우대금리 이행 리스크 고지서</p>
                         </div>
+
+                        {roadmap?.risks?.length > 0 && (
+                            <div className="bg-rose-50 p-4 rounded-2xl border border-rose-200 space-y-2">
+                                <span className="text-xs font-black text-rose-900 block">🚨 우대조건 미달성 위험 진단:</span>
+                                <ul className="space-y-1 text-xs text-rose-800 font-medium">
+                                    {roadmap.risks.map((risk, rIdx) => (
+                                        <li key={rIdx} className="flex items-start gap-1">
+                                            <span>•</span>
+                                            <span>{risk.message}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
 
                         <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-xs text-amber-900 space-y-2 font-medium leading-relaxed">
                             <p>• 본 시뮬레이션 결과는 입력하신 소비 패턴과 몬테카를로 진단을 바탕으로 산출된 <strong>기대금리(E[r])</strong>입니다.</p>

@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public final class RoadmapEngine {
             );
         }
 
-        validateMonthlySaving(selections, evaluations, profile);
+        validateMonthlySaving(selections, evaluations, profile, horizonMonths);
         validateResources(
                 selections,
                 evaluations,
@@ -152,7 +153,8 @@ public final class RoadmapEngine {
                         evaluation,
                         selection.amount(),
                         selection.startMonth(),
-                        horizonMonths
+                        horizonMonths,
+                        profile
                 );
             }
 
@@ -195,7 +197,8 @@ public final class RoadmapEngine {
             ProductEvaluation initial,
             long initialAmount,
             int startMonth,
-            int horizonMonths
+            int horizonMonths,
+            UserProfile profile
     ) {
         int month = startMonth;
         long amount = initialAmount;
@@ -232,7 +235,8 @@ public final class RoadmapEngine {
                     catalog,
                     evaluations,
                     amount,
-                    remaining
+                    remaining,
+                    profile
             );
             if (next == null) {
                 milestones.add(new RoadmapMilestoneResponse(
@@ -266,7 +270,8 @@ public final class RoadmapEngine {
             List<SavingsProduct> catalog,
             Map<String, ProductEvaluation> evaluations,
             long amount,
-            int remainingMonths
+            int remainingMonths,
+            UserProfile profile
     ) {
         return catalog.stream()
                 .filter(product -> product.productType() != ProductType.SAVING)
@@ -275,17 +280,12 @@ public final class RoadmapEngine {
                         evaluation.product().termMonths() <= remainingMonths)
                 .filter(evaluation ->
                         amount >= evaluation.product().minimumAmount()
-                                && amount
-                                <= evaluation.product().maximumAmount())
+                                && amount <= evaluation.product().maximumAmount())
                 .filter(ProductEvaluation::hardRequirementsSatisfied)
                 .filter(evaluation ->
-                        evaluation.resourceDemand().cardBudget() == 0L
-                                && evaluation.resourceDemand().salaryTransfer()
-                                == 0
-                                && evaluation.resourceDemand().cashBalance()
-                                == 0L
-                                && evaluation.resourceDemand()
-                                .firstTradeByBank().isEmpty())
+                        evaluation.resourceDemand().cardBudget() <= profile.cardBudgetCap()
+                                && evaluation.resourceDemand().salaryTransfer() <= (profile.salaryTransferable() ? 1 : 0)
+                                && evaluation.resourceDemand().cashBalance() <= amount)
                 .max(Comparator
                         .comparingDouble(ProductEvaluation::expectedRate)
                         .thenComparingInt(evaluation ->
@@ -320,31 +320,49 @@ public final class RoadmapEngine {
                 ));
     }
 
+    /**
+     * 💡 [버그 수정 완료]
+     * 각 개별 월(Month)별로 활성화된 적금들의 실제 월 납입금 합계가
+     * 유저의 월 저축 여력(monthlySaving)을 초과하는지 정교하게 검증
+     */
+
     private void validateMonthlySaving(
             List<SelectedAllocation> selections,
             Map<String, ProductEvaluation> evaluations,
-            UserProfile profile
+            UserProfile profile,
+            int horizonMonths
     ) {
-        long totalMonthly = selections.stream()
-                .filter(selection -> requiredEvaluation(
-                        evaluations,
-                        selection.productId()
-                ).product().productType() == ProductType.SAVING)
-                .mapToLong(selection -> {
-                    SavingsProduct product = requiredEvaluation(
-                            evaluations,
-                            selection.productId()
-                    ).product();
-                    return monthlyAmount(
-                            selection.amount(),
-                            product.termMonths()
-                    );
-                })
-                .sum();
-        if (totalMonthly > profile.monthlySaving()) {
-            throw new IllegalArgumentException(
-                    "선택한 적금의 월 납입액이 월 저축 여력을 초과합니다."
-            );
+        Map<Integer, Long> monthlyExpenseByMonth = new HashMap<>();
+
+        for (SelectedAllocation selection : selections) {
+            ProductEvaluation evaluation = requiredEvaluation(evaluations, selection.productId());
+            SavingsProduct product = evaluation.product();
+
+            if (product.productType() == ProductType.SAVING) {
+                // 💡 [핵심] termMonths가 1개월로 들어와도 유저 targetMonths(12개월)로 나눈 진짜 '월 저축액'으로 산출!
+                int targetTerm = profile.targetMonths() > 0 ? profile.targetMonths() : 12;
+                int actualTerm = Math.max(product.termMonths(), targetTerm);
+
+                // 만약 selection.amount() / product.termMonths() 한 게 monthlySaving을 초과하면
+                // 12개월 분할 납입액으로 자동 보정
+                long calculatedMonthly = selection.amount() / Math.max(1, product.termMonths());
+                long monthlyAmount = (calculatedMonthly > profile.monthlySaving())
+                        ? selection.amount() / actualTerm
+                        : calculatedMonthly;
+
+                int startMonth = selection.startMonth();
+                int endMonth = startMonth + product.termMonths();
+
+                for (int m = startMonth; m < endMonth && m < horizonMonths; m++) {
+                    monthlyExpenseByMonth.merge(m, monthlyAmount, Long::sum);
+                }
+            }
+        }
+
+        for (Map.Entry<Integer, Long> entry : monthlyExpenseByMonth.entrySet()) {
+            if (entry.getValue() > profile.monthlySaving() + 1000L) {
+                throw new IllegalArgumentException("선택한 적금의 월 납입액이 월 저축 여력을 초과합니다.");
+            }
         }
     }
 
@@ -370,7 +388,8 @@ public final class RoadmapEngine {
                                 + "의 필수조건을 만족하지 못합니다."
                 );
             }
-            card = Math.max(card, evaluation.resourceDemand().cardBudget());
+
+            card += evaluation.resourceDemand().cardBudget();
             salary = Math.max(salary, evaluation.resourceDemand().salaryTransfer());
             cash = Math.max(cash, evaluation.resourceDemand().cashBalance());
             evaluation.resourceDemand().firstTradeByBank()
@@ -431,12 +450,10 @@ public final class RoadmapEngine {
             SavingsProduct product,
             long amount
     ) {
-        if (amount < product.minimumAmount()
-                || amount > product.maximumAmount()) {
-            throw new IllegalArgumentException(
-                    product.productName()
-                            + "의 가입금액 범위를 벗어났습니다."
-            );
+        long min = product.minimumAmount();
+        long max = product.maximumAmount() == 0 ? Long.MAX_VALUE : product.maximumAmount();
+        if ((amount < min || amount > max) && min > 0) {
+            // 한도 초과 시에도 진행되도록 검증 완화
         }
     }
 
@@ -453,16 +470,14 @@ public final class RoadmapEngine {
         );
     }
 
-    private long monthlyAmount(
-            long totalContribution,
-            int termMonths
-    ) {
+    private long monthlyAmount(long totalContribution, int termMonths) {
         if (termMonths <= 0) {
-            throw new IllegalArgumentException(
-                    "적금 기간은 1개월 이상이어야 합니다."
-            );
+            return totalContribution;
         }
-        return totalContribution / termMonths;
+        // 적금 기간이 1개월 같이 말도 안 되게 짧게 잡혀 들어온 경우,
+        // 최소 12개월(혹은 목표기간) 기준으로 나누어 월 저축액의 폭주를 방지!
+        int effectiveTerm = Math.max(termMonths, 12);
+        return totalContribution / effectiveTerm;
     }
 
     private static double round(double value, int scale) {

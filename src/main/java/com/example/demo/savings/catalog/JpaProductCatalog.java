@@ -5,6 +5,7 @@ import com.example.demo.domain.product.repository.ProductRepository;
 import com.example.demo.savings.domain.*;
 import com.example.demo.savings.service.ProductCatalog;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,15 @@ public class JpaProductCatalog implements ProductCatalog {
     }
 
     @Override
+    @Cacheable(value = "productCatalogCache", key = "#productId")
     public Optional<SavingsProduct> findById(String productId) {
         return repository.findById(productId).map(this::mapProduct);
     }
 
     @Override
+    @Cacheable(value = "productCatalogListCache")
     public List<SavingsProduct> findAll() {
+        // N+1 방지를 위해 Fetch Join 쿼리가 있다면 사용, 기본 findAll 호출 시에도 1회만 계산 후 캐싱됨
         return repository.findAll().stream().map(this::mapProduct).toList();
     }
 
@@ -105,7 +109,7 @@ public class JpaProductCatalog implements ProductCatalog {
             case "PRODUCT_HOLDING", "CROSS_PRODUCT" -> ConditionType.PRODUCT_HOLDING;
             case "CHANNEL", "CHANNEL_USE", "ELECTRONIC_BANKING" -> ConditionType.CHANNEL_USE;
             case "MARKETING_AGREE", "MARKETING_AGREEMENT", "MARKETING_CONSENT",
-                    "MARKETING_EVENT", "MYDATA" -> ConditionType.MARKETING_CONSENT;
+                 "MARKETING_EVENT", "MYDATA" -> ConditionType.MARKETING_CONSENT;
             case "UNCONDITIONAL" -> ConditionType.UNCONDITIONAL;
             default -> ConditionType.OTHER;
         };
