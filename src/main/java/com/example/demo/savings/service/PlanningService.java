@@ -47,18 +47,24 @@ public class PlanningService {
             stableSlots.add(new AllocationSlot(AllocationType.LUMP_SUM, allocatable, targetMonths, 0));
         }
         if (monthlySaving > 0L) {
-            long halfMonthlyBudget = (monthlySaving / 2) * (long) targetMonths;
-            // 1차: 1개월차 즉시 가입 (유동성 확보용 50%)
-            stableSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, halfMonthlyBudget, targetMonths, 0));
-            // 2차: 3개월차 순차 가입 (풍차돌리기 50%)
+            // 💡 [수정] 1차(50%)와 2차(50%)의 총 납입액 합계가 온전히 1,200만 원이 되도록 조정
+            long totalBudget = monthlySaving * (long) targetMonths;
+            long halfBudget = totalBudget / 2; // 예: 600만 원
+
+            // 1차: 1개월차 즉시 가입 슬롯 (600만 원)
+            stableSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, halfBudget, targetMonths, 0));
+
+            // 2차: 3개월차 시차 가입 슬롯 (남은 600만 원, 가입 기간은 remainingMonths)
             int remainingMonths = Math.max(1, targetMonths - 2);
-            long secondHalfBudget = (monthlySaving - (monthlySaving / 2)) * (long) remainingMonths;
+            long secondHalfBudget = totalBudget - halfBudget; // 정확히 남은 잔액 600만 원
             stableSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, secondHalfBudget, remainingMonths, 2));
+
+            // 💡 3차: 한도 초과 등으로 남을 자금을 받아줄 100% 완충용 백업 슬롯
+            stableSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, totalBudget, targetMonths, 0));
         }
 
         // =========================================================================
         // 👑 2. [최적형 BALANCED] : 몬테카를로 AI 기대 금리 E[r] 기반 최적 가성비
-        // - 전략: 달성 확률 P(Condition)을 반영해 "실제 통장에 찍힐 기대 수익" 1위 조합
         // =========================================================================
         List<AllocationSlot> balancedSlots = new ArrayList<>();
         if (allocatable > 0L) {
@@ -66,13 +72,13 @@ public class PlanningService {
         }
         if (monthlySaving > 0L) {
             long totalMonthlySavingBudget = monthlySaving * (long) targetMonths;
-            // E[r] 점수가 가장 높은 AI 추천 주력 슬롯
+            balancedSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, totalMonthlySavingBudget, targetMonths, 0));
+            // 💡 한도 소진 시 잔여 예산을 2차 상품에 채우기 위한 백업 슬롯 추가
             balancedSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, totalMonthlySavingBudget, targetMonths, 0));
         }
 
         // =========================================================================
         // 🔥 3. [수익형 AGGRESSIVE] : 표면 최고 우대 금리(Max Rate) 몰빵
-        // - 전략: 조건 완벽 달성(100% 성공) 전제, 한도 끝까지 100% 즉시 몰빵
         // =========================================================================
         List<AllocationSlot> aggressiveSlots = new ArrayList<>();
         if (allocatable > 0L) {
@@ -80,18 +86,19 @@ public class PlanningService {
         }
         if (monthlySaving > 0L) {
             long totalMonthlySavingBudget = monthlySaving * (long) targetMonths;
-            // 최고 명시 금리 상품에 100% 한도 즉시 몰빵 슬롯
+            // 최고 금리 상품 1차 슬롯
+            aggressiveSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, totalMonthlySavingBudget, targetMonths, 0));
+            // 💡 한도 초과 시 나머지 돈을 담아줄 2차 백업 슬롯
             aggressiveSlots.add(new AllocationSlot(AllocationType.MONTHLY_SAVING, totalMonthlySavingBudget, targetMonths, 0));
         }
 
-        // 💡 몬테카를로 시뮬레이션 결과(E[r])와 플랜별 정렬 전략(Strategy)을 Optimizer에 함께 전달
         return optimizer.optimize(
                 productCatalog.findAll(),
                 domainProfile,
                 request.riskTolerance(),
-                stableSlots,    // 전략: BASE_RATE_ORIENTED (기본금리 위주)
-                balancedSlots,  // 전략: MONTE_CARLO_EXPECTED_RATE (E[r] 기대금리 위주)
-                aggressiveSlots // 전략: MAXIMUM_RATE_ORIENTED (최고 우대금리 위주)
+                stableSlots,
+                balancedSlots,
+                aggressiveSlots
         );
     }
 

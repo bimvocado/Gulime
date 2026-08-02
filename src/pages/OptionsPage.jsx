@@ -4,20 +4,9 @@ import Button from '../components/common/Button';
 
 const OPTIONS_STORAGE_KEY = 'gulimi_options_state';
 
-const getInitialOptionsState = () => {
-    try {
-        const saved = localStorage.getItem(OPTIONS_STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
-    } catch (e) {
-        console.error("Options storage parse error:", e);
-    }
-    return null;
-};
-
 export default function OptionsPage({ userProfile, onNext, onPrev, onGoSimulation }) {
-    const savedState = getInitialOptionsState();
-
-    const [optionsData, setOptionsData] = useState(savedState?.optionsData || null);
+    // 💡 [수정] 옛날 캐시 데이터 때문에 화면이 갱신되지 않는 현상 방지
+    const [optionsData, setOptionsData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchOptions = useCallback(async () => {
@@ -44,6 +33,7 @@ export default function OptionsPage({ userProfile, onNext, onPrev, onGoSimulatio
 
             const data = await response.json();
             setOptionsData(data);
+            // 최신 응답 데이터로 저장소 업데이트
             localStorage.setItem(OPTIONS_STORAGE_KEY, JSON.stringify({ optionsData: data }));
         } catch (error) {
             console.error('Options API 연동 에러:', error);
@@ -116,7 +106,6 @@ export default function OptionsPage({ userProfile, onNext, onPrev, onGoSimulatio
                         const isBest = type === 'BALANCED' || index === 1;
                         const isExceeded = option.resourceUsage?.cardBudgetExceeded || option.resourceUsage?.cashBalanceExceeded;
 
-                        // 💡 [개선] 몬테카를로 및 각 플랜 정체성에 맞춘 직관적 라벨 수정
                         const scheduleLabel = type === 'STABLE'
                             ? '풍차형 분산 · 기본 보장 금리 중심'
                             : type === 'AGGRESSIVE'

@@ -79,7 +79,14 @@ export default function App() {
 
     return (
         <div className="min-h-screen bg-amber-50/40 text-amber-950 font-sans pb-20 selection:bg-amber-200">
-            <Header activeTab={activeTab} setActiveTab={setActiveTab} user={user} />
+            {/* 💡 userProfile props 추가 완료! */}
+            <Header
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                user={user}
+                userProfile={userProfile}
+                onLogout={handleLogout}
+            />
 
             <main className="px-4 pt-6">
                 {activeTab === 'simulation' && (

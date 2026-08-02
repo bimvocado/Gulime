@@ -24,12 +24,12 @@ public final class PortfolioOptimizer {
             List<AllocationSlot> balancedSlots,
             List<AllocationSlot> aggressiveSlots
     ) {
-        // 1. 몬테카를로 및 우대조건 확률 기반 상품 평가 (evaluator 내부에서 E[r] 등 산출)
+        // 1. 몬테카를로 및 우대조건 확률 기반 상품 평가
         List<ProductEvaluation> evaluations = products.stream()
                 .map(product -> evaluator.evaluate(product, profile))
                 .toList();
 
-        // 2. [핵심] 각 플랜의 전략에 맞게 설계된 전용 슬롯(slots)을 개별 매핑하여 후보 생성
+        // 2. 각 플랜의 전략에 맞게 설계된 후보 생성 (1,200만 원 완충된 상태로 산출됨)
         List<PortfolioCandidate> candidates = List.of(
                 candidateBuilder.buildGreedyCandidate("STABLE", stableSlots, evaluations, profile, riskTolerance),
                 candidateBuilder.buildGreedyCandidate("BALANCED", balancedSlots, evaluations, profile, riskTolerance),
@@ -37,7 +37,9 @@ public final class PortfolioOptimizer {
         );
 
         long allocatable = Math.max(0L, profile.lumpSum() - profile.emergencyFund());
-
+        System.out.println("=== [DEBUG] STABLE 원금: " + candidates.get(0).principal());
+        System.out.println("=== [DEBUG] BALANCED 원금: " + candidates.get(1).principal());
+        System.out.println("=== [DEBUG] AGGRESSIVE 원금: " + candidates.get(2).principal());
         // 3. 차별화된 수령액과 이자가 반영된 최종 응답 객체 생성
         return responseMapper.buildOptionsResponse(products, profile, candidates, evaluations, allocatable);
     }

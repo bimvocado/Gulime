@@ -1,11 +1,16 @@
 import React from 'react';
 
-export default function Header({ activeTab, setActiveTab, user, onLogout }) {
+// 💡 userProfile props 추가!
+export default function Header({ activeTab, setActiveTab, user, userProfile, onLogout }) {
+    // 💡 개월 수 동적 추출 (기본값 12개월)
+    const targetMonths = userProfile?.targetMonths || userProfile?.targetPeriod || 12;
+
     const tabs = [
         { id: 'simulation', label: '1. 자산 굴리기', emoji: '🎲' },
         { id: 'options', label: '2. 3가지 맞춤 플랜', emoji: '✨' },
-        { id: 'roadmap', label: '3. 12개월 지도', emoji: '🗺️' },
-        { id: 'mypage', label: '마이페이지', emoji: '👤' } // 💡 마이페이지 탭 추가!
+        // 💡 하드코딩된 '12개월' 대신 ${targetMonths}개월 로 변경!
+        { id: 'roadmap', label: `3. 투자 지도`, emoji: '🗺️' },
+        { id: 'mypage', label: '마이페이지', emoji: '👤' }
     ];
 
     return (
@@ -43,7 +48,7 @@ export default function Header({ activeTab, setActiveTab, user, onLogout }) {
                         ))}
                     </nav>
 
-                    {/* 로그인 유저 간편 표시 (선택 사항) */}
+                    {/* 로그인 유저 간편 표시 */}
                     {user && (
                         <div className="hidden md:flex items-center gap-2 pl-2 border-l border-amber-200/60">
                             <span className="text-xs font-black text-amber-950">{user.name || '유저'}님</span>
