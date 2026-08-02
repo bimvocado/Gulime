@@ -116,11 +116,11 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev, onCon
         setIsModalOpen(false);
         authStorage.setRoadmap(roadmap);
 
-        alert('🎉 12개월 저축 로드맵이 마이페이지에 저장되었습니다!');
+        const targetMonths = userProfile?.targetMonths || userProfile?.targetPeriod || 12;
+        alert(`🎉 ${targetMonths}개월 저축 로드맵이 마이페이지에 저장되었습니다!`);
+
         if (onConfirmSuccess) onConfirmSuccess();
     };
-
-    // 💡 [수정 2] 메인 확정/변경 버튼 클릭 핸들러
     const handleMainButtonClick = () => {
         if (isConfirmed) {
             // 이미 확정된 상태라면 -> 옵션 페이지로 돌아가서 다른 플랜 선택

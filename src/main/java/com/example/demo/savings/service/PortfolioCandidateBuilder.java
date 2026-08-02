@@ -34,7 +34,7 @@ public class PortfolioCandidateBuilder {
                 selected
         );
 
-        return buildCandidate(selected);
+        return buildCandidate(selected, optionType);
     }
 
     private void allocateUnifiedBudget(
@@ -72,6 +72,7 @@ public class PortfolioCandidateBuilder {
                 .filter(eval -> eval.product() != null)
                 .filter(eval -> eval.product().productType() == ProductType.DEPOSIT
                         || eval.product().productType() == ProductType.SAVING)
+                .filter(eval -> eval.product().termMonths() <= targetMonths)
                 .sorted(ranking)
                 .toList();
 
@@ -79,11 +80,15 @@ public class PortfolioCandidateBuilder {
         for (ProductEvaluation evaluation : ranked) {
             SavingsProduct product = evaluation.product();
             AllocationType allocationType = allocationType(evaluation);
-            PortfolioCandidate current = buildCandidate(selected);
+            PortfolioCandidate current = buildCandidate(selected, optionType);
             long remainingPrincipal = totalBudget - current.principal();
             if (remainingPrincipal <= 0L) {
                 break;
             }
+
+            int typeIndex = typeIndexes.getOrDefault(allocationType, 0);
+            int startMonth = calculateStartMonth(optionType, allocationType, typeIndex);
+            int productTermMonths = product.termMonths();
 
             long maximum = product.maximumAmount() <= 0L
                     ? Long.MAX_VALUE
@@ -101,24 +106,32 @@ public class PortfolioCandidateBuilder {
                 }
             } else {
                 long maximumMonthly = maximum;
-                long remainingMonthlyCapacity = remainingPrincipal / targetMonths;
-                long monthlyAmount = Math.min(remainingMonthlyCapacity, maximumMonthly);
+                long remainingMonthlyCapacity = remainingPrincipal / productTermMonths;
+                long affordableMonthly = maximumAffordableMonthlyAmount(
+                        selected,
+                        initialCash,
+                        monthlyCashFlow,
+                        startMonth,
+                        productTermMonths
+                );
+                long monthlyAmount = Math.min(
+                        remainingMonthlyCapacity,
+                        Math.min(maximumMonthly, affordableMonthly)
+                );
                 if (monthlyAmount < product.minimumAmount()) {
                     continue;
                 }
-                principalAmount = safeMultiply(monthlyAmount, targetMonths);
+                principalAmount = safeMultiply(monthlyAmount, productTermMonths);
             }
 
             if (principalAmount <= 0L) {
                 continue;
             }
 
-            int typeIndex = typeIndexes.getOrDefault(allocationType, 0);
-            int startMonth = calculateStartMonth(optionType, allocationType, typeIndex);
             AllocationSlot slot = new AllocationSlot(
                     allocationType,
                     principalAmount,
-                    targetMonths,
+                    productTermMonths,
                     startMonth
             );
             PortfolioAllocation allocation = new PortfolioAllocation(
@@ -129,13 +142,56 @@ public class PortfolioCandidateBuilder {
 
             List<PortfolioAllocation> tentative = new ArrayList<>(selected);
             tentative.add(allocation);
-            if (!isFeasible(buildCandidate(tentative), profile)) {
+            if (!isFeasible(buildCandidate(tentative, optionType), profile)) {
                 continue;
             }
 
             selected.add(allocation);
             typeIndexes.put(allocationType, typeIndex + 1);
         }
+    }
+
+    private long maximumAffordableMonthlyAmount(
+            List<PortfolioAllocation> selected,
+            long initialCash,
+            long monthlyCashFlow,
+            int startMonth,
+            int termMonths
+    ) {
+        long deposited = selected.stream()
+                .filter(allocation -> allocation.slot().allocationType() == AllocationType.LUMP_SUM)
+                .mapToLong(allocation -> allocation.slot().amount())
+                .sum();
+        long cash = initialCash - deposited;
+        if (cash < 0L) {
+            return 0L;
+        }
+
+        long maximum = Long.MAX_VALUE;
+        int endMonth = startMonth + termMonths;
+        for (int month = 0; month < endMonth; month++) {
+            cash = safeAdd(cash, monthlyCashFlow);
+            long existingExpense = monthlyExpense(selected, month);
+            if (existingExpense > cash) {
+                return 0L;
+            }
+            cash -= existingExpense;
+
+            if (month >= startMonth) {
+                int paymentCount = month - startMonth + 1;
+                maximum = Math.min(maximum, cash / paymentCount);
+            }
+        }
+        return maximum == Long.MAX_VALUE ? 0L : maximum;
+    }
+
+    private long monthlyExpense(List<PortfolioAllocation> allocations, int month) {
+        return allocations.stream()
+                .filter(allocation -> allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING)
+                .filter(allocation -> month >= allocation.slot().startMonth())
+                .filter(allocation -> month < allocation.slot().startMonth() + allocation.slot().termMonths())
+                .mapToLong(allocation -> monthlyAmount(allocation.slot()))
+                .sum();
     }
 
     private AllocationType allocationType(ProductEvaluation evaluation) {
@@ -182,24 +238,33 @@ public class PortfolioCandidateBuilder {
     }
 
     private double greedyScore(ProductEvaluation evaluation, String optionType, UserProfile profile) {
-        double baseRate = evaluation.expectedRate();
+        SavingsProduct product = evaluation.product();
+        double expectedRate = evaluation.expectedRate();
         long cardDemand = evaluation.resourceDemand() != null ? evaluation.resourceDemand().cardBudget() : 0L;
 
         switch (optionType) {
             case "STABLE":
-                return baseRate - (cardDemand * 0.0000001) - (0.5 * evaluation.rateRisk());
+                return product.baseRate()
+                        - (cardDemand * 0.0000001)
+                        - (1.5 * evaluation.rateRisk());
             case "BALANCED":
                 double balancedBonus = (cardDemand > 0 && cardDemand <= profile.cardBudgetCap()) ? 0.002 : 0.0;
-                return baseRate + balancedBonus - (0.2 * evaluation.rateRisk());
+                return expectedRate + balancedBonus - (0.2 * evaluation.rateRisk());
             case "AGGRESSIVE":
-                double aggressiveBonus = (cardDemand > 0) ? 0.005 : 0.001;
-                return baseRate + aggressiveBonus - (0.01 * evaluation.rateRisk());
+                return product.maxRate() - (0.01 * evaluation.rateRisk());
             default:
-                return baseRate;
+                return expectedRate;
         }
     }
 
     public PortfolioCandidate buildCandidate(List<PortfolioAllocation> allocations) {
+        return buildCandidate(allocations, "BALANCED");
+    }
+
+    public PortfolioCandidate buildCandidate(
+            List<PortfolioAllocation> allocations,
+            String optionType
+    ) {
         long principal = 0L;
         long lumpSumPrincipal = 0L;
         double expectedReturn = 0.0;
@@ -221,7 +286,10 @@ public class PortfolioCandidateBuilder {
                     ? (product.product().termMonths() + 1.0) / 24.0
                     : product.product().termMonths() / 12.0;
 
-            expectedReturn += slot.amount() * product.expectedRate() * durationFactor;
+            double appliedRate = "AGGRESSIVE".equals(optionType)
+                    ? product.product().maxRate()
+                    : product.expectedRate();
+            expectedReturn += slot.amount() * appliedRate * durationFactor;
             double riskWon = slot.amount() * product.rateRisk() * durationFactor;
             variance += riskWon * riskWon;
 
@@ -253,15 +321,6 @@ public class PortfolioCandidateBuilder {
         long allocatable = Math.max(0L, profile.lumpSum() - profile.emergencyFund());
         int targetMonths = profile.targetMonths() > 0 ? profile.targetMonths() : 12;
 
-        long totalMonthlySavingDemand = candidate.allocations().stream()
-                .filter(allocation -> allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING)
-                .mapToLong(allocation -> monthlyAmount(allocation.slot()))
-                .sum();
-        long initialCashReservedForSavings = allocatable - candidate.lumpSumPrincipal();
-        long monthlySavingCapacity = safeAdd(
-                profile.monthlySaving(),
-                initialCashReservedForSavings / targetMonths
-        );
         long totalBudget = safeAdd(
                 allocatable,
                 safeMultiply(profile.monthlySaving(), targetMonths)
@@ -269,12 +328,26 @@ public class PortfolioCandidateBuilder {
 
         if (candidate.lumpSumPrincipal() > allocatable
                 || candidate.principal() > totalBudget
-                || totalMonthlySavingDemand > monthlySavingCapacity + 1000L
                 || candidate.cardBudgetUsed() > profile.cardBudgetCap()
                 || candidate.salaryTransferUsed() > (profile.salaryTransferable() ? 1 : 0)
                 || candidate.cashBalanceUsed() > allocatable
                 || candidate.allocations().stream().anyMatch(a -> !a.product().hardRequirementsSatisfied())) {
             return false;
+        }
+
+        long cash = allocatable - candidate.lumpSumPrincipal();
+        int horizonMonths = candidate.allocations().stream()
+                .filter(allocation -> allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING)
+                .mapToInt(allocation -> allocation.slot().startMonth() + allocation.slot().termMonths())
+                .max()
+                .orElse(0);
+        for (int month = 0; month < horizonMonths; month++) {
+            cash = safeAdd(cash, profile.monthlySaving());
+            long expense = monthlyExpense(candidate.allocations(), month);
+            if (expense > cash + 1000L) {
+                return false;
+            }
+            cash -= Math.min(cash, expense);
         }
 
         return candidate.firstTradeUsed().values().stream().allMatch(count -> count <= 1);
