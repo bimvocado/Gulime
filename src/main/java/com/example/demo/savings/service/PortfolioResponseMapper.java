@@ -90,7 +90,10 @@ public class PortfolioResponseMapper {
             double totalWeightedRateSum = 0.0;
             for (PortfolioAllocation allocation : candidate.allocations()) {
                 double weight = (double) allocation.slot().amount() / candidate.principal();
-                totalWeightedRateSum += allocation.product().expectedRate() * weight;
+                double appliedRate = "AGGRESSIVE".equals(optionType)
+                        ? allocation.product().product().maxRate()
+                        : allocation.product().expectedRate();
+                totalWeightedRateSum += appliedRate * weight;
             }
             weightedRate = totalWeightedRateSum * 100.0;
         }
@@ -99,6 +102,14 @@ public class PortfolioResponseMapper {
                 .mapToInt(allocation -> allocation.slot().startMonth() + allocation.product().product().termMonths())
                 .max()
                 .orElse(0);
+        long totalMonthlySaving = candidate.allocations().stream()
+                .filter(allocation -> allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING)
+                .mapToLong(allocation -> candidateBuilder.monthlyAmount(allocation.slot()))
+                .sum();
+        long monthlyFundingFromLumpSum = Math.max(
+                0L,
+                totalMonthlySaving - profile.monthlySaving()
+        );
 
         List<AllocationResponse> allocations = candidate.allocations().stream()
                 .map(allocation -> new AllocationResponse(
@@ -116,7 +127,11 @@ public class PortfolioResponseMapper {
                         toPercent(allocation.product().expectedRate()),
                         allocation.product().resourceDemand().cardBudget(),
                         "SELECTED",
-                        null
+                        allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING
+                                && monthlyFundingFromLumpSum > 0L
+                                ? "매월 " + monthlyFundingFromLumpSum
+                                + "원은 목돈 유보분에서 충당합니다."
+                                : null
                 ))
                 .toList();
 
@@ -166,7 +181,7 @@ public class PortfolioResponseMapper {
 
     private String riskLevel(double riskScore) {
         if (riskScore < 0.33) return "LOW";
-        if (riskScore < 0.66) return "HIGH"; // 위험도 구간 재조정 필요 시 수정 가능
+        if (riskScore < 0.66) return "MEDIUM";
         return "HIGH";
     }
 

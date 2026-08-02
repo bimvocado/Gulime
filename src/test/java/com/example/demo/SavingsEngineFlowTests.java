@@ -126,31 +126,44 @@ class SavingsEngineFlowTests {
                 .filter(option -> option.optionType().equals("AGGRESSIVE"))
                 .findFirst()
                 .orElseThrow();
-        assertThat(stable.allocations())
-                .extracting(allocation -> allocation.startMonth())
-                .contains(0, 1, 2);
-        assertThat(balanced.allocations())
-                .extracting(allocation -> allocation.startMonth())
-                .contains(0, 1)
-                .doesNotContain(2);
-        assertThat(aggressive.allocations())
-                .allSatisfy(allocation ->
-                        assertThat(allocation.startMonth()).isZero());
-        assertThat(stable.completionMonth())
-                .isGreaterThanOrEqualTo(balanced.completionMonth());
-        assertThat(balanced.completionMonth())
-                .isGreaterThanOrEqualTo(aggressive.completionMonth());
+        long allocatable = profile.lumpSum() - profile.emergencyFund();
+        long totalBudget = allocatable
+                + profile.monthlySaving() * profile.targetMonths();
+        assertThat(List.of(stable, balanced, aggressive))
+                .allSatisfy(option -> {
+                    assertThat(option.allocations()).isNotEmpty();
+
+                    long principal = option.allocations().stream()
+                            .mapToLong(allocation -> allocation.amount())
+                            .sum();
+                    long lumpSumPrincipal = option.allocations().stream()
+                            .filter(allocation -> allocation.allocationType().equals("LUMP_SUM"))
+                            .mapToLong(allocation -> allocation.amount())
+                            .sum();
+                    assertThat(principal).isLessThanOrEqualTo(totalBudget);
+                    assertThat(lumpSumPrincipal).isLessThanOrEqualTo(allocatable);
+                    assertThat(option.expectedFinalAmount())
+                            .isGreaterThanOrEqualTo(principal);
+
+                    long cash = allocatable - lumpSumPrincipal;
+                    for (int month = 0; month < option.completionMonth(); month++) {
+                        int currentMonth = month;
+                        cash += profile.monthlySaving();
+                        long monthlyExpense = option.allocations().stream()
+                                .filter(allocation -> allocation.allocationType().equals("MONTHLY_SAVING"))
+                                .filter(allocation -> currentMonth >= allocation.startMonth())
+                                .filter(allocation -> currentMonth < allocation.maturityMonth())
+                                .mapToLong(allocation -> allocation.monthlyAmount())
+                                .sum();
+                        assertThat(monthlyExpense).isLessThanOrEqualTo(cash + 1000L);
+                        cash -= Math.min(cash, monthlyExpense);
+                    }
+                });
         assertThat(options.options())
                 .flatExtracting(option -> option.allocations())
                 .allSatisfy(allocation -> assertThat(allocation.maturityMonth())
                         .isEqualTo(allocation.startMonth()
                                 + allocation.termMonths()));
-        assertThat(balanced.allocations().stream()
-                .filter(allocation -> allocation.allocationType().equals("LUMP_SUM"))
-                .map(allocation -> allocation.productId())
-                .distinct())
-                .hasSizeGreaterThan(1);
-
         RoadmapResponse roadmap = planningService.roadmap(
                 new RoadmapRequest(
                         profile,
@@ -170,7 +183,11 @@ class SavingsEngineFlowTests {
         assertThat(roadmap.milestones())
                 .filteredOn(milestone -> milestone.eventType().equals("SUBSCRIPTION"))
                 .extracting(milestone -> milestone.month())
-                .contains(0, 1);
+                .containsExactlyInAnyOrderElementsOf(
+                        balanced.allocations().stream()
+                                .map(allocation -> allocation.startMonth())
+                                .toList()
+                );
         assertThat(roadmap.finalConfirmationRisks()).isNotNull();
         assertThat(roadmap.summary()).isNotNull();
         assertThat(objectMapper.writeValueAsString(roadmap))

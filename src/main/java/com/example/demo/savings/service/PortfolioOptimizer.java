@@ -37,9 +37,6 @@ public final class PortfolioOptimizer {
         );
 
         long allocatable = Math.max(0L, profile.lumpSum() - profile.emergencyFund());
-        System.out.println("=== [DEBUG] STABLE 원금: " + candidates.get(0).principal());
-        System.out.println("=== [DEBUG] BALANCED 원금: " + candidates.get(1).principal());
-        System.out.println("=== [DEBUG] AGGRESSIVE 원금: " + candidates.get(2).principal());
         // 3. 차별화된 수령액과 이자가 반영된 최종 응답 객체 생성
         return responseMapper.buildOptionsResponse(products, profile, candidates, evaluations, allocatable);
     }

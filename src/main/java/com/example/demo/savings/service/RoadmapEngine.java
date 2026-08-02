@@ -60,7 +60,13 @@ public final class RoadmapEngine {
             );
         }
 
-        validateMonthlySaving(selections, evaluations, profile, horizonMonths);
+        validateMonthlySaving(
+                selections,
+                evaluations,
+                profile,
+                horizonMonths,
+                allocatable - lumpSumPrincipal
+        );
         validateResources(
                 selections,
                 evaluations,
@@ -311,7 +317,8 @@ public final class RoadmapEngine {
             List<SelectedAllocation> selections,
             Map<String, ProductEvaluation> evaluations,
             UserProfile profile,
-            int horizonMonths
+            int horizonMonths,
+            long initialCashReservedForSavings
     ) {
         Map<Integer, Long> monthlyExpenseByMonth = new HashMap<>();
 
@@ -332,10 +339,14 @@ public final class RoadmapEngine {
             }
         }
 
-        for (Map.Entry<Integer, Long> entry : monthlyExpenseByMonth.entrySet()) {
-            if (entry.getValue() > profile.monthlySaving() + 1000L) {
+        long cash = Math.max(0L, initialCashReservedForSavings);
+        for (int month = 0; month < horizonMonths; month++) {
+            cash += profile.monthlySaving();
+            long expense = monthlyExpenseByMonth.getOrDefault(month, 0L);
+            if (expense > cash + 1000L) {
                 throw new IllegalArgumentException("선택한 적금의 월 납입액이 월 저축 여력을 초과합니다.");
             }
+            cash -= Math.min(cash, expense);
         }
     }
 
