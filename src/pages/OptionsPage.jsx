@@ -2,34 +2,38 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 
-export default function OptionsPage({ userProfile, onNext, onPrev }) {
-    const [riskTolerance, setRiskTolerance] = useState(50);
-    const [optionsData, setOptionsData] = useState(null);
+const OPTIONS_STORAGE_KEY = 'gulimi_options_state';
+
+const getInitialOptionsState = () => {
+    try {
+        const saved = localStorage.getItem(OPTIONS_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+    } catch (e) {
+        console.error("Options storage parse error:", e);
+    }
+    return null;
+};
+
+export default function OptionsPage({ userProfile, onNext, onPrev, onGoSimulation }) {
+    const savedState = getInitialOptionsState();
+
+    const [optionsData, setOptionsData] = useState(savedState?.optionsData || null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetchOptions = useCallback(async (riskVal) => {
+    const fetchOptions = useCallback(async () => {
+        if (!userProfile) return;
         setIsLoading(true);
-
-        const profile = userProfile || {
-            employment: 'FULL_TIME',
-            salaryTransferable: true,
-            lumpSum: 20000000,
-            emergencyFund: 3000000,
-            monthlySaving: 1000000,
-            targetMonths: 12,
-            cardSpend6m: [250000, 300000, 200000, 280000, 320000, 220000],
-            cardBudgetCap: 300000,
-            existingBanks: [],
-            conditionAnswers: {},
-        };
 
         try {
             const response = await fetch('/api/v1/options', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache'
+                },
                 body: JSON.stringify({
-                    profile,
-                    riskTolerance: riskVal / 100.0,
+                    profile: userProfile,
+                    riskTolerance: 0.5,
                 }),
             });
 
@@ -38,7 +42,9 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                 throw new Error(`플랜 조회 실패: ${response.status} - ${errText}`);
             }
 
-            setOptionsData(await response.json());
+            const data = await response.json();
+            setOptionsData(data);
+            localStorage.setItem(OPTIONS_STORAGE_KEY, JSON.stringify({ optionsData: data }));
         } catch (error) {
             console.error('Options API 연동 에러:', error);
         } finally {
@@ -47,9 +53,40 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
     }, [userProfile]);
 
     useEffect(() => {
-        const timer = setTimeout(() => fetchOptions(riskTolerance), 300);
-        return () => clearTimeout(timer);
-    }, [riskTolerance, fetchOptions]);
+        if (userProfile) {
+            fetchOptions();
+        }
+    }, [userProfile, fetchOptions]);
+
+    const handleSelectOption = (option) => {
+        localStorage.setItem('gulimi_selected_option', JSON.stringify(option));
+        onNext?.(option);
+    };
+
+    if (!userProfile) {
+        return (
+            <div className="max-w-2xl mx-auto py-16 text-center space-y-6">
+                <Card title="자산 AI 진단 필요" icon="⚠️">
+                    <div className="py-10 space-y-4">
+                        <p className="text-lg font-black text-amber-950">
+                            아직 자산 시뮬레이션을 진행하지 않으셨어요!
+                        </p>
+                        <p className="text-xs text-amber-800/70 font-semibold">
+                            1단계에서 자산 프로필을 먼저 입력하시고 AI 시뮬레이션을 돌려보세요.
+                        </p>
+                        <div className="pt-2">
+                            <Button
+                                onClick={onGoSimulation || onPrev}
+                                className="px-8 py-3.5 bg-amber-500 text-white font-black text-sm rounded-2xl hover:bg-amber-600 shadow-md"
+                            >
+                                🎲 시뮬레이션 돌리러 가기
+                            </Button>
+                        </div>
+                    </div>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-8 animate-fadeIn max-w-5xl mx-auto py-4">
@@ -61,70 +98,66 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                     어떤 스타일로 굴려볼까요?
                 </h1>
                 <p className="text-amber-800/60 text-xs font-semibold">
-                    자원 제약을 꼼꼼히 계산해 도출한 파레토 최적 조합입니다.
+                    몬테카를로 AI 시뮬레이션으로 조건 달성 확률을 진단하여 산출한 최적의 자금 스케줄입니다.
                 </p>
             </div>
 
-            <Card
-                title="내 리스크 민감도 조절"
-                icon="🎚️"
-                subtitle="슬라이더를 움직여 달성 확률과 목표 수익 사이의 균형을 맞추세요"
-            >
-                <div className="space-y-3 py-1">
-                    <div className="flex justify-between items-center text-xs font-extrabold text-amber-950">
-                        <span className="text-blue-700">🛡️ 안전 우대 (확률 위주)</span>
-                        <span className="bg-amber-200/80 px-3 py-1 rounded-full text-amber-900">
-                            위험 선호도: {riskTolerance}% {isLoading && '🔄 분석 중...'}
-                        </span>
-                        <span className="text-rose-700">🔥 수익 우대 (금리 위주)</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                {isLoading ? (
+                    <div className="col-span-3 text-center py-16 bg-white rounded-3xl border border-amber-200 space-y-3">
+                        <span className="text-3xl inline-block animate-bounce">🎲</span>
+                        <p className="text-amber-900 font-black text-base">
+                            AI 몬테카를로 시뮬레이션 기반 최적 플랜 산출 중...
+                        </p>
                     </div>
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={riskTolerance}
-                        onChange={(event) => setRiskTolerance(Number(event.target.value))}
-                        className="w-full accent-amber-500 h-2.5 bg-amber-100 rounded-lg cursor-pointer"
-                    />
-                </div>
-            </Card>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {optionsData?.options?.length > 0 ? (
+                ) : optionsData?.options?.length > 0 ? (
                     optionsData.options.map((option, index) => {
-                        const isBest = index === 1;
-                        const isExceeded = option.isBudgetExceeded || option.exceeded || false;
-                        const scheduleLabel = option.optionType === 'STABLE'
-                            ? '월별 풍차형 · 1개월 간격 가입'
-                            : option.optionType === 'AGGRESSIVE'
-                                ? '즉시 분산형 · 첫 달 모두 가입'
-                                : '혼합형 · 일부 즉시, 일부 순차 가입';
+                        const type = option.optionType || (index === 0 ? 'STABLE' : index === 1 ? 'BALANCED' : 'AGGRESSIVE');
+                        const isBest = type === 'BALANCED' || index === 1;
+                        const isExceeded = option.resourceUsage?.cardBudgetExceeded || option.resourceUsage?.cashBalanceExceeded;
+
+                        // 💡 [개선] 몬테카를로 및 각 플랜 정체성에 맞춘 직관적 라벨 수정
+                        const scheduleLabel = type === 'STABLE'
+                            ? '풍차형 분산 · 기본 보장 금리 중심'
+                            : type === 'AGGRESSIVE'
+                                ? '즉시 몰빵형 · 표면 최고 금리 도전'
+                                : 'AI 몬테카를로 예측 · 실제 기대수익 극대화';
+
+                        const planTitle = type === 'STABLE'
+                            ? '원금 보장 꼭꼭 플랜'
+                            : type === 'AGGRESSIVE'
+                                ? '최대 이자 도전 플랜'
+                                : 'AI 가성비 최고 플랜';
+
+                        const finalAmount = Math.floor((option.expectedFinalAmount || 0) / 10000);
+                        const totalReturn = Math.floor((option.expectedTotalReturn || 0) / 10000);
+                        const expectedRate = option.weightedExpectedRate ? option.weightedExpectedRate.toFixed(2) : '0.00';
 
                         return (
                             <div
-                                key={option.optionId || option.id || index}
+                                key={type || index}
                                 className={`rounded-[2.5rem] p-6 border transition-all relative flex flex-col justify-between ${
                                     isExceeded
                                         ? 'bg-gray-100/90 border-gray-300 opacity-60'
-                                        : `bg-white border-amber-200 ${isBest ? 'shadow-xl shadow-amber-200/50 -translate-y-2 ring-2 ring-amber-300' : 'shadow-sm'}`
+                                        : `bg-white border-amber-200 ${isBest ? 'shadow-xl shadow-amber-200/50 -translate-y-2 ring-2 ring-amber-300' : 'shadow-sm hover:border-amber-300'}`
                                 }`}
                             >
                                 {isBest && !isExceeded && (
                                     <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-950 font-black text-[11px] px-4 py-1 rounded-full shadow-sm border border-amber-200">
-                                        👑 굴리미 강력 추천
+                                        👑 굴리미 AI 강력 추천
                                     </div>
                                 )}
 
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
                                         <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                                            index === 0
+                                            type === 'STABLE'
                                                 ? 'bg-blue-100 text-blue-800'
-                                                : index === 1
+                                                : type === 'BALANCED'
                                                     ? 'bg-amber-300 text-amber-950 font-black'
                                                     : 'bg-rose-100 text-rose-800'
                                         }`}>
-                                            {option.name || (index === 0 ? '안정 굴리미 🛡️' : index === 1 ? '최적 굴리미 ★' : '공격 굴리미 🚀')}
+                                            {type === 'STABLE' ? '안정형' : type === 'AGGRESSIVE' ? '수익형' : '최적형'}
                                         </span>
                                         {isExceeded && (
                                             <span className="text-[10px] font-bold bg-rose-100 text-rose-700 px-2.5 py-0.5 rounded-full">
@@ -134,58 +167,63 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                                     </div>
 
                                     <h3 className="text-lg font-black text-amber-950 mb-1">
-                                        {option.title || (index === 0 ? '원금 보장 꼭꼭 플랜' : index === 1 ? 'AI 가성비 최고 플랜' : '최대 이자 도전 플랜')}
+                                        {planTitle}
                                     </h3>
                                     <p className="text-[11px] font-extrabold text-emerald-700 mb-1">
                                         {scheduleLabel}
                                     </p>
                                     <p className="text-xs text-amber-700/60 mb-4 font-medium">
-                                        최종 만기 {option.completionMonth || userProfile?.targetMonths || 12}개월차 예상 수령액
+                                        최종 만기 {option.completionMonth || 12}개월차 예상 수령액
                                     </p>
 
                                     <div className="bg-amber-50/50 p-4 rounded-2xl mb-4 border border-amber-100 space-y-2">
                                         <span className="text-2xl font-black text-amber-950 block">
-                                            {option.totalAmount
-                                                ? `${(option.totalAmount / 10000).toLocaleString()}만원`
-                                                : `${((option.expectedAmount || 33000000) / 10000).toLocaleString()}만원`}
+                                            {finalAmount.toLocaleString()}만원
                                         </span>
                                         <div className="pt-2 border-t border-amber-200/40 flex justify-between items-center text-xs">
-                                            <span className="text-amber-700/70 line-through">
-                                                광고 연 {option.advertisedRate || option.maxRate || '5.50'}%
+                                            <span className="text-amber-700/70 font-semibold">
+                                                기대 수익 +{totalReturn.toLocaleString()}만원
                                             </span>
                                             <span className="font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100">
-                                                실제 기대 {option.expectedRate || '3.80'}%
+                                                {type === 'BALANCED' ? 'AI 기대금리' : '금리'} {expectedRate}%
                                             </span>
                                         </div>
                                     </div>
 
                                     <div className="space-y-2 mb-5">
-                                        {(option.allocations || []).map((allocation) => (
-                                            <div key={allocation.slotIndex} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px]">
-                                                <div className="flex justify-between font-extrabold text-amber-950">
-                                                    <span>{allocation.startMonth + 1}개월차 · {allocation.productName}</span>
-                                                    <span>{(allocation.amount / 10000).toLocaleString()}만원</span>
-                                                </div>
-                                                <p className="mt-1 text-amber-700/70">
-                                                    {allocation.bankName} · {allocation.maturityMonth}개월차 만기
-                                                </p>
-                                            </div>
-                                        ))}
-                                    </div>
+                                        {(option.allocations || []).map((allocation, aIdx) => {
+                                            const startMonthDisplay = allocation.startMonth === 0
+                                                ? '1개월차(즉시)'
+                                                : `${(allocation.startMonth || 0) + 1}개월차`;
 
-                                    <div className="text-xs font-semibold text-amber-800 space-y-1.5 mb-6">
-                                        <p>
-                                            💳 필요 카드실적: <strong>월 {(option.requiredCardSpend || option.monthlyCardBudget || 0).toLocaleString()}원</strong>
-                                        </p>
-                                        <p className="text-[11px] text-amber-700/70 font-normal">
-                                            {option.description || option.desc || '소비 패턴에 딱 맞아 우대금리를 챙기기 제일 편해요!'}
-                                        </p>
+                                            const monthlyAmt = Math.floor((allocation.monthlyAmount || 0) / 10000);
+                                            const totalAmt = Math.floor((allocation.amount || 0) / 10000);
+
+                                            return (
+                                                <div key={allocation.slotIndex ?? aIdx} className="rounded-xl border border-amber-100 bg-white p-3 text-[11px] shadow-2xs">
+                                                    <div className="flex justify-between font-extrabold text-amber-950 mb-0.5">
+                                                        <span className="text-amber-900 font-black">
+                                                            🗓️ {startMonthDisplay} · {allocation.productName || '추천 상품'}
+                                                        </span>
+                                                        <span className="text-emerald-700 font-black">
+                                                            {monthlyAmt > 0
+                                                                ? `월 ${monthlyAmt.toLocaleString()}만원`
+                                                                : `${totalAmt.toLocaleString()}만원`}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex justify-between text-[10px] text-amber-700/70 pt-1 border-t border-amber-50">
+                                                        <span>{allocation.bankName || '금융사'}</span>
+                                                        <span>만기 {allocation.maturityMonth || 12}개월차</span>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
                                 <Button
                                     variant={isBest ? 'primary' : 'secondary'}
-                                    onClick={() => onNext?.(option)}
+                                    onClick={() => handleSelectOption(option)}
                                     disabled={isExceeded}
                                     className={isExceeded ? 'opacity-50 cursor-not-allowed bg-gray-200 text-gray-500 border-gray-300' : ''}
                                 >
@@ -195,19 +233,19 @@ export default function OptionsPage({ userProfile, onNext, onPrev }) {
                         );
                     })
                 ) : (
-                    <div className="col-span-3 text-center py-12 bg-white rounded-3xl border border-amber-200">
-                        <p className="text-amber-800 font-bold text-sm">
-                            {isLoading ? '🎲 백엔드 최적 파레토 플랜 산출 중...' : '플랜 데이터를 불러오는 중입니다.'}
+                    <div className="col-span-3 text-center py-16 bg-white rounded-3xl border border-amber-200 space-y-3">
+                        <p className="text-amber-900 font-black text-base">
+                            추천 플랜을 불러올 수 없습니다. 다시 시도해 주세요.
                         </p>
                     </div>
                 )}
             </div>
 
             {onPrev && (
-                <div className="flex justify-start">
+                <div className="flex justify-start pt-4">
                     <button
                         onClick={onPrev}
-                        className="px-6 py-3 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-2xl transition-all text-xs"
+                        className="px-6 py-3 bg-amber-100 hover:bg-amber-200 text-amber-950 font-bold rounded-2xl transition-all text-xs flex items-center gap-1"
                     >
                         👈 이전 단계(프로필 수정)로 돌아가기
                     </button>
