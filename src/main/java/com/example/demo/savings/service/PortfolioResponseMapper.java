@@ -89,6 +89,14 @@ public class PortfolioResponseMapper {
                 .mapToInt(allocation -> allocation.slot().startMonth() + allocation.product().product().termMonths())
                 .max()
                 .orElse(0);
+        long totalMonthlySaving = candidate.allocations().stream()
+                .filter(allocation -> allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING)
+                .mapToLong(allocation -> candidateBuilder.monthlyAmount(allocation.slot()))
+                .sum();
+        long monthlyFundingFromLumpSum = Math.max(
+                0L,
+                totalMonthlySaving - profile.monthlySaving()
+        );
 
         List<AllocationResponse> allocations = candidate.allocations().stream()
                 .map(allocation -> new AllocationResponse(
@@ -106,7 +114,11 @@ public class PortfolioResponseMapper {
                         toPercent(allocation.product().expectedRate()),
                         allocation.product().resourceDemand().cardBudget(),
                         "SELECTED",
-                        null
+                        allocation.slot().allocationType() == AllocationType.MONTHLY_SAVING
+                                && monthlyFundingFromLumpSum > 0L
+                                ? "매월 " + monthlyFundingFromLumpSum
+                                + "원은 목돈 유보분에서 충당합니다."
+                                : null
                 ))
                 .toList();
 

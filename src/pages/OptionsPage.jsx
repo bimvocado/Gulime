@@ -215,6 +215,11 @@ export default function OptionsPage({ userProfile, onNext, onPrev, onGoSimulatio
                                                         <span>{allocation.bankName || '금융사'}</span>
                                                         <span>만기 {allocation.maturityMonth || 12}개월차</span>
                                                     </div>
+                                                    {allocation.warningMessage && (
+                                                        <p className="mt-2 rounded-lg bg-blue-50 px-2 py-1.5 text-[10px] font-bold text-blue-700">
+                                                            {allocation.warningMessage}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             );
                                         })}
