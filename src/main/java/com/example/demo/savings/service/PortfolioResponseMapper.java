@@ -82,8 +82,18 @@ public class PortfolioResponseMapper {
     ) {
         double riskScore = normalize(candidate.returnRisk(), minRisk, maxRisk);
         long expectedReturn = Math.round(candidate.expectedReturn());
-        double weightedRate = candidate.principal() == 0L ? 0.0 : candidate.expectedReturn() / candidate.principal() * 100.0;
         long allocatable = Math.max(0L, profile.lumpSum() - profile.emergencyFund());
+
+        // 💡 [수정] 단순 이자/원금이 아닌, 포트폴리오 내 각 상품의 금액 비중별 '가중평균 연 기대금리(%)' 계산
+        double weightedRate = 0.0;
+        if (candidate.principal() > 0L) {
+            double totalWeightedRateSum = 0.0;
+            for (PortfolioAllocation allocation : candidate.allocations()) {
+                double weight = (double) allocation.slot().amount() / candidate.principal();
+                totalWeightedRateSum += allocation.product().expectedRate() * weight;
+            }
+            weightedRate = totalWeightedRateSum * 100.0;
+        }
 
         int completionMonth = candidate.allocations().stream()
                 .mapToInt(allocation -> allocation.slot().startMonth() + allocation.product().product().termMonths())
@@ -112,10 +122,10 @@ public class PortfolioResponseMapper {
 
         return new PortfolioResponse(
                 optionType,
-                candidate.principal() + expectedReturn,
+                candidate.principal() + expectedReturn, // 총 만기 수령액 (원금 + 이자)
                 expectedReturn,
                 completionMonth,
-                round(weightedRate, 6),
+                round(weightedRate, 2), // 연 기대금리 (%)
                 riskLevel(riskScore),
                 round(riskScore, 6),
                 true,
@@ -156,7 +166,7 @@ public class PortfolioResponseMapper {
 
     private String riskLevel(double riskScore) {
         if (riskScore < 0.33) return "LOW";
-        if (riskScore < 0.66) return "MEDIUM";
+        if (riskScore < 0.66) return "HIGH"; // 위험도 구간 재조정 필요 시 수정 가능
         return "HIGH";
     }
 
