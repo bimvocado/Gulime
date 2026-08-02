@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import { authStorage } from '../utils/storage';
 
-// 💡 1. 영문 백엔드 이벤트 코드를 사용자가 한눈에 알기 쉬운 한글로 변환해 주는 헬퍼
 const getEventTypeInfo = (eventType) => {
     switch (eventType) {
         case 'SAVING_START':
@@ -19,9 +19,19 @@ const getEventTypeInfo = (eventType) => {
     }
 };
 
-export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
+export default function RoadmapPage({ userProfile, selectedOption, onPrev, onConfirmSuccess }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isConfirmed, setIsConfirmed] = useState(false);
+
+    // 💡 [수정 1] 초기화 시 로컬 스토리지/저장소에 로드맵이 이미 존재하는지 확인하여 확정 상태 유지
+    const [isConfirmed, setIsConfirmed] = useState(() => {
+        try {
+            const savedRoadmap = authStorage.getRoadmap();
+            return !!savedRoadmap;
+        } catch (e) {
+            return false;
+        }
+    });
+
     const [roadmap, setRoadmap] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -45,7 +55,10 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
 
         fetch('/api/v1/roadmap', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache'
+            },
             body: JSON.stringify({
                 profile: userProfile,
                 selectedAllocations: selectedAllocations
@@ -56,7 +69,6 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                 return response.json();
             })
             .then((data) => {
-                console.log('🏁 로드맵 백엔드 데이터 도착:', data);
                 setRoadmap(data);
             })
             .catch((requestError) => {
@@ -68,10 +80,55 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
             });
     }, [userProfile, selectedOption]);
 
+    if (!selectedOption) {
+        return (
+            <div className="max-w-2xl mx-auto py-16 text-center space-y-6">
+                <Card title="추천 플랜 선택 필요" icon="⚠️">
+                    <div className="py-10 space-y-4">
+                        <p className="text-lg font-black text-amber-950">
+                            선택된 추천 플랜이 없거나 최신 프로필로 갱신되었습니다.
+                        </p>
+                        <p className="text-xs text-amber-800/70 font-semibold">
+                            Step 2에서 원하시는 굴리기 플랜을 먼저 선택해주세요.
+                        </p>
+                        <div className="pt-2">
+                            <Button
+                                onClick={onPrev}
+                                className="px-8 py-3.5 bg-amber-500 text-white font-black text-sm rounded-2xl hover:bg-amber-600 shadow-md"
+                            >
+                                👈 플랜 선택하러 가기
+                            </Button>
+                        </div>
+                    </div>
+                </Card>
+            </div>
+        );
+    }
+
     const handleConfirm = () => {
+        if (!selectedOption || !roadmap) {
+            alert('⚠️ 선택된 추천 플랜 또는 로드맵 정보가 정상적으로 불러와지지 않았습니다. 플랜을 다시 선택해주세요!');
+            setIsModalOpen(false);
+            return;
+        }
+
         setIsConfirmed(true);
         setIsModalOpen(false);
-        alert('🎉 12개월 저축 로드맵이 최종 저장되었습니다!');
+        authStorage.setRoadmap(roadmap);
+
+        alert('🎉 12개월 저축 로드맵이 마이페이지에 저장되었습니다!');
+        if (onConfirmSuccess) onConfirmSuccess();
+    };
+
+    // 💡 [수정 2] 메인 확정/변경 버튼 클릭 핸들러
+    const handleMainButtonClick = () => {
+        if (isConfirmed) {
+            // 이미 확정된 상태라면 -> 옵션 페이지로 돌아가서 다른 플랜 선택
+            if (onPrev) onPrev();
+        } else {
+            // 아직 확정 안 된 상태라면 -> 확인 모달 띄우기
+            setIsModalOpen(true);
+        }
     };
 
     const summary = roadmap?.summary || {
@@ -83,14 +140,10 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
 
     const rawMilestones = roadmap?.milestones || [];
 
-    // 💡 2. 백엔드 타임라인 데이터를 [개월 차(month)] 순으로 정렬하고 그루핑하는 로직
     const groupedMilestones = React.useMemo(() => {
         const filtered = rawMilestones.filter((item) => item.eventType !== 'START');
-
-        // 개월 차(month) 기준 오름차순 정렬 (0, 1, 2 ... 12)
         const sorted = [...filtered].sort((a, b) => (a.month || 0) - (b.month || 0));
 
-        // month 별로 그룹핑 { 1: [item, item], 12: [item, item] }
         const groups = {};
         sorted.forEach((item) => {
             const m = item.month ?? 0;
@@ -121,7 +174,6 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                 </div>
             </div>
 
-            {/* 📊 요약 리포트 카드 */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-white p-5 rounded-2xl border border-amber-200/60 shadow-sm text-center">
                     <span className="text-[11px] font-bold text-amber-800/60">총 원금</span>
@@ -169,14 +221,12 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                         </div>
                     )}
 
-                    {/* 💡 3. 개월 차(month) 단위로 묶어서 타임라인 출력 */}
                     {!isLoading && Object.entries(groupedMilestones).map(([monthStr, items]) => {
                         const monthNum = Number(monthStr);
                         const displayMonth = monthNum === 0 ? '1개월 차 (현재)' : `${monthNum}개월 차`;
 
                         return (
                             <div key={monthStr} className="relative space-y-3">
-                                {/* 월 표시 노드 핀 */}
                                 <div className="absolute -left-[35px] top-1 flex items-center justify-center w-6 h-6 rounded-full bg-amber-400 text-amber-950 text-[10px] font-black border-2 border-white shadow-sm">
                                     {monthNum === 0 ? 1 : monthNum}
                                 </div>
@@ -190,10 +240,10 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                                     </span>
                                 </div>
 
-                                {/* 해당 개월 차에 일어나는 상품 액션 리스트 */}
                                 <div className="space-y-3">
                                     {items.map((item, index) => {
                                         const typeInfo = getEventTypeInfo(item.eventType);
+                                        const bankName = item.bankName || item.bank;
 
                                         return (
                                             <div
@@ -209,12 +259,19 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                                                     </span>
                                                 </div>
 
-                                                <h4 className="font-extrabold text-amber-950 text-base mt-2.5">
-                                                    {item.productName || '대기 자금 (파킹통장)'}
-                                                </h4>
+                                                <div className="mt-2.5 flex items-center gap-2">
+                                                    {bankName && (
+                                                        <span className="text-[10px] font-black bg-amber-100 text-amber-900 px-2 py-0.5 rounded-md border border-amber-200/70 shrink-0">
+                                                            {bankName}
+                                                        </span>
+                                                    )}
+                                                    <h4 className="font-extrabold text-amber-950 text-base">
+                                                        {item.productName || '대기 자금 (파킹통장)'}
+                                                    </h4>
+                                                </div>
 
                                                 {item.action && (
-                                                    <p className="mt-1.5 text-xs text-amber-800/80 font-medium bg-amber-50/50 p-2.5 rounded-xl border border-amber-100">
+                                                    <p className="mt-2 text-xs text-amber-800/80 font-medium bg-amber-50/50 p-2.5 rounded-xl border border-amber-100">
                                                         💡 {item.action}
                                                     </p>
                                                 )}
@@ -237,15 +294,20 @@ export default function RoadmapPage({ userProfile, selectedOption, onPrev }) {
                         👈 플랜 다시 고르기
                     </button>
                 )}
+
+                {/* 💡 [수정 3] 확정 상태에 따른 버튼 문구, 디자인, 동작 전환 */}
                 <Button
-                    onClick={() => setIsModalOpen(true)}
-                    className={`text-base py-4 ${onPrev ? 'w-2/3' : 'w-full'} ${isConfirmed ? 'bg-emerald-500 hover:bg-emerald-600' : ''}`}
+                    onClick={handleMainButtonClick}
+                    className={`text-base py-4 ${onPrev ? 'w-2/3' : 'w-full'} ${
+                        isConfirmed
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md'
+                            : 'bg-amber-500 hover:bg-amber-600 text-white'
+                    }`}
                 >
-                    {isConfirmed ? '✅ 로드맵 확정 완료됨' : '🚀 이 로드맵으로 최종 확정하기'}
+                    {isConfirmed ? '✅ 로드맵 확정 완료 (다른 플랜 고르기 🔄)' : '🚀 이 로드맵으로 최종 확정하기'}
                 </Button>
             </div>
 
-            {/* 우대금리 이행 리스크 안내 모달 */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
                     <div className="bg-white rounded-[2.5rem] p-8 max-w-lg w-full border-2 border-amber-300 shadow-2xl space-y-6">

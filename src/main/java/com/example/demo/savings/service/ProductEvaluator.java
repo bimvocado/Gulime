@@ -10,8 +10,8 @@ import com.example.demo.savings.domain.UserProfile;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -74,7 +74,6 @@ public final class ProductEvaluator {
 
             if (evaluation.achievable()) {
                 switch (condition.resource()) {
-                    // 💡 [수정] 카드 실적 총액을 산정 기간(periodMonths)으로 나누어 '월 필요 카드 실적'으로 계산!
                     case CARD_BUDGET -> cardBudget = Math.max(
                             cardBudget,
                             monthlyThreshold(condition)
@@ -94,6 +93,16 @@ public final class ProductEvaluator {
                 }
             }
         }
+
+        // 💡 [버그 수정] 기대금리 및 관련 금리 지표들이 상품의 '최고금리(product.maxRate())'를 초과하지 않도록 보정
+        double productMaxLimit = product.maxRate() > 0 ? product.maxRate() : maxRate;
+
+        expectedRate = Math.min(expectedRate, productMaxLimit);
+        lowerRate = Math.min(lowerRate, productMaxLimit);
+        upperRate = Math.min(upperRate, productMaxLimit);
+        plusRate = Math.min(plusRate, productMaxLimit);
+        minusRate = Math.min(minusRate, productMaxLimit);
+        maxRate = Math.min(maxRate, productMaxLimit);
 
         return new ProductEvaluation(
                 product,
@@ -176,21 +185,23 @@ public final class ProductEvaluator {
             ProductCondition condition,
             UserProfile profile
     ) {
-        // 💡 [수정] 월 카드 예산 상한(cardBudgetCap)과 '월 단위 필요 실적(monthlyThreshold)'을 비교!
         long requiredMonthly = monthlyThreshold(condition);
-        boolean achievable = profile.cardBudgetCap() >= requiredMonthly;
+
+        double cardMean = ProbabilityCalculator.mean(profile.cardSpend6m());
+        long effectiveCap = Math.max(profile.cardBudgetCap(), (long) cardMean);
+
+        boolean achievable = effectiveCap >= requiredMonthly;
 
         if (!achievable) {
             return binary(
                     condition,
                     false,
-                    "월 카드 예산 상한이 필요 월 카드 실적보다 낮습니다."
+                    "월 카드 예산 상한 및 최근 사용액이 필요 월 카드 실적보다 낮습니다."
             );
         }
 
         long conditionSeed = MONTE_CARLO_SEED + condition.conditionId().hashCode();
 
-        // 💡 [수정] 몬테카롤로 시뮬레이션에도 월 단위 필요 실적을 기준으로 넘겨줌
         MonteCarloResult result = monteCarlo.simulateCardCondition(
                 profile.cardSpend6m(),
                 profile.cardBudgetCap(),
@@ -349,7 +360,6 @@ public final class ProductEvaluator {
         return condition.threshold() == null ? 0L : condition.threshold();
     }
 
-    // 💡 [신규 추가] 총 조건 실적 금액을 산정 개월 수로 나눈 '월 평균 카드 필요 실적' 계산
     private long monthlyThreshold(ProductCondition condition) {
         long threshold = safeThreshold(condition);
         int period = (condition.periodMonths() != null && condition.periodMonths() > 0)

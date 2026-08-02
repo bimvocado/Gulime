@@ -1,39 +1,126 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 
-export default function SimulationPage({ onNext }) {
-    const [employment, setEmployment] = useState("FULL_TIME");
-    const [salaryTransferable, setSalaryTransferable] = useState(true);
-    const [lumpSum, setLumpSum] = useState(20000000);
-    const [emergencyFund, setEmergencyFund] = useState(3000000);
-    const [monthlySaving, setMonthlySaving] = useState(1000000);
-    const [targetMonths, setTargetMonths] = useState(12);
-    const [cardSpend6m, setCardSpend6m] = useState([250000, 300000, 200000, 280000, 320000, 220000]);
-    const [cardBudgetCap, setCardBudgetCap] = useState(300000);
-    const [existingBank, setExistingBank] = useState("KB국민은행");
+const SIMULATION_STORAGE_KEY = 'gulimi_simulation_state';
 
+// 💡 가이드용 placeholder 예시값 (실제 state로 들어가진 않음)
+const PLACEHOLDERS = {
+    lumpSum: "10000000",
+    emergencyFund: "3000000",
+    monthlySaving: "500000",
+    cardSpend: "500000",
+    cardBudgetCap: "1000000"
+};
+
+const getInitialSimulationState = () => {
+    try {
+        const saved = localStorage.getItem(SIMULATION_STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+    } catch (e) {
+        console.error("Simulation storage parse error:", e);
+    }
+    return null;
+};
+
+export default function SimulationPage({ initialProfile, onNext }) {
+    const savedState = getInitialSimulationState();
+
+    // 💡 입력폼 상태 (비어있는 경우 빈 문자열 "" 유지)
+    const [employment, setEmployment] = useState(
+        savedState?.employment || initialProfile?.employment || "FULL_TIME"
+    );
+    const [salaryTransferable, setSalaryTransferable] = useState(
+        savedState?.salaryTransferable ?? initialProfile?.salaryTransferable ?? true
+    );
+    const [lumpSum, setLumpSum] = useState(
+        savedState?.lumpSum ?? initialProfile?.lumpSum ?? ""
+    );
+    const [emergencyFund, setEmergencyFund] = useState(
+        savedState?.emergencyFund ?? initialProfile?.emergencyFund ?? ""
+    );
+    const [monthlySaving, setMonthlySaving] = useState(
+        savedState?.monthlySaving ?? initialProfile?.monthlySaving ?? ""
+    );
+    const [targetMonths, setTargetMonths] = useState(
+        savedState?.targetMonths ?? initialProfile?.targetMonths ?? 12
+    );
+    const [cardSpend6m, setCardSpend6m] = useState(
+        savedState?.cardSpend6m || initialProfile?.cardSpend6m || ["", "", "", "", "", ""]
+    );
+    const [cardBudgetCap, setCardBudgetCap] = useState(
+        savedState?.cardBudgetCap ?? initialProfile?.cardBudgetCap ?? ""
+    );
+    const [existingBank, setExistingBank] = useState(
+        savedState?.existingBank || (initialProfile?.existingBanks?.[0]) || "KB국민은행"
+    );
+
+    // 💡 유효성 검사 에러 상태 관리 (어떤 필드가 비었는지 체크)
+    const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
-    const [resultData, setResultData] = useState(null);
-    const [conditionAnswers, setConditionAnswers] = useState({});
-    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [resultData, setResultData] = useState(savedState?.resultData || null);
+    const [conditionAnswers, setConditionAnswers] = useState(savedState?.conditionAnswers || {});
+    const [selectedProductId, setSelectedProductId] = useState(savedState?.selectedProductId || null);
+
+    useEffect(() => {
+        const currentState = {
+            employment,
+            salaryTransferable,
+            lumpSum,
+            emergencyFund,
+            monthlySaving,
+            targetMonths,
+            cardSpend6m,
+            cardBudgetCap,
+            existingBank,
+            resultData,
+            conditionAnswers,
+            selectedProductId
+        };
+        localStorage.setItem(SIMULATION_STORAGE_KEY, JSON.stringify(currentState));
+    }, [
+        employment, salaryTransferable, lumpSum, emergencyFund,
+        monthlySaving, targetMonths, cardSpend6m, cardBudgetCap,
+        existingBank, resultData, conditionAnswers, selectedProductId
+    ]);
 
     const handleCardSpendChange = (index, value) => {
         const updated = [...cardSpend6m];
-        updated[index] = Number(value) || 0;
+        updated[index] = value;
         setCardSpend6m(updated);
+        // 입력 시 해당 영역 에러 해제
+        if (errors.cardSpend6m) {
+            setErrors(prev => ({ ...prev, cardSpend6m: false }));
+        }
+    };
+
+    // 💡 미입력 항목 검증 로직
+    const validateInputs = () => {
+        const newErrors = {};
+
+        if (lumpSum === "" || lumpSum === null || isNaN(lumpSum)) newErrors.lumpSum = "보유 목돈을 입력해 주세요.";
+        if (emergencyFund === "" || emergencyFund === null || isNaN(emergencyFund)) newErrors.emergencyFund = "비상금을 입력해 주세요.";
+        if (monthlySaving === "" || monthlySaving === null || isNaN(monthlySaving)) newErrors.monthlySaving = "월 저축여력을 입력해 주세요.";
+        if (cardBudgetCap === "" || cardBudgetCap === null || isNaN(cardBudgetCap)) newErrors.cardBudgetCap = "월 카드 예산 상한을 입력해 주세요.";
+
+        // 카드 6개월 사용액 중 하나라도 비어있는지 확인
+        const hasEmptyCardSpend = cardSpend6m.some(v => v === "" || v === null || isNaN(v));
+        if (hasEmptyCardSpend) newErrors.cardSpend6m = "6개월 카드 사용액을 모두 입력해 주세요.";
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const buildProfilePayload = (answers = conditionAnswers) => ({
-        employment: employment,
+        employment,
         salaryTransferable: Boolean(salaryTransferable),
-        lumpSum: Math.max(0, Number(lumpSum) || 0),
-        emergencyFund: Math.max(0, Number(emergencyFund) || 0),
-        monthlySaving: Math.max(0, Number(monthlySaving) || 0),
-        targetMonths: Number(targetMonths) || 12,
-        cardSpend6m: cardSpend6m.map(v => Math.max(0, Number(v) || 0)),
-        cardBudgetCap: Math.max(0, Number(cardBudgetCap) || 0),
-        existingBanks: existingBank ? [existingBank] : [],
+        lumpSum: Number(lumpSum),
+        emergencyFund: Number(emergencyFund),
+        monthlySaving: Number(monthlySaving),
+        targetMonths: Number(targetMonths),
+        cardSpend6m: cardSpend6m.map(v => Number(v)),
+        cardBudgetCap: Number(cardBudgetCap),
+        existingBanks: [existingBank],
         conditionAnswers: answers
     });
 
@@ -49,7 +136,10 @@ export default function SimulationPage({ onNext }) {
         try {
             const response = await fetch('/api/v1/simulate', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-cache'
+                },
                 body: JSON.stringify(requestBody),
             });
 
@@ -59,7 +149,6 @@ export default function SimulationPage({ onNext }) {
             }
 
             const data = await response.json();
-            console.log("백엔드 시뮬레이션 응답 성공:", data);
             setResultData(data);
         } catch (error) {
             console.error("API 연동 에러:", error);
@@ -70,13 +159,19 @@ export default function SimulationPage({ onNext }) {
     };
 
     const handleRunSimulation = () => {
+        // 검증 실패 시 실행 차단
+        if (!validateInputs()) {
+            return;
+        }
         setSelectedProductId(null);
-        requestSimulation(null);
+        setConditionAnswers({});
+        requestSimulation(null, {});
     };
 
     const handleProductDetail = (productId) => {
+        if (!validateInputs()) return;
         setSelectedProductId(productId);
-        requestSimulation([productId]);
+        requestSimulation([productId], conditionAnswers);
     };
 
     const handleConditionAnswer = (conditionId, answer) => {
@@ -86,12 +181,16 @@ export default function SimulationPage({ onNext }) {
     };
 
     const handleContinue = () => {
+        if (!validateInputs()) return;
+        localStorage.removeItem('gulimi_options_state');
+        localStorage.removeItem('gulimi_selected_option');
         onNext?.(buildProfilePayload());
     };
 
-    // 금액 단위 변환 헬퍼 (예: 20000000 -> 2,000만원)
     const formatKoreanMoney = (amount) => {
+        if (amount === "" || amount === null || isNaN(amount)) return "";
         const num = Number(amount) || 0;
+        if (num === 0) return "0원";
         if (num >= 10000) {
             return `${(num / 10000).toLocaleString()}만원`;
         }
@@ -113,7 +212,12 @@ export default function SimulationPage({ onNext }) {
                 <div className="lg:col-span-5">
                     <Card title="내 자산 프로필" icon="👤">
                         <div className="space-y-4 text-xs font-bold text-amber-900">
-                            {/* 근로 형태 / 급여 이체 */}
+                            {Object.keys(errors).length > 0 && (
+                                <div className="p-3 bg-red-100 border border-red-300 text-red-700 rounded-xl text-xs font-extrabold animate-pulse">
+                                    ⚠️ 입력되지 않은 항목이 있습니다. 연한 안냇값을 참고하여 적어주세요!
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
                                     <label className="block mb-1.5 text-amber-800">근로 형태</label>
@@ -143,7 +247,6 @@ export default function SimulationPage({ onNext }) {
                                 </div>
                             </div>
 
-                            {/* 목표 저축 기간 선택 UI */}
                             <div>
                                 <label className="block mb-1.5 text-amber-800 font-extrabold text-xs">🎯 목표 저축 기간</label>
                                 <select
@@ -158,41 +261,57 @@ export default function SimulationPage({ onNext }) {
                                 </select>
                             </div>
 
-                            {/* 자산 금액 관련 */}
                             <div className="grid grid-cols-3 gap-2">
                                 <div>
                                     <label className="text-amber-800 text-[11px] block mb-1.5">보유 목돈</label>
                                     <input
                                         type="number"
                                         value={lumpSum}
-                                        onChange={(e) => setLumpSum(Number(e.target.value))}
-                                        className="w-full px-2.5 py-3 bg-amber-50/60 border border-amber-200/80 rounded-2xl text-amber-950 font-extrabold text-xs"
+                                        placeholder={PLACEHOLDERS.lumpSum}
+                                        onChange={(e) => {
+                                            setLumpSum(e.target.value);
+                                            setErrors(prev => ({ ...prev, lumpSum: false }));
+                                        }}
+                                        className={`w-full px-2.5 py-3 bg-amber-50/60 border ${errors.lumpSum ? 'border-red-500 ring-2 ring-red-200' : 'border-amber-200/80'} rounded-2xl text-amber-950 placeholder:text-amber-900/30 placeholder:font-normal font-extrabold text-xs transition-all`}
                                     />
-                                    <p className="text-[10px] text-amber-700/70 font-semibold mt-1 text-right">{formatKoreanMoney(lumpSum)}</p>
+                                    <p className="text-[10px] text-amber-700/70 font-semibold mt-1 text-right min-h-[14px]">
+                                        {formatKoreanMoney(lumpSum)}
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="text-amber-800 text-[11px] block mb-1.5">비상금</label>
                                     <input
                                         type="number"
                                         value={emergencyFund}
-                                        onChange={(e) => setEmergencyFund(Number(e.target.value))}
-                                        className="w-full px-2.5 py-3 bg-amber-50/60 border border-amber-200/80 rounded-2xl text-amber-950 font-bold text-xs"
+                                        placeholder={PLACEHOLDERS.emergencyFund}
+                                        onChange={(e) => {
+                                            setEmergencyFund(e.target.value);
+                                            setErrors(prev => ({ ...prev, emergencyFund: false }));
+                                        }}
+                                        className={`w-full px-2.5 py-3 bg-amber-50/60 border ${errors.emergencyFund ? 'border-red-500 ring-2 ring-red-200' : 'border-amber-200/80'} rounded-2xl text-amber-950 placeholder:text-amber-900/30 placeholder:font-normal font-bold text-xs transition-all`}
                                     />
-                                    <p className="text-[10px] text-amber-700/70 font-semibold mt-1 text-right">{formatKoreanMoney(emergencyFund)}</p>
+                                    <p className="text-[10px] text-amber-700/70 font-semibold mt-1 text-right min-h-[14px]">
+                                        {formatKoreanMoney(emergencyFund)}
+                                    </p>
                                 </div>
                                 <div>
                                     <label className="text-amber-800 text-[11px] block mb-1.5">월 저축여력</label>
                                     <input
                                         type="number"
                                         value={monthlySaving}
-                                        onChange={(e) => setMonthlySaving(Number(e.target.value))}
-                                        className="w-full px-2.5 py-3 bg-amber-50/60 border border-amber-200/80 rounded-2xl text-amber-950 font-bold text-xs"
+                                        placeholder={PLACEHOLDERS.monthlySaving}
+                                        onChange={(e) => {
+                                            setMonthlySaving(e.target.value);
+                                            setErrors(prev => ({ ...prev, monthlySaving: false }));
+                                        }}
+                                        className={`w-full px-2.5 py-3 bg-amber-50/60 border ${errors.monthlySaving ? 'border-red-500 ring-2 ring-red-200' : 'border-amber-200/80'} rounded-2xl text-amber-950 placeholder:text-amber-900/30 placeholder:font-normal font-bold text-xs transition-all`}
                                     />
-                                    <p className="text-[10px] text-amber-700/70 font-semibold mt-1 text-right">{formatKoreanMoney(monthlySaving)}</p>
+                                    <p className="text-[10px] text-amber-700/70 font-semibold mt-1 text-right min-h-[14px]">
+                                        {formatKoreanMoney(monthlySaving)}
+                                    </p>
                                 </div>
                             </div>
 
-                            {/* 기존 주거래 은행 */}
                             <div>
                                 <label className="block mb-1.5 text-amber-800">기존 주 거래 은행</label>
                                 <select
@@ -208,10 +327,10 @@ export default function SimulationPage({ onNext }) {
                                     <option value="토스뱅크">토스뱅크</option>
                                     <option value="IBK기업은행">IBK기업은행</option>
                                     <option value="NH농협은행">NH농협은행</option>
+                                    <option value="부산은행">부산은행</option>
                                 </select>
                             </div>
 
-                            {/* 카드 소비 데이터 */}
                             <div>
                                 <label className="block mb-1.5 text-amber-800">최근 6개월 카드 사용액 (원)</label>
                                 <div className="grid grid-cols-3 gap-2">
@@ -221,8 +340,9 @@ export default function SimulationPage({ onNext }) {
                                             <input
                                                 type="number"
                                                 value={spend}
+                                                placeholder={PLACEHOLDERS.cardSpend}
                                                 onChange={(e) => handleCardSpendChange(idx, e.target.value)}
-                                                className="w-full px-2 py-1.5 bg-amber-50/60 border border-amber-200/80 rounded-xl text-amber-950 text-xs font-bold"
+                                                className={`w-full px-2 py-1.5 bg-amber-50/60 border ${errors.cardSpend6m ? 'border-red-500 ring-1 ring-red-200' : 'border-amber-200/80'} rounded-xl text-amber-950 text-xs font-bold placeholder:text-amber-900/30 placeholder:font-normal transition-all`}
                                             />
                                         </div>
                                     ))}
@@ -237,8 +357,12 @@ export default function SimulationPage({ onNext }) {
                                 <input
                                     type="number"
                                     value={cardBudgetCap}
-                                    onChange={(e) => setCardBudgetCap(Number(e.target.value))}
-                                    className="w-full px-4 py-3 bg-amber-100/40 border border-amber-300 rounded-2xl text-amber-950 font-black text-sm"
+                                    placeholder={PLACEHOLDERS.cardBudgetCap}
+                                    onChange={(e) => {
+                                        setCardBudgetCap(e.target.value);
+                                        setErrors(prev => ({ ...prev, cardBudgetCap: false }));
+                                    }}
+                                    className={`w-full px-4 py-3 bg-amber-100/40 border ${errors.cardBudgetCap ? 'border-red-500 ring-2 ring-red-200' : 'border-amber-300'} rounded-2xl text-amber-950 font-black text-sm placeholder:text-amber-900/30 placeholder:font-normal transition-all`}
                                 />
                             </div>
 
@@ -253,7 +377,6 @@ export default function SimulationPage({ onNext }) {
                     </Card>
                 </div>
 
-                {/* 우측 시뮬레이션 결과 리스트 */}
                 <div className="lg:col-span-7 space-y-6">
                     {resultData?.cardBudget && (
                         <div className="bg-amber-100/80 p-5 rounded-2xl border border-amber-300 flex justify-between items-center text-amber-950 text-xs font-bold shadow-sm">
@@ -288,14 +411,15 @@ export default function SimulationPage({ onNext }) {
                                 )}
                             </div>
 
-                            {/* 상위 10개 상품만 표시 */}
                             {resultData.products.slice(0, 10).map((prod, idx) => (
                                 <Card key={prod.productId || idx} title={prod.productName} subtitle={`${prod.bankName || '은행'} | ${prod.termMonths || 12}개월`}>
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center p-3 bg-amber-50/80 rounded-xl border border-amber-200">
                                             <div>
                                                 <p className="text-[10px] text-amber-700 font-bold">기본금리 → 최고금리</p>
-                                                <p className="text-xs font-black text-amber-900">{prod.baseRate}% ~ {prod.advertisedMaxRate}%</p>
+                                                <p className="text-xs font-black text-amber-900">
+                                                    {prod.baseRate}% ~ {prod.maxRate ?? prod.advertisedMaxRate}%
+                                                </p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-[10px] text-amber-700 font-bold">굴리미 AI 기대금리 E[r]</p>
@@ -309,27 +433,17 @@ export default function SimulationPage({ onNext }) {
                                                     <p className="text-xs font-black text-blue-950">
                                                         이 항목을 확인하면 금리를 더 정확히 계산할 수 있어요
                                                     </p>
-                                                    <p className="mt-1 text-[11px] font-semibold text-blue-700">
-                                                        한 번에 최대 3개만 여쭤봅니다.
-                                                    </p>
                                                 </div>
                                                 {prod.confirmationQuestions.map((question) => (
-                                                    <div
-                                                        key={question.conditionId}
-                                                        className="rounded-xl border border-blue-100 bg-white p-3"
-                                                    >
-                                                        <p className="text-xs font-bold text-blue-950">
-                                                            {question.question}
-                                                        </p>
-                                                        <p className="mt-1 text-[10px] font-semibold text-blue-600">
-                                                            금리 영향 +{question.rateImpact}%p
-                                                        </p>
+                                                    <div key={question.conditionId} className="rounded-xl border border-blue-100 bg-white p-3">
+                                                        <p className="text-xs font-bold text-blue-950">{question.question}</p>
+                                                        <p className="mt-1 text-[10px] font-semibold text-blue-600">금리 영향 +{question.rateImpact}%p</p>
                                                         <div className="mt-2 flex gap-2">
                                                             <button
                                                                 type="button"
                                                                 onClick={() => handleConditionAnswer(question.conditionId, true)}
                                                                 disabled={isLoading}
-                                                                className="flex-1 rounded-lg bg-blue-600 px-3 py-2 text-[11px] font-black text-white disabled:opacity-50 hover:bg-blue-700 transition-colors"
+                                                                className="flex-1 rounded-lg bg-blue-600 px-3 py-2 text-[11px] font-black text-white"
                                                             >
                                                                 가능해요
                                                             </button>
@@ -337,7 +451,7 @@ export default function SimulationPage({ onNext }) {
                                                                 type="button"
                                                                 onClick={() => handleConditionAnswer(question.conditionId, false)}
                                                                 disabled={isLoading}
-                                                                className="flex-1 rounded-lg border border-blue-200 bg-white px-3 py-2 text-[11px] font-black text-blue-800 disabled:opacity-50 hover:bg-blue-50 transition-colors"
+                                                                className="flex-1 rounded-lg border border-blue-200 bg-white px-3 py-2 text-[11px] font-black text-blue-800"
                                                             >
                                                                 어려워요
                                                             </button>
@@ -352,7 +466,7 @@ export default function SimulationPage({ onNext }) {
                                                 type="button"
                                                 onClick={() => handleProductDetail(prod.productId)}
                                                 disabled={isLoading}
-                                                className="w-full rounded-xl border border-amber-300 bg-white px-4 py-2.5 text-xs font-black text-amber-900 hover:bg-amber-100 transition-colors disabled:opacity-50 shadow-sm"
+                                                className="w-full rounded-xl border border-amber-300 bg-white px-4 py-2.5 text-xs font-black text-amber-900 hover:bg-amber-100"
                                             >
                                                 이 상품 금리 정확히 계산하기 🔍
                                             </button>
@@ -365,7 +479,7 @@ export default function SimulationPage({ onNext }) {
                         <Card title="AI 시뮬레이션 대기 중" icon="🎲">
                             <div className="text-center py-12 text-amber-800/60 font-bold text-xs space-y-2">
                                 <p className="text-2xl">👈</p>
-                                <p>왼쪽 자산 프로필을 확인하고 [⚡ 전체 상품 AI 시뮬레이션 실행] 버튼을 눌러보세요!</p>
+                                <p>왼쪽 자산 프로필을 입력하고 [⚡ 전체 상품 AI 시뮬레이션 실행] 버튼을 눌러보세요!</p>
                             </div>
                         </Card>
                     )}
@@ -374,7 +488,7 @@ export default function SimulationPage({ onNext }) {
 
             {resultData?.products?.length > 0 && (
                 <div className="flex justify-end pt-4">
-                    <Button onClick={handleContinue} disabled={isLoading} className="text-sm px-8 py-4 bg-amber-500 text-white font-black rounded-2xl hover:bg-amber-600 transition-all shadow-lg">
+                    <Button onClick={handleContinue} disabled={isLoading} className="text-sm px-8 py-4 bg-amber-500 text-white font-black rounded-2xl hover:bg-amber-600 shadow-lg">
                         추천 플랜 확인하기 (Step 2) →
                     </Button>
                 </div>
