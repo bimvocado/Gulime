@@ -1,0 +1,18 @@
+package com.example.demo.savings.domain;
+
+public enum ConditionType {
+    CARD_SPEND,
+    CARD_OWNERSHIP,
+    CARD_PAYMENT_ACCOUNT,
+    SALARY_TRANSFER,
+    FIRST_TRADE,
+    BALANCE_MAINTENANCE,
+    DEPOSIT_AMOUNT,
+    TRANSFER_COUNT,
+    PRODUCT_HOLDING,
+    CHANNEL_USE,
+    MARKETING_CONSENT,
+    UNCONDITIONAL,
+    OTHER
+}
+
